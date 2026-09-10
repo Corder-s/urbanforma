@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URBANFORMA — Design the Cities of Tomorrow</title>
+  <meta name="description" content="Plan smarter cities with GIS, 3D visualization, environmental intelligence and optimization. One platform from site to city." />
+  <meta property="og:title" content="URBANFORMA — Design the Cities of Tomorrow" />
+  <meta property="og:description" content="GIS, 3D visualization, environmental intelligence and optimization for urban planners." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M7 24V14l5-3v13M12 24V8l6-3v19M18 24V12l7 4v8' stroke='%237b6ff0' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="#top" class="brand" aria-label="URBANFORMA home">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M7 24V14l5-3v13M12 24V8l6-3v19M18 24V12l7 4v8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand__name">URBANFORMA</span>
+      </a>
+
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="#features">Product</a>
+        <a href="#workflow">Solutions</a>
+        <a href="#vision">Resources</a>
+        <a href="#footer" class="nav__login">Login</a>
+        <a href="#cta" class="btn btn--small btn--primary nav__cta">Get Started</a>
+      </nav>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__grid"></div>
+        <div class="hero__glow hero__glow--1"></div>
+        <div class="hero__glow hero__glow--2"></div>
+      </div>
+
+      <div class="container hero__inner">
+        <p class="eyebrow reveal"><span class="eyebrow__dot"></span> Urban Intelligence Platform</p>
+
+        <h1 class="hero__title reveal">
+          DESIGN THE<br />
+          CITIES <span class="accent">OF TOMORROW.</span>
+        </h1>
+
+        <p class="hero__sub reveal">
+          Plan smarter cities with GIS, 3D visualization, environmental
+          intelligence and optimization — all in one fluid workspace.
+        </p>
+
+        <div class="hero__actions reveal">
+          <a href="#cta" class="btn btn--primary btn--lg">
+            Start Planning
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#features" class="btn btn--ghost btn--lg">Explore Platform</a>
+        </div>
+
+        <!-- 3D CITY VISUAL -->
+        <div class="stage reveal" id="stage">
+          <div class="stage__hud stage__hud--tl"></div>
+          <div class="stage__hud stage__hud--tr"></div>
+          <div class="stage__hud stage__hud--bl"></div>
+          <div class="stage__hud stage__hud--br"></div>
+
+          <div class="stage__label">
+            <span class="stage__label-dot"></span> 3D CITY VISUAL <em>· LIVE</em>
+          </div>
+
+          <canvas id="cityCanvas" class="stage__canvas" aria-label="Interactive 3D city visualization"></canvas>
+          <div class="stage__fallback" id="stageFallback"></div>
+
+          <div class="stage__legend">
+            <span><i class="dot dot--green"></i> Parcels</span>
+            <span><i class="dot dot--cyan"></i> Mobility</span>
+            <span><i class="dot dot--amber"></i> Energy</span>
+          </div>
+          <div class="stage__hint">Drag to orbit · Scroll to zoom</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRUSTED BY ============ -->
+    <section class="trust">
+      <div class="container">
+        <p class="trust__title reveal">Trusted by planners &amp; built for the teams shaping tomorrow’s cities</p>
+        <div class="marquee reveal" aria-label="Partner organizations">
+          <div class="marquee__track">
+            <span>METRO PLANNING OFFICE</span><i>◆</i>
+            <span>NORTHRIDGE AEC</span><i>◆</i>
+            <span>URBAN INSTITUTE</span><i>◆</i>
+            <span>HARBOR DEVELOPMENT AUTHORITY</span><i>◆</i>
+            <span>VERDANT CITIES</span><i>◆</i>
+            <span>ATLAS INFRASTRUCTURE</span><i>◆</i>
+            <span>SKYLINE BIM STUDIO</span><i>◆</i>
+            <span>CIVIC GRID LABS</span><i>◆</i>
+            <!-- duplicate for seamless loop -->
+            <span>METRO PLANNING OFFICE</span><i>◆</i>
+            <span>NORTHRIDGE AEC</span><i>◆</i>
+            <span>URBAN INSTITUTE</span><i>◆</i>
+            <span>HARBOR DEVELOPMENT AUTHORITY</span><i>◆</i>
+            <span>VERDANT CITIES</span><i>◆</i>
+            <span>ATLAS INFRASTRUCTURE</span><i>◆</i>
+            <span>SKYLINE BIM STUDIO</span><i>◆</i>
+            <span>CIVIC GRID LABS</span><i>◆</i>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat reveal">
+            <span class="stat__num" data-count="120" data-suffix="+">0</span>
+            <span class="stat__label">City projects delivered</span>
+          </div>
+          <div class="stat reveal">
+            <span class="stat__num" data-count="4.8" data-decimals="1" data-suffix="M">0</span>
+            <span class="stat__label">Parcels modeled in 3D</span>
+          </div>
+          <div class="stat reveal">
+            <span class="stat__num" data-count="60" data-suffix="×">0</span>
+            <span class="stat__label">Faster scenario testing</span>
+          </div>
+          <div class="stat reveal">
+            <span class="stat__num" data-count="1" data-suffix="">0</span>
+            <span class="stat__label">Platform, GIS → BIM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="features section" id="features">
+      <div class="container">
+        <p class="eyebrow eyebrow--center reveal">Capabilities</p>
+        <h2 class="section__title reveal">Everything you need to <span class="accent">plan better</span></h2>
+        <p class="section__sub reveal">Four interconnected engines. One continuous workflow — from the first parcel to the final masterplan.</p>
+
+        <div class="features__grid">
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M9 3v15M15 6v15" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+            </div>
+            <h3>Site Planning</h3>
+            <p>Import parcels, zoning and constraints in minutes. Automatic site suitability scoring puts every option on the table.</p>
+            <ul class="card__list">
+              <li>Parcel &amp; zoning import</li>
+              <li>Suitability heatmaps</li>
+              <li>Constraint checking</li>
+            </ul>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M3 7l9 5 9-5M12 22V12" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+            </div>
+            <h3>3D Cities</h3>
+            <p>Real-time 3D massing with procedural buildings, terrain and context. See scale, shadows and skyline impact instantly.</p>
+            <ul class="card__list">
+              <li>Procedural massing</li>
+              <li>Shadow &amp; view analysis</li>
+              <li>Real-time WebGL engine</li>
+            </ul>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 16l3-4 3 2 4-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Analysis</h3>
+            <p>Environmental intelligence for sun, wind, noise, flood and mobility. Quantify every proposal before you present it.</p>
+            <ul class="card__list">
+              <li>Sun, wind &amp; microclimate</li>
+              <li>Mobility &amp; noise mapping</li>
+              <li>Scenario comparison</li>
+            </ul>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8 8V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3M3 13h18M9 16.5h.01M15 16.5h.01" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <h3>BIM</h3>
+            <p>Bridge urban design into delivery. IFC-grade data flows from masterplan to Revit, Rhino and the construction team.</p>
+            <ul class="card__list">
+              <li>IFC &amp; Revit interoperability</li>
+              <li>Level-of-detail control</li>
+              <li>Single source of truth</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WORKFLOW ============ -->
+    <section class="workflow section" id="workflow">
+      <div class="container">
+        <p class="eyebrow eyebrow--center reveal">The Workflow</p>
+        <h2 class="section__title reveal">FROM <span class="accent">SITE → CITY</span></h2>
+        <p class="section__sub reveal">A single pipeline that grows with your project — no rework, no translation losses.</p>
+
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step__num">01</span>
+            <h3>Choose</h3>
+            <p>Select sites and pull in zoning, demographics and environmental layers from the GIS data hub.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num">02</span>
+            <h3>Design</h3>
+            <p>Mass buildings, streets and open space in live 3D with parametric rules and instant feedback.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num">03</span>
+            <h3>Analyze</h3>
+            <p>Test sun, wind, energy, traffic and comfort across scenarios — side by side, in real time.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num">04</span>
+            <h3>Optimize</h3>
+            <p>Let the engine balance density, daylight and emissions to land on the best-performing plan.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ VISION / BIG VISUAL ============ -->
+    <section class="vision section" id="vision">
+      <div class="container">
+        <p class="eyebrow eyebrow--center reveal">The Platform</p>
+        <h2 class="section__title reveal">SEE YOUR CITY <span class="accent">DIFFERENTLY</span></h2>
+        <p class="section__sub reveal">Layer live data over your masterplan and watch the city breathe — energy, mobility and environment in one frame.</p>
+
+        <!-- Pure CSS/SVG analytics dashboard — no images -->
+        <div class="dash reveal">
+          <div class="dash__window">
+            <aside class="dash__side">
+              <span class="dash__logo"><span></span></span>
+              <nav class="dash__icons" aria-label="Dashboard sections">
+                <span class="is-active" aria-label="Overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
+                <span aria-label="Analytics"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+                <span aria-label="Locations"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+                <span aria-label="Layers"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5"/></svg></span>
+                <span aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
+              </nav>
+              <span class="dash__avatar"></span>
+            </aside>
+
+            <div class="dash__body">
+              <header class="dash__head">
+                <div>
+                  <h3>General statistics</h3>
+                  <p>Urbanforma · city intelligence</p>
+                </div>
+                <div class="dash__seg">
+                  <span class="on">Overview</span><span>Districts</span><span>Reports</span>
+                </div>
+              </header>
+
+              <div class="dash__tiles">
+                <div class="tile tile--big">
+                  <span class="tile__k">All users · 2026</span>
+                  <span class="tile__v">7,541,390</span>
+                  <span class="tile__d up">▲ 12.4% vs last year</span>
+                </div>
+                <div class="tile">
+                  <span class="tile__ic tile__ic--indigo"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4-9-4zM3 12l9 4 9-4M3 17l9 4 9-4"/></svg></span>
+                  <span class="tile__k">Parcels modeled</span>
+                  <span class="tile__v">4.8M</span>
+                </div>
+                <div class="tile">
+                  <span class="tile__ic tile__ic--blue"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16l3-4 3 2 4-6"/></svg></span>
+                  <span class="tile__k">Scenarios tested</span>
+                  <span class="tile__v">128K</span>
+                </div>
+                <div class="tile">
+                  <span class="tile__ic tile__ic--orange"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V8l6-4 6 4v13M10 21v-5h4v5"/></svg></span>
+                  <span class="tile__k">City projects</span>
+                  <span class="tile__v">120+</span>
+                </div>
+              </div>
+
+              <div class="dash__charts">
+                <div class="panel panel--bars">
+                  <div class="panel__h"><span>Projects by district</span><span class="panel__tag">Monthly</span></div>
+                  <div class="bars">
+                    <i style="--h:44%;--i:0"></i><i style="--h:62%;--i:1"></i><i style="--h:50%;--i:2"></i>
+                    <i style="--h:74%;--i:3"></i><i style="--h:58%;--i:4"></i><i style="--h:84%;--i:5"></i>
+                    <i style="--h:66%;--i:6"></i><i style="--h:92%;--i:7"></i><i style="--h:70%;--i:8"></i>
+                    <i style="--h:80%;--i:9"></i><i style="--h:60%;--i:10"></i><i style="--h:96%;--i:11"></i>
+                  </div>
+                </div>
+
+                <div class="panel panel--line">
+                  <div class="panel__h"><span>Scenarios &amp; approvals</span><span class="panel__tag">Live</span></div>
+                  <svg class="linechart" viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#7b6ff0" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#7b6ff0" stop-opacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <path class="lc-area" d="M0,92 C30,86 44,66 72,70 S112,44 142,56 S192,26 222,38 S272,14 300,20 L300,120 L0,120 Z" fill="url(#areaGrad)"/>
+                    <path class="lc-line lc-line--a" d="M0,92 C30,86 44,66 72,70 S112,44 142,56 S192,26 222,38 S272,14 300,20" fill="none" stroke="#7b6ff0" stroke-width="2.6" stroke-linecap="round"/>
+                    <path class="lc-line lc-line--b" d="M0,104 C34,98 50,86 78,90 S120,74 150,82 S200,60 232,68 S278,52 300,58" fill="none" stroke="#4f8ef7" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="5 5"/>
+                    <circle cx="142" cy="56" r="3.6" fill="#7b6ff0"/><circle cx="300" cy="20" r="3.6" fill="#7b6ff0"/>
+                  </svg>
+                </div>
+
+                <div class="panel panel--donut">
+                  <div class="panel__h"><span>Land-use mix</span></div>
+                  <div class="donutwrap">
+                    <div class="donut"><span>68%<b>developed</b></span></div>
+                    <ul class="legend">
+                      <li><i style="background:#7b6ff0"></i>Residential 38%</li>
+                      <li><i style="background:#4f8ef7"></i>Commercial 24%</li>
+                      <li><i style="background:#34d399"></i>Green space 20%</li>
+                      <li><i style="background:#ff9f43"></i>Civic 12%</li>
+                      <li><i style="background:#f7687a"></i>Industrial 6%</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <span class="dash__chip dash__chip--a">● Live data</span>
+          <span class="dash__chip dash__chip--b">4.8M parcels</span>
+          <span class="dash__chip dash__chip--c">Real-time</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="cta section" id="cta">
+      <div class="container cta__inner reveal">
+        <div class="cta__glow" aria-hidden="true"></div>
+        <h2 class="cta__title">BUILT FOR<br /><span class="accent">BETTER CITIES</span></h2>
+        <p class="cta__sub">Bring your next site. Leave with a masterplan your stakeholders can walk through.</p>
+        <a href="#top" class="btn btn--primary btn--lg">
+          Get Started
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" id="footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <a href="#top" class="brand">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M7 24V14l5-3v13M12 24V8l6-3v19M18 24V12l7 4v8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand__name">URBANFORMA</span>
+        </a>
+        <p>The urban intelligence platform for planning smarter, greener, more resilient cities — from site to skyline.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="X / Twitter"><svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4 4 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8 10v6M8 7.5v.01M12 16v-3.5a2 2 0 0 1 4 0V16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-2.8 17.55c.45.08.61-.2.61-.44v-1.7c-2.5.55-3.02-1.05-3.02-1.05-.41-1.03-1-1.31-1-1.31-.82-.56.06-.55.06-.55.9.06 1.38.93 1.38.93.8 1.37 2.1.98 2.61.75.08-.58.31-.98.57-1.2-2-.23-4.1-1-4.1-4.45 0-.98.35-1.79.93-2.42-.1-.23-.4-1.14.08-2.38 0 0 .76-.24 2.48.92a8.6 8.6 0 0 1 4.5 0c1.72-1.16 2.48-.92 2.48-.92.48 1.24.18 2.15.09 2.38.58.63.92 1.44.92 2.42 0 3.46-2.1 4.22-4.11 4.44.32.28.6.82.6 1.66v2.46c0 .24.16.53.62.44A9 9 0 0 0 12 3z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+
+      <nav class="footer__col" aria-label="Product">
+        <h4>Product</h4>
+        <a href="#features">Site Planning</a>
+        <a href="#features">3D Cities</a>
+        <a href="#features">Analysis</a>
+        <a href="#features">BIM</a>
+        <a href="#cta">Pricing</a>
+      </nav>
+
+      <nav class="footer__col" aria-label="Company">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Partners</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <nav class="footer__col" aria-label="Resources">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">API Reference</a>
+        <a href="#">Case Studies</a>
+        <a href="#">Blog</a>
+        <a href="#">Support</a>
+      </nav>
+    </div>
+
+    <div class="container footer__bar">
+      <span>© 2026 Urbanforma. All rights reserved.</span>
+      <span class="footer__legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></span>
+    </div>
+  </footer>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="js/city3d.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
