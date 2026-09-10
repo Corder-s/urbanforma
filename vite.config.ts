@@ -19,4 +19,26 @@ export default defineConfig({
     port: 4173,
     allowedHosts: true,
   },
+  build: {
+    target: "es2020",
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 650,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("three")) {
+              return "three-vendor";
+            }
+            if (id.includes("react") || id.includes("scheduler")) {
+              return "react-vendor";
+            }
+            if (id.includes("lucide-react")) {
+              return "icons-vendor";
+            }
+          }
+        },
+      },
+    },
+  },
 });

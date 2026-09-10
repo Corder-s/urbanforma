@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { ShellContext } from "./shellContext";
 import { Sidebar } from "../components/layout/Sidebar";
 import { MobileSidebar } from "../components/layout/MobileSidebar";
 import { AppHeader } from "../components/layout/AppHeader";
+import { Loader } from "../components/ui/Loader";
 
 /**
  * Permanent authenticated application frame:
@@ -51,7 +52,9 @@ export function AppShell() {
         <div className="flex min-w-0 flex-1 flex-col lg:h-dvh">
           <AppHeader />
           <main id="app-content" className="min-h-0 flex-1 overflow-y-auto">
-            <Outlet />
+            <Suspense fallback={<Loader className="h-full min-h-[50vh] bg-transparent" label="Loading view…" />}>
+              <Outlet />
+            </Suspense>
           </main>
         </div>
       </div>
