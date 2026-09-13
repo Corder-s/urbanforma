@@ -58,16 +58,26 @@ function sanitizeReport(raw: unknown, projectId: string): ReportConfig | null {
   const sections = Array.isArray(raw.sections)
     ? (raw.sections.map(sanitizeSection).filter((s): s is ReportSectionConfig => s !== null))
     : [];
-  // Guarantee every catalogue section has a slot, so new sections appear in old reports.
+  // Guarantee every catalogue section has a slot, so sections added after a
+  // report was saved still appear in it. They are inserted at their *catalogue*
+  // position (fractional order, normalised below) rather than appended, so the
+  // figure sections land next to the content they belong to.
   const present = new Set(sections.map((s) => s.id));
-  const merged = [
-    ...sections,
-    ...SECTION_CATALOG.filter((s) => !present.has(s.id)).map((s, i) => ({
-      id: s.id,
-      enabled: REPORT_TYPE_META[type].sections.includes(s.id),
-      order: sections.length + i,
-    })),
-  ].sort((a, b) => a.order - b.order);
+  const defaults = new Set(REPORT_TYPE_META[type].sections);
+  const merged = [...sections];
+  SECTION_CATALOG.forEach((meta, catalogueIndex) => {
+    if (present.has(meta.id)) return;
+    let after = -1;
+    for (let i = catalogueIndex - 1; i >= 0; i -= 1) {
+      const neighbour = merged.find((s) => s.id === SECTION_CATALOG[i].id);
+      if (neighbour) {
+        after = neighbour.order;
+        break;
+      }
+    }
+    merged.push({ id: meta.id, enabled: defaults.has(meta.id), order: after + 0.5 });
+  });
+  const ordered = merged.sort((a, b) => a.order - b.order).map((section, i) => ({ ...section, order: i }));
 
   return {
     id: isStr(raw.id) && raw.id ? raw.id : newReportId(),
@@ -75,7 +85,7 @@ function sanitizeReport(raw: unknown, projectId: string): ReportConfig | null {
     type,
     title: isStr(raw.title) && raw.title.trim() ? raw.title.slice(0, 90) : "Untitled report",
     description: isStr(raw.description) ? raw.description.slice(0, 280) : "",
-    sections: merged,
+    sections: ordered,
     status: isStr(raw.status) && (STATUSES as string[]).includes(raw.status) ? (raw.status as ReportStatus) : "draft",
     version: isNum(raw.version) && raw.version >= 1 ? Math.floor(raw.version) : 1,
     createdAt: isStr(raw.createdAt) ? raw.createdAt : new Date().toISOString(),

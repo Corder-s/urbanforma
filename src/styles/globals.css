@@ -283,3 +283,23 @@ body {
     min-width: 0 !important;
   }
 }
+
+/* Report figures: a plan or model view must never be split across pages, and
+   its frame must not add a screen-only shadow to the printed sheet. */
+@media print {
+  .report-figure {
+    break-inside: avoid;
+  }
+
+  .report-figure > div:first-child {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* The overlay badges (figure number, north arrow) are print furniture: keep
+     them, but drop the screen-only shadow and translucency. */
+  .report-figure .shadow-soft {
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+}

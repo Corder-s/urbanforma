@@ -43,7 +43,7 @@ menu), mobile drawer, and breadcrumbs.
 | **Analysis** | Environmental engine (solar, wind, heat, green, carbon, density, land-use, open-space, mobility) with 9 map overlays and per-category inspectors |
 | **Optimization** | Scenario generation with goals/weights/constraints, scoring, trade-offs, comparison, performance charts, pluggable provider |
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
-| **Reports** | Five report types, 15 configurable sections (enable + reorder), live document preview, revision/status tracking, print → PDF with app chrome stripped |
+| **Reports** | Five report types, 17 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers) and an axonometric massing model drawn from the live dataset, live document preview, revision/status tracking, print → PDF with app chrome stripped |
 | BIM · Settings | Route-level "coming soon" placeholders |
 
 ### Cross-cutting

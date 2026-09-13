@@ -206,6 +206,7 @@ export async function buildReportModel(projectId: string): Promise<ReportModel> 
     projectId,
     project,
     planning,
+    spatial: dataset,
     analysis,
     optimization:
       context && state

@@ -20,6 +20,12 @@ interface MiniPlanProps {
   padding?: number;
   /** Thumbnails skip labels / annotations / trees for speed. */
   thumbnail?: boolean;
+  /**
+   * How the site is fitted into the frame. `slice` (default) fills the pane and
+   * crops, which suits square thumbnails; `meet` shows the whole site inside the
+   * frame, which is what a printed document needs — nothing may be cropped.
+   */
+  fit?: "slice" | "meet";
   className?: string;
   title?: string;
 }
@@ -32,7 +38,7 @@ const NONE: Annotation[] = [];
  * the Step 12 map layers with `interactive=false`, so slide thumbnails and the
  * Before/After panes look exactly like the map. No pan/zoom; the parent sizes it.
  */
-export const MiniPlan = memo(function MiniPlan({ data, layers, settings, basemap: basemapId, annotations = NONE, padding = 40, thumbnail = false, className = "", title }: MiniPlanProps) {
+export const MiniPlan = memo(function MiniPlan({ data, layers, settings, basemap: basemapId, annotations = NONE, padding = 40, thumbnail = false, fit = "slice", className = "", title }: MiniPlanProps) {
   const basemap = getBasemap(basemapId);
   const effective = useMemo(() => ({ ...layers, buildings: layers.buildings && settings.buildings, trees: layers.trees && settings.trees && settings.landscape && !thumbnail, green: layers.green && settings.landscape, parks: layers.parks && settings.landscape, water: layers.water && settings.water, roads: layers.roads && settings.roadNetwork, terrain: layers.terrain && settings.terrain }), [layers, settings, thumbnail]);
   const groups = useMemo(() => group(data.objects.filter((o) => o.visible && effective[o.layer])), [data.objects, effective]);
@@ -44,7 +50,7 @@ export const MiniPlan = memo(function MiniPlan({ data, layers, settings, basemap
   // scale ≈ px per metre for a ~400px wide pane; labels + hairlines are sized from it
   const scale = thumbnail ? 0.18 : 0.45;
   return (
-    <svg viewBox={vb} preserveAspectRatio="xMidYMid slice" className={`block h-full w-full ${className}`} role="img" aria-label={title ?? `Plan of ${data.projectName}`} style={{ backgroundColor: basemap.contextGround }}>
+    <svg viewBox={vb} preserveAspectRatio={fit === "meet" ? "xMidYMid meet" : "xMidYMid slice"} className={`block h-full w-full ${className}`} role="img" aria-label={title ?? `Plan of ${data.projectName}`} style={{ backgroundColor: basemap.contextGround }}>
       <rect x={data.world.x} y={data.world.y} width={data.world.width} height={data.world.height} fill={basemap.ground} />
       <SiteLayer boundary={boundaryObj} contextBuildings={groups.ctxBuildings} contextRoads={groups.ctxRoads} contours={groups.contours} basemap={basemap} scale={scale} selected={false} showBoundary={!!groups.boundary} onSelectBoundary={NOOP} interactive={false} />
       <BlockLayer blocks={groups.blocks} selectedId={null} scale={scale} onSelect={NOOP} interactive={false} />

@@ -28,9 +28,11 @@ import {
   viewRows,
 } from "../lib/reportData";
 import type { ScenarioRow } from "../lib/reportData";
+import { enabledSections } from "../lib/reportModel";
 import type { ReportConfig, ReportMetric, ReportModel, ReportSectionId } from "../types/report.types";
 import { MetricBarList, ScoreBars, ShareBar, TrendChart, type MetricBarProps } from "./ReportCharts";
 import { BulletList, DataTable, DefinitionList, DeltaCell, StatusTag, VERDICT_GLYPH, verdictTone } from "./ReportTables";
+import { ModelViewFigure, PlanFigure } from "./ReportFigures";
 import { SectionUnavailable } from "./ReportStates";
 
 /**
@@ -240,6 +242,68 @@ function UrbanFormSection({ model }: SectionProps) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Figures: site plan (2-D) and model view (axonometric)
+// ---------------------------------------------------------------------------
+
+/** "Figure 1 / 2" — numbered by position among the report's enabled figures. */
+function figureLabel(report: ReportConfig, id: ReportSectionId): string {
+  const figures = enabledSections(report).filter((s) => s.id === "sitePlan" || s.id === "modelView");
+  const index = figures.findIndex((s) => s.id === id);
+  return index >= 0 ? `Figure ${index + 1}` : "Figure";
+}
+
+function sourceNote(model: ReportModel): string {
+  const kind = model.spatial?.source.kind;
+  return kind === "local-plan"
+    ? "your saved Planning Studio plan"
+    : kind === "demo"
+      ? "the demo site model"
+      : "the live site model";
+}
+
+function SitePlanSection({ model, report }: SectionProps) {
+  if (!model.spatial) {
+    return (
+      <SectionUnavailable
+        label="The site plan figure"
+        hint="The spatial dataset for this project could not be read. Draw a plan in Planning Studio, then generate the report again."
+      />
+    );
+  }
+  return (
+    <div className="space-y-3">
+      <PlanFigure data={model.spatial} label={figureLabel(report, "sitePlan")} />
+      <p className="report-block text-[11.5px] leading-relaxed text-muted">
+        Drawn from {sourceNote(model)} — the same geometry the 2-D map and the 3-D city render, so the figure and the
+        workspace can never disagree. North is up; the plan is fitted to the page without cropping.
+      </p>
+    </div>
+  );
+}
+
+function ModelViewSection({ model, report }: SectionProps) {
+  if (!model.spatial) {
+    return (
+      <SectionUnavailable
+        label="The model view figure"
+        hint="The spatial dataset for this project could not be read. Draw a plan in Planning Studio, then generate the report again."
+      />
+    );
+  }
+  const facts = model.planning;
+  return (
+    <div className="space-y-3">
+      <ModelViewFigure data={model.spatial} label={figureLabel(report, "modelView")} />
+      <p className="report-block text-[11.5px] leading-relaxed text-muted">
+        Axonometric massing of {sourceNote(model)}, drawn at true height with no vertical exaggeration
+        {facts ? ` — ${facts.buildings} volumes, tallest ${facts.tallestM.toFixed(1)} m, average ${facts.avgFloors.toFixed(1)} floors` : ""}. Roofs are
+        coloured by land use, existing buildings in grey.
+      </p>
     </div>
   );
 }
@@ -689,8 +753,10 @@ const RENDERERS: Record<ReportSectionId, (props: SectionProps) => ReactElement> 
   executiveSummary: ExecutiveSummarySection,
   projectOverview: ProjectOverviewSection,
   siteContext: SiteContextSection,
+  sitePlan: SitePlanSection,
   planningOverview: PlanningOverviewSection,
   urbanForm: UrbanFormSection,
+  modelView: ModelViewSection,
   environmental: EnvironmentalSection,
   mobility: MobilitySection,
   optimization: OptimizationSection,

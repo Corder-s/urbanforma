@@ -6,7 +6,7 @@ import type {
   ScenarioMetrics,
 } from "../../optimization/types/optimization.types";
 import type { ScoredScenario } from "../../optimization/services/optimization.service";
-import type { PresentationView } from "../../visualization/types/visualization.types";
+import type { PresentationView, SpatialDataset } from "../../visualization/types/visualization.types";
 
 /** The five report flavours offered by the Reports workspace. */
 export type ReportType =
@@ -24,8 +24,10 @@ export type ReportSectionId =
   | "executiveSummary"
   | "projectOverview"
   | "siteContext"
+  | "sitePlan"
   | "planningOverview"
   | "urbanForm"
+  | "modelView"
   | "environmental"
   | "mobility"
   | "optimization"
@@ -137,6 +139,11 @@ export interface ReportModel {
   project: ProjectDetail | null;
   /** Planning Studio document, summarised (site + drawn objects). */
   planning: PlanningSummary | null;
+  /**
+   * The live spatial dataset the figures draw (Step 12 geometry). Null when the
+   * spatial service did not respond — the figure sections then say so.
+   */
+  spatial: SpatialDataset | null;
   /** Step 13 analysis output. */
   analysis: AnalysisResult | null;
   /** Step 14 optimization state + the scenario set derived from it. */
