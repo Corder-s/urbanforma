@@ -10,7 +10,7 @@ import { PlanningCanvas } from "./PlanningCanvas";
 import { InspectorPanel } from "./InspectorPanel";
 import { ContextPanel } from "./ContextPanel";
 import { StatusBar } from "./StatusBar";
-import { StudioDrawer } from "./StudioDrawer";
+import { PanelDrawer } from "../../../components/ui/PanelDrawer";
 import { StudioSettings } from "./StudioSettings";
 import { ModePlaceholder } from "./ModePlaceholder";
 import { CanvasLoading, NoProjectSelected, ProjectNotFound, StudioError, StudioLoading } from "./StudioStates";
@@ -282,7 +282,7 @@ export function PlanningStudio() {
           )}
 
           {/* drawers (scoped to the canvas box) */}
-          <StudioDrawer open={toolsOpen} onClose={closeTools} label="Planning tools" side="bottom" hideAt="lg">
+          <PanelDrawer open={toolsOpen} onClose={closeTools} label="Planning tools" side="bottom" hideAt="lg">
             <div className="flex h-11 shrink-0 items-center justify-between border-b border-line px-4">
               <h2 className="text-[11px] font-bold uppercase tracking-widest text-faint">Tools</h2>
               <button type="button" onClick={closeTools} className="text-[12.5px] font-bold text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 rounded-md px-1">
@@ -305,13 +305,13 @@ export function PlanningStudio() {
                 <ContextPanel state={state} />
               </div>
             </div>
-          </StudioDrawer>
-          <StudioDrawer open={contextOpen} onClose={closeContext} label="Context layers" side="left" hideAt="xl">
+          </PanelDrawer>
+          <PanelDrawer open={contextOpen} onClose={closeContext} label="Context layers" side="left" hideAt="xl">
             <ContextPanel state={state} onClose={closeContext} />
-          </StudioDrawer>
-          <StudioDrawer open={inspectorOpen} onClose={closeInspector} label="Properties" side="right" hideAt="xl">
+          </PanelDrawer>
+          <PanelDrawer open={inspectorOpen} onClose={closeInspector} label="Properties" side="right" hideAt="xl">
             <InspectorPanel state={state} onClose={closeInspector} />
-          </StudioDrawer>
+          </PanelDrawer>
         </div>
 
         {/* right: inspector + context (docked xl+) */}

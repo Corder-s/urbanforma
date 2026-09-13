@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Box, Focus, Home, LayoutGrid, Minus, Plus, SlidersHorizontal, Square } from "lucide-react";
 import { IconButton } from "../../../components/ui/IconButton";
 import { NoProjectSelected, ProjectNotFound, SpatialError, SpatialLoading } from "../../visualization/components/VisualizationStates";
-import { WorkspaceDrawer } from "../../visualization/components/WorkspaceDrawer";
+import { PanelDrawer } from "../../../components/ui/PanelDrawer";
 import { useMapView } from "../../visualization/hooks/useMapView";
 import { CATEGORIES, getCategory, isCategoryId } from "../data/analysis.data";
 import { useAnalysisState } from "../hooks/useAnalysisState";
@@ -280,12 +280,12 @@ export function AnalysisWorkspace() {
             )}
 
             {/* drawers */}
-            <WorkspaceDrawer open={openPanel === "nav"} onClose={closePanel} label="Analysis categories" side="left" hideAt="lg">
+            <PanelDrawer open={openPanel === "nav"} onClose={closePanel} label="Analysis categories" side="left" hideAt="lg">
               {ready && <AnalysisNavigation state={state} onClose={closePanel} idPrefix="nav-drawer" />}
-            </WorkspaceDrawer>
-            <WorkspaceDrawer open={openPanel === "inspector"} onClose={closePanel} label="Details" side="right" hideAt="xl">
+            </PanelDrawer>
+            <PanelDrawer open={openPanel === "inspector"} onClose={closePanel} label="Details" side="right" hideAt="xl">
               {ready && <AnalysisInspector state={state} onClose={closePanel} idPrefix="inspector-drawer" />}
-            </WorkspaceDrawer>
+            </PanelDrawer>
           </div>
 
           {/* mobile: compact legend + metric strip for the analysis map */}

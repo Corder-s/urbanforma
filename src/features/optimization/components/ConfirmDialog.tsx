@@ -1,6 +1,7 @@
-import { useEffect, useId, useRef } from "react";
+import { useId, useRef } from "react";
 import type { ReactNode } from "react";
 import { Button } from "../../../components/ui/Button";
+import { useDialogBehavior } from "../../../components/ui/useDialogBehavior";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -15,45 +16,16 @@ interface ConfirmDialogProps {
 }
 
 /**
- * Small modal confirmation (Select / Apply / Reset). Focus is moved into the
- * dialog, trapped with Tab, and restored to the trigger on close; Escape
- * cancels. Rendered inside the workspace (no portal) so it stacks inside the
- * module, not over the global shell chrome.
+ * Small modal confirmation (Select / Apply / Reset). Rendered inside the
+ * workspace (no portal) so it stacks inside the module, not over the global
+ * shell chrome. Focus management lives in `useDialogBehavior`.
  */
 export function ConfirmDialog({ open, title, description, confirmLabel, cancelLabel = "Cancel", tone = "primary", onConfirm, onCancel, children }: ConfirmDialogProps) {
   const id = useId();
-  const ref = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.activeElement as HTMLElement | null;
-    confirmRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.stopPropagation();
-        onCancel();
-        return;
-      }
-      if (e.key !== "Tab" || !ref.current) return;
-      const items = Array.from(ref.current.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((el) => !el.hasAttribute("disabled"));
-      if (items.length === 0) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey, true);
-    return () => {
-      document.removeEventListener("keydown", onKey, true);
-      previous?.focus?.();
-    };
-  }, [open, onCancel]);
+  // Focus in on open, Tab trapped, Escape cancels, focus restored to the
+  // trigger on close. Shared with the app's other modals — see useDialogBehavior.
+  const ref = useDialogBehavior<HTMLDivElement>({ open, onClose: onCancel, initialFocus: confirmRef });
 
   if (!open) return null;
   return (

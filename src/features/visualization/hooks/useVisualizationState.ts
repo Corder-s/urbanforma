@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MAX_ANNOTATIONS } from "../data/presentation.data";
 import { DEFAULT_LAYERS, DEFAULT_SETTINGS } from "../data/visualization.data";
 import { scenarioBadge, type ScenarioOption } from "../lib/scenarios";
@@ -116,10 +116,40 @@ export function useVisualizationState(projectId: string | null): VisualizationSt
     setPrefs({ for: projectId, viewMode: stored?.viewMode ?? "2d", basemap: stored?.basemap ?? "urban", layers: stored?.layers ?? DEFAULT_LAYERS, settings: stored?.settings ?? DEFAULT_SETTINGS, scenario: stored?.scenario ?? null });
     rememberLastVisualizedProject(projectId);
   }, [projectId]);
+  // Persistence is debounced. The scene-settings sliders (time of day, sun
+  // intensity / position, camera height) call updateSettings on every
+  // pointermove and `prefs` is a fresh object each time, so writing
+  // synchronously meant a JSON.stringify + localStorage.setItem per frame for
+  // the length of a drag. A trailing debounce collapses that into one write
+  // once the user pauses; the pending value is flushed on project switch,
+  // unmount and pagehide so a change made just before navigating away is never
+  // dropped.
+  const pendingPrefs = useRef<{ id: string; prefs: TaggedPrefs } | null>(null);
+  const flushPrefs = useCallback(() => {
+    const pending = pendingPrefs.current;
+    if (!pending) return;
+    pendingPrefs.current = null;
+    const { viewMode: vm, basemap: bm, layers: ly, settings: st, scenario: sc } = pending.prefs;
+    savePrefs(pending.id, { viewMode: vm, basemap: bm, layers: ly, settings: st, scenario: sc });
+  }, []);
+
+  // Declared before the debounce effect so that on a project switch the
+  // outgoing project's pending write lands before the incoming one is queued.
+  useEffect(flushPrefs, [projectId, flushPrefs]);
+
   useEffect(() => {
     if (!projectId || prefs.for !== projectId) return;
-    savePrefs(projectId, { viewMode: prefs.viewMode, basemap: prefs.basemap, layers: prefs.layers, settings: prefs.settings, scenario: prefs.scenario });
-  }, [projectId, prefs]);
+    pendingPrefs.current = { id: projectId, prefs };
+    const timer = window.setTimeout(flushPrefs, PREFS_SAVE_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [projectId, prefs, flushPrefs]);
+
+  // Unmount and tab close/background never let the debounce timer fire.
+  useEffect(() => flushPrefs, [flushPrefs]);
+  useEffect(() => {
+    window.addEventListener("pagehide", flushPrefs);
+    return () => window.removeEventListener("pagehide", flushPrefs);
+  }, [flushPrefs]);
   const { viewMode, basemap, layers, settings } = prefs;
   const setLayersFn = useCallback((fn: (l: LayerVisibility) => LayerVisibility) => setPrefs((p) => ({ ...p, layers: fn(p.layers) })), []);
 
@@ -217,7 +247,7 @@ export function useVisualizationState(projectId: string | null): VisualizationSt
         camera = camera2d.scale > 0 ? { kind: "2d", center: { x: camera2d.center.x, y: camera2d.center.y }, scale: camera2d.scale } : { kind: "preset", preset: cameraApi.lastPreset };
       }
       return {
-        id: id ?? `view-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+        id: id ?? newId("view"),
         projectId,
         name: name.trim().slice(0, 60) || "Untitled view",
         mode,
@@ -305,6 +335,9 @@ export interface Camera2d {
   center: { x: number; y: number };
   scale: number;
 }
+
+/** Idle window before visualization prefs are written to localStorage. */
+const PREFS_SAVE_DEBOUNCE_MS = 400;
 
 const PLAN_TYPES = new Set<SpatialObject["type"]>(["building", "road", "path", "green", "water", "parking", "tree"]);
 

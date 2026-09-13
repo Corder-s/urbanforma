@@ -87,6 +87,14 @@ export class CityScene {
   private overlayGroup = new THREE.Group();
   private annotationGroup = new THREE.Group();
   private annotations: Annotation[] = [];
+  // Scratch objects reused by applyInputs(). Dragging the time-of-day or sun
+  // sliders re-runs applyInputs at pointer-event rate, and it used to allocate
+  // ~7 Color/Fog objects per call only to overwrite them on the next frame —
+  // pure GC pressure. These are mutated in place instead. Declared above the
+  // constructor so they exist before the first applyInputs() call.
+  private readonly skyColor = new THREE.Color();
+  private readonly scratchColor = new THREE.Color();
+  private readonly sceneFog = new THREE.Fog(0xffffff, 1, 1000);
 
   constructor(dom: HTMLElement, inputs: SceneInputs, opts: CitySceneOptions) {
     this.dom = dom;
@@ -296,10 +304,19 @@ export class CityScene {
     this.sun.position.set(cx + sun.toSun.x * span * 0.9, span * sun.elevation, cz + sun.toSun.y * span * 0.9);
     this.sun.target.position.set(cx, 0, cz);
     this.sun.color.set(sun.preset.sunColor);
-    // sky + fog: basemap tone mixed with the time-of-day tint and the atmosphere's grey
-    const sky = new THREE.Color(bm.sky3d).lerp(new THREE.Color(sun.preset.skyTint), sun.preset.skyMix).lerp(new THREE.Color(0xdfe4ea), sun.atmosphere.skyGrey);
+    // sky + fog: basemap tone mixed with the time-of-day tint and the atmosphere's grey.
+    // Scratch colors are reused across calls; `scratchColor` is safe to re-set
+    // between the chained lerps because each `.lerp()` reads it immediately.
+    const sky = this.skyColor
+      .set(bm.sky3d)
+      .lerp(this.scratchColor.set(sun.preset.skyTint), sun.preset.skyMix)
+      .lerp(this.scratchColor.set(0xdfe4ea), sun.atmosphere.skyGrey);
     this.scene.background = sky;
-    this.scene.fog = new THREE.Fog(sky.clone().lerp(new THREE.Color(bm.fog3d), 0.3), far * sun.atmosphere.fogNear, far * sun.atmosphere.fogFar);
+    const fog = this.sceneFog;
+    fog.color.copy(sky).lerp(this.scratchColor.set(bm.fog3d), 0.3);
+    fog.near = far * sun.atmosphere.fogNear;
+    fog.far = far * sun.atmosphere.fogFar;
+    this.scene.fog = fog;
     const cam = this.sun.shadow.camera;
     cam.left = -span * 0.75;
     cam.right = span * 0.75;

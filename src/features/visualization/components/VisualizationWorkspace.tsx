@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Bookmark, Check, Columns2, Compass, Download, Info, Layers, Link2, Presentation, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { IconButton } from "../../../components/ui/IconButton";
+import { useDialogBehavior } from "../../../components/ui/useDialogBehavior";
 import { useFullscreen } from "../hooks/useFullscreen";
 import { useMapView } from "../hooks/useMapView";
 import { useSlideshow } from "../hooks/useSlideshow";
@@ -24,7 +25,7 @@ import { ViewManager, tabForPanel, type SideTab } from "./ViewManager";
 import { NoProjectSelected, NoSpatialObjects, ProjectNotFound, SpatialError, SpatialLoading } from "./VisualizationStates";
 import { VisualizationToolbar, type PanelId } from "./VisualizationToolbar";
 import { VisualizationViewport } from "./VisualizationViewport";
-import { WorkspaceDrawer } from "./WorkspaceDrawer";
+import { PanelDrawer } from "../../../components/ui/PanelDrawer";
 import { PanelHeader } from "./controls";
 
 /**
@@ -122,6 +123,14 @@ export function VisualizationWorkspace() {
   const [capture, setCapture] = useState<CaptureResult | null>(null);
   const [capturing, setCapturing] = useState(false);
   const [share, setShare] = useState<{ url: string; copied: boolean } | null>(null);
+
+  // Both previews declare aria-modal="true", so they have to behave like one:
+  // focus moves in on open, Tab is trapped, Escape closes, focus returns to the
+  // trigger. Escape is stopped in the capture phase, which is the same
+  // mechanism the global shortcut handler below already expects (see its
+  // "viewports handle their own when focused and stop propagation" note).
+  const captureDialogRef = useDialogBehavior<HTMLDivElement>({ open: capture !== null, onClose: () => setCapture(null) });
+  const shareDialogRef = useDialogBehavior<HTMLDivElement>({ open: share !== null, onClose: () => setShare(null) });
   useEffect(() => () => releaseCapture(capture), [capture]);
   const onCapture = useCallback(() => {
     if (!ready) return;
@@ -321,7 +330,7 @@ export function VisualizationWorkspace() {
             {/* capture preview */}
             {capture && (
               <div className="absolute inset-0 z-30 grid place-items-center bg-ink/30 p-3" role="presentation" onClick={() => setCapture(null)}>
-                <div role="dialog" aria-modal="true" aria-label="Captured view" className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-white shadow-float" onClick={(e) => e.stopPropagation()}>
+                <div ref={captureDialogRef} role="dialog" aria-modal="true" data-inner="" aria-label="Captured view" className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-white shadow-float" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-2.5">
                     <p className="text-[13.5px] font-bold text-ink">View captured</p>
                     <button type="button" onClick={() => setCapture(null)} aria-label="Close capture preview" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
@@ -346,7 +355,7 @@ export function VisualizationWorkspace() {
             {/* share preview (demo) */}
             {share && (
               <div className="absolute inset-0 z-30 grid place-items-center bg-ink/30 p-3" role="presentation" onClick={() => setShare(null)}>
-                <div role="dialog" aria-modal="true" aria-labelledby="share-title" className="w-full max-w-md rounded-2xl border border-line bg-white p-4 shadow-float" onClick={(e) => e.stopPropagation()}>
+                <div ref={shareDialogRef} role="dialog" aria-modal="true" data-inner="" aria-labelledby="share-title" className="w-full max-w-md rounded-2xl border border-line bg-white p-4 shadow-float" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p id="share-title" className="text-[14px] font-bold text-ink">
@@ -385,26 +394,26 @@ export function VisualizationWorkspace() {
             )}
 
             {/* drawers */}
-            <WorkspaceDrawer open={openPanel === "layers"} onClose={closePanel} label="Layers" side="left" hideAt={docked && !present ? "lg" : undefined}>
+            <PanelDrawer open={openPanel === "layers"} onClose={closePanel} label="Layers" side="left" hideAt={docked && !present ? "lg" : undefined}>
               {ready && <LayerPanel state={state} onClose={closePanel} idPrefix="layers-drawer" />}
-            </WorkspaceDrawer>
-            <WorkspaceDrawer open={openPanel === "inspector" || openPanel === "scene" || openPanel === "views" || openPanel === "compare" || (openPanel === "storyboard" && !present)} onClose={closePanel} label={present ? "Presentation panels" : "Workspace panels"} side="right" hideAt={docked && !present ? "xl" : undefined}>
+            </PanelDrawer>
+            <PanelDrawer open={openPanel === "inspector" || openPanel === "scene" || openPanel === "views" || openPanel === "compare" || (openPanel === "storyboard" && !present)} onClose={closePanel} label={present ? "Presentation panels" : "Workspace panels"} side="right" hideAt={docked && !present ? "xl" : undefined}>
               {ready && sidePanel("side-drawer", closePanel)}
-            </WorkspaceDrawer>
-            <WorkspaceDrawer open={openPanel === "storyboard" && present} onClose={closePanel} label="Storyboard" side="bottom" hideAt={docked ? "lg" : undefined}>
+            </PanelDrawer>
+            <PanelDrawer open={openPanel === "storyboard" && present} onClose={closePanel} label="Storyboard" side="bottom" hideAt={docked ? "lg" : undefined}>
               {ready && <PresentationStoryboard state={state} camera2d={camera2d} onClose={closePanel} onPlay={show.start} onNotice={onNotice} horizontal idPrefix="storyboard-sheet" />}
-            </WorkspaceDrawer>
-            <WorkspaceDrawer open={openPanel === "settings"} onClose={closePanel} label={present ? "Presentation settings" : "Scene settings"} side="right">
+            </PanelDrawer>
+            <PanelDrawer open={openPanel === "settings"} onClose={closePanel} label={present ? "Presentation settings" : "Scene settings"} side="right">
               {ready && (
                 <div className="flex h-full min-h-0 flex-col">
                   <PanelHeader id="settings-drawer-title" title={present ? "Presentation settings" : "Scene settings"} onClose={closePanel} closeLabel="Close settings" />
                   <div className="min-h-0 flex-1 overflow-y-auto p-4">{present ? <PresentationSettings state={state} idPrefix="pres-drawer" /> : <SceneControls state={state} idPrefix="scene-drawer" initialOpen="settings" embedded />}</div>
                 </div>
               )}
-            </WorkspaceDrawer>
-            <WorkspaceDrawer open={openPanel === "context"} onClose={closePanel} label="Site context" side="right">
+            </PanelDrawer>
+            <PanelDrawer open={openPanel === "context"} onClose={closePanel} label="Site context" side="right">
               {ready && <SiteContextDrawer state={state} onClose={closePanel} />}
-            </WorkspaceDrawer>
+            </PanelDrawer>
           </div>
 
           {/* phone / tablet-portrait bottom controls */}

@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Box, Check, Focus, FolderTree, GitBranch, Home, Info, Minus, Plus, SlidersHorizontal, Square, Target, X } from "lucide-react";
 import { IconButton } from "../../../components/ui/IconButton";
 import { NoProjectSelected, ProjectNotFound, SpatialError, SpatialLoading } from "../../visualization/components/VisualizationStates";
-import { WorkspaceDrawer } from "../../visualization/components/WorkspaceDrawer";
+import { PanelDrawer } from "../../../components/ui/PanelDrawer";
 import { useMapView } from "../../visualization/hooks/useMapView";
 import { MODES, getConstraintDef } from "../data/optimization.data";
 import { useOptimizationState, relativeDay, type OptimizationWorkspaceState } from "../hooks/useOptimizationState";
@@ -369,12 +369,12 @@ export function OptimizationWorkspace() {
         <div className="hidden min-h-0 border-l border-line bg-white xl:block">{ready ? <ScenarioInspector state={state} onRequestSelect={requestSelect} onRequestApply={requestApply} idPrefix="inspector-dock" /> : <PanelSkeleton title="Scenario Details" />}</div>
 
         {/* drawers */}
-        <WorkspaceDrawer open={openPanel === "goals"} onClose={closePanel} label="Goals & constraints" side="left" hideAt="lg">
+        <PanelDrawer open={openPanel === "goals"} onClose={closePanel} label="Goals & constraints" side="left" hideAt="lg">
           {ready && <GoalsSidebar state={state} idPrefix="goals-drawer" onClose={closePanel} onReset={() => setDialog({ kind: "reset" })} />}
-        </WorkspaceDrawer>
-        <WorkspaceDrawer open={openPanel === "inspector"} onClose={closePanel} label="Scenario details" side="right" hideAt="xl">
+        </PanelDrawer>
+        <PanelDrawer open={openPanel === "inspector"} onClose={closePanel} label="Scenario details" side="right" hideAt="xl">
           {ready && <ScenarioInspector state={state} onClose={closePanel} onRequestSelect={requestSelect} onRequestApply={requestApply} idPrefix="inspector-drawer" />}
-        </WorkspaceDrawer>
+        </PanelDrawer>
 
         {/* dialogs */}
         <ConfirmDialog open={dialog?.kind === "select"} title="Select preferred scenario" description={<>Use this scenario as the preferred planning direction?{dialog?.kind === "select" && <span className="mt-1 block text-ink">Only one scenario can be preferred. This marks <strong>{dialog.scenario.name}</strong> — it does not change the project plan.</span>}</>} confirmLabel="Select Scenario" onConfirm={confirmDialog} onCancel={closeDialog} />

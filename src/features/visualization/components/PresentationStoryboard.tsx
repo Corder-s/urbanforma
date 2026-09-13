@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Play, Plus, RotateCcw } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
+import { useDialogBehavior } from "../../../components/ui/useDialogBehavior";
 import { ConfirmDialog } from "../../optimization/components/ConfirmDialog";
 import { MAX_SLIDES } from "../data/presentation.data";
 import type { Camera2d, VisualizationState } from "../hooks/useVisualizationState";
@@ -37,6 +38,10 @@ export function PresentationStoryboard({ state, camera2d, onClose, onPlay, onNot
   const [draft, setDraft] = useState({ title: "", description: "" });
   const [confirm, setConfirm] = useState<{ kind: "delete"; slide: Slide } | { kind: "reset" } | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  // The "Edit slide" dialog declared aria-modal="true" but had no Escape
+  // handling and no focus trap — the only Escape listener here belongs to the
+  // slide ⋯ menu and is registered solely while a menu is open.
+  const editDialogRef = useDialogBehavior<HTMLFormElement>({ open: editing !== null, onClose: () => setEditing(null) });
 
   useEffect(() => {
     if (!menu) return;
@@ -182,8 +187,10 @@ export function PresentationStoryboard({ state, camera2d, onClose, onPlay, onNot
       {editing && (
         <div className="absolute inset-0 z-30 flex items-end bg-ink/30 p-3 sm:items-center" role="presentation">
           <form
+            ref={editDialogRef}
             role="dialog"
             aria-modal="true"
+            data-inner=""
             aria-labelledby={`${idPrefix}-edit-title-${uid}`}
             className="w-full rounded-2xl border border-line bg-white p-4 shadow-float"
             onSubmit={(e) => {
