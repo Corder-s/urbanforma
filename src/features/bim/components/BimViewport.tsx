@@ -1,5 +1,5 @@
-import type { RefObject } from "react";
-import { Box, Crosshair, EyeOff, History, X } from "lucide-react";
+import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { Box, Crosshair, EyeOff, History, Orbit, X } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
 import type { MapViewApi } from "../../visualization/hooks/useMapView";
 import type { VisualizationState } from "../../visualization/hooks/useVisualizationState";
@@ -9,6 +9,8 @@ import { ViewControls } from "../../visualization/components/ViewControls";
 import { VisualizationViewport } from "../../visualization/components/VisualizationViewport";
 import { CATEGORY_ICON, SCENE_MODES, formatArea, formatMetres } from "../data/bim.data";
 import type { BimElement, BimModel, BimSceneMode } from "../types/bim.types";
+import type { BimInspect360Api } from "../hooks/useBimInspect360";
+import { Inspect360Bar } from "./Inspect360Bar";
 
 const NO_ANNOTATIONS: Annotation[] = [];
 
@@ -28,6 +30,8 @@ interface BimViewportProps {
   /** 0 = the model's latest revision; 1–2 = a historical revision is shown. */
   revision: number;
   onLatestRevision: () => void;
+  /** 360° inspection state (playback lives here; the turntable lives in the rig). */
+  inspect: BimInspect360Api;
 }
 
 /**
@@ -53,9 +57,41 @@ export function BimViewport({
   onFocus,
   revision,
   onLatestRevision,
+  inspect,
 }: BimViewportProps) {
   const is2d = state.viewMode === "2d";
   const historical = revision > 0 && revision < 3;
+  const inspecting = inspect.active;
+  /** Azimuth readout — written by the scene, never through React state. */
+  const angleRef = useRef<HTMLSpanElement>(null);
+
+  // Drive the shared 3-D scene from the inspection state. `state.viewMode` is in
+  // the deps because entering from a 2-D plan mounts the scene *after* this runs;
+  // CityView also replays a request that arrived before its scene existed, so the
+  // tour starts either way.
+  useEffect(() => {
+    const city = cityRef.current;
+    if (!city) return;
+    if (!inspecting) {
+      city.inspect360(null);
+      return;
+    }
+    city.inspect360({
+      objectId: inspect.targetObjectId,
+      playing: inspect.playing && !inspect.needs3d,
+      speed: inspect.speed,
+      clockwise: inspect.clockwise,
+      onAngle: (degrees) => {
+        if (angleRef.current) angleRef.current.textContent = `${Math.round(degrees)}°`;
+      },
+    });
+  }, [cityRef, state.viewMode, inspecting, inspect.targetObjectId, inspect.playing, inspect.speed, inspect.clockwise, inspect.needs3d]);
+
+  const inspectLabel = inspect.targetElementId ? "Inspect the selected element 360°" : "Orbit the whole model 360°";
+  /** Stable: the bar keeps its keydown listener across renders. */
+  const handleNudge = useCallback((degrees: number) => cityRef.current?.nudge360(degrees), [cityRef]);
+  const vizSetViewMode = state.setViewMode;
+  const handleSwitchTo3d = useCallback(() => vizSetViewMode("3d"), [vizSetViewMode]);
 
   return (
     <div className="relative h-full min-h-0 w-full overflow-hidden bg-[#EEF3F9]">
@@ -65,13 +101,19 @@ export function BimViewport({
       {selectedElement && (
         <div className={`pointer-events-none absolute top-3 z-10 w-[min(320px,calc(100%-5.5rem))] ${is2d ? "left-16" : "left-3"}`}>
           <div className="pointer-events-auto">
-            <SelectedElementChip element={selectedElement} onFocus={() => onFocus(selectedElement.id)} onClear={onClearSelection} />
+            <SelectedElementChip
+              element={selectedElement}
+              onFocus={() => onFocus(selectedElement.id)}
+              onClear={onClearSelection}
+              onInspect360={() => (inspecting ? inspect.exit() : inspect.enter(selectedElement))}
+              inspecting360={inspecting}
+            />
           </div>
         </div>
       )}
 
-      {/* scene mode (top-centre, md+) */}
-      <div className="pointer-events-none absolute inset-x-0 top-3 z-10 hidden justify-center px-3 md:flex">
+      {/* scene mode (top-centre, md+) — hidden while an inspection isolates one object */}
+      <div className={`pointer-events-none absolute inset-x-0 top-3 z-10 hidden justify-center px-3 ${inspecting ? "" : "md:flex"}`}>
         <div className="pointer-events-auto flex items-center gap-0.5 rounded-xl border border-line bg-surface/95 p-0.5 shadow-soft backdrop-blur" role="group" aria-label="Scene content">
           {SCENE_MODES.map((m) => {
             const on = sceneMode === m.id;
@@ -94,15 +136,30 @@ export function BimViewport({
         </div>
       </div>
 
-      {/* view controls (top-right) */}
-      <div className="pointer-events-none absolute right-3 top-3 z-10 hidden sm:block">
+      {/* view controls + 360° entry (top-right) */}
+      <div className="pointer-events-none absolute right-3 top-3 z-10 flex flex-col items-end gap-2">
         <div className="pointer-events-auto">
+          <button
+            type="button"
+            onClick={() => (inspecting ? inspect.exit() : inspect.enter(selectedElement))}
+            aria-pressed={inspecting}
+            title={inspecting ? "Exit the 360° inspection (Esc)" : inspectLabel + (is2d ? " — switches to 3-D" : "")}
+            className={[
+              "grid h-9 w-9 place-items-center rounded-xl border shadow-soft transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-primary/20 motion-reduce:transition-none",
+              inspecting ? "border-primary/40 bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:text-primary",
+            ].join(" ")}
+          >
+            <Orbit size={17} aria-hidden="true" />
+            <span className="sr-only">{inspecting ? "Exit 360° inspection" : inspectLabel}</span>
+          </button>
+        </div>
+        <div className="pointer-events-auto hidden sm:block">
           <ViewControls state={state} map={map} />
         </div>
       </div>
 
-      {/* model chip (bottom-left, above the 2-D scale bar) */}
-      {model && (
+      {/* model chip (bottom-left, above the 2-D scale bar) — the bar replaces it while inspecting */}
+      {model && !inspecting && (
         <div className={`pointer-events-none absolute left-3 z-10 w-[min(320px,calc(100%-1.5rem))] ${is2d ? "bottom-14" : "bottom-3"}`}>
           <div className="pointer-events-auto rounded-xl border border-line bg-surface/95 p-2.5 shadow-soft backdrop-blur">
             <div className="flex items-start gap-2">
@@ -122,6 +179,18 @@ export function BimViewport({
               </Badge>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* 360° inspection bar (bottom-centre, above a revision banner when both show) */}
+      {inspecting && (
+        <div className={`pointer-events-none absolute inset-x-0 z-20 flex justify-center px-3 ${historical ? "bottom-16" : is2d ? "bottom-14" : "bottom-3"}`}>
+          <Inspect360Bar
+            inspect={inspect}
+            angleRef={angleRef}
+            onSwitchTo3d={handleSwitchTo3d}
+            onNudge={handleNudge}
+          />
         </div>
       )}
 
@@ -164,7 +233,19 @@ export function BimViewport({
   );
 }
 
-function SelectedElementChip({ element, onFocus, onClear }: { element: BimElement; onFocus: () => void; onClear: () => void }) {
+function SelectedElementChip({
+  element,
+  onFocus,
+  onClear,
+  onInspect360,
+  inspecting360,
+}: {
+  element: BimElement;
+  onFocus: () => void;
+  onClear: () => void;
+  onInspect360: () => void;
+  inspecting360: boolean;
+}) {
   const Icon = CATEGORY_ICON[element.category];
   const facts = [
     element.level,
@@ -194,13 +275,28 @@ function SelectedElementChip({ element, onFocus, onClear }: { element: BimElemen
         </button>
       </div>
       {element.planningRef && (
-        <button
-          type="button"
-          onClick={onFocus}
-          className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-1 text-[11.5px] font-bold text-muted transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
-        >
-          <Crosshair size={12} aria-hidden="true" /> Centre in view · {element.planningRef.objectName}
-        </button>
+        <div className="mt-2 flex items-stretch gap-1.5">
+          <button
+            type="button"
+            onClick={onFocus}
+            className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-1 text-[11.5px] font-bold text-muted transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+          >
+            <Crosshair size={12} aria-hidden="true" />
+            <span className="truncate">Centre in view · {element.planningRef.objectName}</span>
+          </button>
+          <button
+            type="button"
+            onClick={onInspect360}
+            aria-pressed={inspecting360}
+            title={inspecting360 ? "Exit the 360° inspection (Esc)" : "Isolate this element and orbit it 360°"}
+            className={[
+              "inline-flex shrink-0 items-center gap-1 rounded-lg border px-2 py-1 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
+              inspecting360 ? "border-primary/40 bg-primary/10 text-primary" : "border-line text-muted hover:border-primary hover:text-primary",
+            ].join(" ")}
+          >
+            <Orbit size={12} aria-hidden="true" /> 360°
+          </button>
+        </div>
       )}
     </div>
   );

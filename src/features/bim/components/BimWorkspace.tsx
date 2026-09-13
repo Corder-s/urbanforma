@@ -52,7 +52,7 @@ export function BimWorkspace() {
   // in this module re-renders when the user switches systems (Settings → Units).
   useUnitPreferences();
   const w = useBimWorkspace();
-  const { prefs, models, filters, issues, coordination, selection, viz, sceneState, map } = w;
+  const { prefs, models, filters, issues, coordination, selection, viz, sceneState, map, inspect } = w;
 
   const [openPanel, setOpenPanel] = useState<PanelId>(null);
   const [sideTab, setSideTab] = useState<SideTab>("properties");
@@ -84,20 +84,26 @@ export function BimWorkspace() {
     [prefsSetMode]
   );
 
-  // Escape clears the selection (the tree, drawers and dialogs handle their own).
-  // Deps are the stable callbacks, not the API object, so the listener is not
-  // re-attached on every render.
+  // Escape leaves the 360° inspection first, then clears the selection (the tree,
+  // drawers and dialogs handle their own). Deps are the stable callbacks, not the
+  // API objects, so the listener is not re-attached on every render.
   const { selectedElementId, clearSelection } = selection;
+  const inspectActive = inspect.active;
+  const inspectExit = inspect.exit;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape" || e.defaultPrevented) return;
       const target = e.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+      if (inspectActive) {
+        inspectExit();
+        return;
+      }
       if (selectedElementId) clearSelection();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedElementId, clearSelection]);
+  }, [selectedElementId, clearSelection, inspectActive, inspectExit]);
 
   /** Transient confirmation. `info` is used for honest "this did not work" notes. */
   const notify = useCallback((text: string, tone: "success" | "info" = "success") => {
@@ -578,6 +584,7 @@ export function BimWorkspace() {
                   onFocus={(id) => selection.selectElement(id, { focus: true })}
                   revision={models.revision}
                   onLatestRevision={() => models.setRevision(0)}
+                  inspect={inspect}
                 />
                 )}
               </div>

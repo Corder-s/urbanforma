@@ -12,9 +12,29 @@ interface CityViewProps {
   presentation?: boolean;
 }
 
-/** Imperative surface for Capture View. */
+/** A 360° inspection request — the BIM element/model turntable. */
+export interface Inspect360Request {
+  /** Spatial object to isolate and orbit; `null` orbits the whole site. */
+  objectId: string | null;
+  playing: boolean;
+  /** Degrees per second. */
+  speed: number;
+  clockwise: boolean;
+  /**
+   * Azimuth, published ~8× a second while the camera moves. Write it straight
+   * to a DOM node: a state update per frame would re-render the caller's whole
+   * workspace for one number.
+   */
+  onAngle?: (degrees: number) => void;
+}
+
+/** Imperative surface for Capture View and the 360° inspection. */
 export interface CityViewHandle {
   capture: () => string | null;
+  /** Frame a target and orbit it 360°. Pass `null` to leave the inspection. */
+  inspect360: (request: Inspect360Request | null) => void;
+  /** Step the orbit by an exact angle (keyboard inspection, no animation). */
+  nudge360: (degrees: number) => void;
 }
 
 function prefersReducedMotion(): boolean {
@@ -37,7 +57,48 @@ export const CityView = forwardRef<CityViewHandle, CityViewProps>(function CityV
   const [hover, setHover] = useState<string | null>(null);
   const hostRef = useCallback((el: HTMLDivElement | null) => setHost(el), []);
 
-  useImperativeHandle(ref, () => ({ capture: () => sceneRef.current?.capture() ?? null }), []);
+  /**
+   * The request survives the scene's lifecycle: entering an inspection usually
+   * means switching 2-D → 3-D, so the scene does not exist yet when the caller
+   * asks. It is stashed and applied on creation, and re-applied after a project
+   * change or a trip back to 2-D.
+   */
+  const pendingInspect = useRef<Inspect360Request | null>(null);
+  /** Which target has already been framed, so playback changes do not re-fly. */
+  const framedFor = useRef<string | null | undefined>(undefined);
+
+  // Stable: the imperative handle and the create effect both close over it.
+  const applyInspect = useCallback((request: Inspect360Request | null, scene: CityScene) => {
+    if (request === null) {
+      framedFor.current = undefined;
+      scene.stopInspect360();
+      return;
+    }
+    if (framedFor.current !== request.objectId) {
+      framedFor.current = request.objectId;
+      scene.inspect360(request.objectId);
+    }
+    scene.setTurntable({
+      playing: request.playing,
+      speed: request.speed,
+      clockwise: request.clockwise,
+      onAngle: request.onAngle,
+    });
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      capture: () => sceneRef.current?.capture() ?? null,
+      inspect360: (request) => {
+        pendingInspect.current = request;
+        const scene = sceneRef.current;
+        if (scene) applyInspect(request, scene);
+      },
+      nudge360: (degrees) => sceneRef.current?.nudge360(degrees),
+    }),
+    [applyInspect]
+  );
 
   // create / dispose --------------------------------------------------------------------------
   useEffect(() => {
@@ -56,6 +117,8 @@ export const CityView = forwardRef<CityViewHandle, CityViewProps>(function CityV
         requestApplied.current = request.token;
         applyRequest(scene, request.pose, host);
       }
+      // An inspection requested before this scene existed (2-D → 3-D switch).
+      if (pendingInspect.current) applyInspect(pendingInspect.current, scene);
     } catch (err) {
       setFailed(err instanceof Error ? err.message : "WebGL is not available in this browser.");
       return;
@@ -70,6 +133,11 @@ export const CityView = forwardRef<CityViewHandle, CityViewProps>(function CityV
       mq?.removeEventListener?.("change", onMq);
       scene?.dispose();
       sceneRef.current = null;
+      // A disposed scene invalidates the request: the next scene must frame the
+      // target again, and a stale id must never be replayed into another
+      // project's scene (the caller re-issues on the next view/project change).
+      framedFor.current = undefined;
+      pendingInspect.current = null;
     };
     // The scene is created once per host + project; later changes flow through
     // the update effects below, so only those two dependencies are intended.

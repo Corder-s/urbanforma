@@ -13,6 +13,7 @@ export class CameraRig {
   private site: Bounds;
   private tween: { from: THREE.Vector3; to: THREE.Vector3; fromT: THREE.Vector3; toT: THREE.Vector3; start: number; duration: number } | null = null;
   private reducedMotion: boolean;
+  private lastNow: number | null = null;
   /** 0–100 relative elevation preference from the settings drawer. */
   heightBias = 55;
 
@@ -55,13 +56,13 @@ export class CameraRig {
   }
 
   /** Distance needed to frame the site diagonal. */
-  private frameDistance(bounds: Bounds, padding = 1.15): number {
+  private frameDistance(bounds: Bounds, padding = 1.15, floor = 40): number {
     const diag = Math.hypot(bounds.width, bounds.height);
     const fov = (this.camera.fov * Math.PI) / 180;
     const aspect = this.camera.aspect;
     const vertical = (diag * padding) / 2 / Math.tan(fov / 2);
     const horizontal = vertical / Math.min(1, aspect);
-    return Math.max(vertical, horizontal, 40);
+    return Math.max(vertical, horizontal, floor);
   }
 
   applyPreset(preset: CameraPreset, immediate = false, bounds: Bounds = this.site) {
@@ -147,6 +148,67 @@ export class CameraRig {
     this.flyTo(target.clone().add(dir.multiplyScalar(Math.max(d, 60))), target, false);
   }
 
+  // --- 360° inspection ---------------------------------------------------------------------
+
+  /**
+   * Frame one target tightly for a 360° inspection.
+   *
+   * `focusBounds` pads by a fixed 40 m, which suits a search hit but swamps a
+   * single element — a 12 m wall would be framed inside 100 m of empty ground.
+   * This sizes the orbit to the target instead, lifts the centre to mid-height so
+   * a tall element is looked *at* rather than up at, and relaxes the distance
+   * limits (the site-wide `minDistance` of 20 m would keep the camera outside a
+   * small component). `stopTurntable` restores both.
+   */
+  inspectBounds(bounds: Bounds, targetHeight = 0) {
+    const span = Math.max(bounds.width, bounds.height, 8);
+    const centre = boundsCenter(bounds);
+    const target = new THREE.Vector3(centre.x, targetHeight, centre.z);
+    // Room to swing past the target (1.5 padding) without the site-scale 40 m
+    // floor, which would leave a door or a window 40 m away.
+    const d = Math.max(this.frameDistance(bounds, 1.5, 12), span * 1.5, 12);
+
+    this.controls.minDistance = Math.max(6, d * 0.15);
+    this.controls.maxDistance = Math.max(this.controls.maxDistance, d * 5);
+    // Three-quarter view, about 27° of elevation: faces read without the
+    // foreshortening of a near-top-down orbit.
+    this.flyTo(new THREE.Vector3(target.x - d * 0.72, target.y + d * 0.52, target.z + d * 0.72), target, false);
+  }
+
+  /**
+   * Orbit the current target at a constant rate. OrbitControls advances
+   * 6°/s per unit of `autoRotateSpeed`, and only while the user is not dragging,
+   * so a manual look-around simply pauses the tour.
+   */
+  setTurntable(on: boolean, degreesPerSecond = 24, clockwise = true) {
+    this.controls.autoRotate = on;
+    this.controls.autoRotateSpeed = (degreesPerSecond / 6) * (clockwise ? 1 : -1);
+  }
+
+  /** Stop orbiting and restore the site-wide distance limits. */
+  stopTurntable() {
+    this.controls.autoRotate = false;
+    this.controls.minDistance = 20;
+    this.controls.maxDistance = Math.max(this.site.width, this.site.height) * 6;
+  }
+
+  /** Rotate the camera around the target by an exact angle (keyboard stepping). */
+  nudgeAzimuth(degrees: number) {
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    spherical.theta += THREE.MathUtils.degToRad(degrees);
+    spherical.makeSafe();
+    offset.setFromSpherical(spherical);
+    this.camera.position.copy(this.controls.target).add(offset);
+    this.controls.update();
+  }
+
+  /** Current azimuth in degrees, normalised to 0–359 (compass readout). */
+  getAzimuth(): number {
+    const degrees = THREE.MathUtils.radToDeg(this.controls.getAzimuthalAngle());
+    return ((degrees % 360) + 360) % 360;
+  }
+
   flyTo(pos: THREE.Vector3, target: THREE.Vector3, immediate: boolean) {
     if (immediate || this.reducedMotion) {
       this.camera.position.copy(pos);
@@ -160,16 +222,21 @@ export class CameraRig {
 
   /** Call every frame; returns true when something changed (needs render). */
   update(now: number): boolean {
+    // Passed to OrbitControls so auto-rotation is degrees-per-second rather
+    // than degrees-per-frame (a 120 Hz panel would otherwise spin twice as
+    // fast). Clamped so a background tab does not jump the camera on return.
+    const delta = this.lastNow === null ? null : Math.min(0.1, Math.max(0, (now - this.lastNow) / 1000));
+    this.lastNow = now;
     if (this.tween) {
       const t = Math.min(1, (now - this.tween.start) / this.tween.duration);
       const e = 1 - Math.pow(1 - t, 3);
       this.camera.position.lerpVectors(this.tween.from, this.tween.to, e);
       this.controls.target.lerpVectors(this.tween.fromT, this.tween.toT, e);
       if (t >= 1) this.tween = null;
-      this.controls.update();
+      this.controls.update(delta ?? undefined);
       return true;
     }
-    return this.controls.update();
+    return this.controls.update(delta ?? undefined);
   }
 
   dispose() {

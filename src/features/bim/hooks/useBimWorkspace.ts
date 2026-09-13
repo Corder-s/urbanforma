@@ -8,12 +8,13 @@ import {
 import { useMapView, type MapViewApi } from "../../visualization/hooks/useMapView";
 import { getElement, getBimProjects, getLastBimProject, type BimProjectSummary } from "../services/bim.service";
 import type { CityViewHandle } from "../../visualization/components/3d/CityView";
-import { primaryElementByPlanningId, selectSceneObjects, visiblePlanningIds } from "../lib/bimModel";
+import { isolateSceneObjects, primaryElementByPlanningId, selectSceneObjects, visiblePlanningIds } from "../lib/bimModel";
 import { useBimPrefs, type BimPrefsApi } from "./useBimPrefs";
 import { useBimModels, type BimModelsApi } from "./useBimModels";
 import { useBimFilters, type BimFiltersApi } from "./useBimFilters";
 import { useBimIssues, type BimIssuesApi } from "./useBimIssues";
 import { useBimCoordination, type BimCoordinationApi } from "./useBimCoordination";
+import { useBimInspect360, type BimInspect360Api } from "./useBimInspect360";
 import type { BimElement } from "../types/bim.types";
 
 export type BimProjectsLoad =
@@ -51,6 +52,8 @@ export interface BimWorkspaceApi {
   cityRef: RefObject<CityViewHandle>;
   /** Number of spatial objects the viewport currently draws. */
   sceneObjectCount: number;
+  /** 360° inspection of the selected element (or the whole model). */
+  inspect: BimInspect360Api;
 }
 
 /**
@@ -223,11 +226,22 @@ export function useBimWorkspace(): BimWorkspaceApi {
     if (objectId) vizSelect(objectId);
   }, [paramElementId, index, selectedElementId, vizSelect]);
 
+  // --- 360° inspection ----------------------------------------------------------
+  // The turntable only exists in the 3-D scene, so entering an inspection from a
+  // 2-D plan switches the shared view mode rather than opening another viewport.
+  const vizSetViewMode = viz.setViewMode;
+  const enterInspect3d = useCallback(() => vizSetViewMode("3d"), [vizSetViewMode]);
+  const inspect = useBimInspect360({ index, viewMode: viz.viewMode, projectId, onEnter3d: enterInspect3d });
+
   // --- scene -------------------------------------------------------------------
-  const sceneObjects = useMemo(
-    () => (dataset ? selectSceneObjects(dataset, viz.visibleObjects, modelObjectIds, prefs.prefs.sceneMode) : []),
-    [dataset, viz.visibleObjects, modelObjectIds, prefs.prefs.sceneMode]
-  );
+  const sceneObjects = useMemo(() => {
+    if (!dataset) return [];
+    const shown = selectSceneObjects(dataset, viz.visibleObjects, modelObjectIds, prefs.prefs.sceneMode);
+    // An inspection isolates its target *after* the scene-mode filter, so it
+    // works in City / Model / Combined alike. Only the list handed to the
+    // renderer changes — the dataset is never edited.
+    return isolateSceneObjects(shown, dataset, inspect.active ? inspect.targetObjectId : null);
+  }, [dataset, viz.visibleObjects, modelObjectIds, prefs.prefs.sceneMode, inspect.active, inspect.targetObjectId]);
 
   // Only `visibleObjects` is narrowed: `objects` stays the full dataset so the
   // map can still resolve the boundary and focus requests.
@@ -253,5 +267,6 @@ export function useBimWorkspace(): BimWorkspaceApi {
     map,
     cityRef,
     sceneObjectCount: sceneObjects.length,
+    inspect,
   };
 }

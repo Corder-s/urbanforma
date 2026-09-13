@@ -1149,6 +1149,23 @@ export function selectSceneObjects(
   return extra.length === 0 ? vizVisible : [...vizVisible, ...extra];
 }
 
+/**
+ * Narrow a scene's object list to one 360° inspection target.
+ *
+ * Applied *after* `selectSceneObjects`, so isolation behaves the same in City,
+ * Model and Combined (the `bim` mode ignores `visibleObjects` entirely, so
+ * narrowing the visualization state alone would isolate nothing). It picks which
+ * objects are drawn and never edits the dataset.
+ *
+ * Returns `shown` unchanged when the target is not in it — an element with no
+ * geometry of its own must not produce an empty viewport.
+ */
+export function isolateSceneObjects(shown: SpatialObject[], dataset: SpatialDataset, targetId: string | null): SpatialObject[] {
+  if (!targetId) return shown;
+  const hit = shown.find((o) => o.id === targetId) ?? dataset.objects.find((o) => o.id === targetId);
+  return hit ? [hit] : shown;
+}
+
 // ---------------------------------------------------------------------------
 // Quantities
 // ---------------------------------------------------------------------------

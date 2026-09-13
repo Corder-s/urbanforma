@@ -44,7 +44,7 @@ menu), mobile drawer, and breadcrumbs.
 | **Optimization** | Scenario generation with goals/weights/constraints, scoring, trade-offs, comparison, performance charts, pluggable provider |
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
 | **Reports** | Five report types, 18 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers), an axonometric massing model drawn from the live dataset and a BIM model & quantities section, live document preview, revision/status tracking, print → PDF with app chrome stripped |
-| **BIM** | Toolbar project + model-record selectors, derived element index (site → building → level → component) with IFC-style GlobalIds and property sets, model tree with debounced search (name · id · GlobalId · category · level), properties inspector, typed filters, 8 BIM layers, metric cards, 2D/3D viewport reuse (scene-synced, no second engine), versions & revisions, coordination checks against planning/analysis/optimization/reports plus a BIM → Analysis quantity feed, issue tracking, recent-models dashboard, honest import pipeline states |
+| **BIM** | Toolbar project + model-record selectors, derived element index (site → building → level → component) with IFC-style GlobalIds and property sets, model tree with debounced search (name · id · GlobalId · category · level), properties inspector, typed filters, 8 BIM layers, metric cards, 2D/3D viewport reuse (scene-synced, no second engine), 360° element inspection (the target isolated and orbited on a turntable with play/pause, direction, three speeds, a live azimuth readout and ←/→ stepping), versions & revisions, coordination checks against planning/analysis/optimization/reports plus a BIM → Analysis quantity feed, issue tracking, recent-models dashboard, honest import pipeline states |
 | **Settings** | Thirteen panels: profile, account, accessibility, appearance (light / dark / system + three accents), units (metric / imperial with a live preview table), map & GIS defaults (view, basemap, camera, zoom, overlays), visualization defaults, BIM defaults, notification categories, privacy, data & storage (inventory, per-category clear, JSON export), about, and a danger zone — all driven by one typed `AppSettings` tree with debounced persistence, a Saved/Saving indicator that only claims "Saved" once the bytes reached storage (blocked or full localStorage is reported, not hidden), corruption fallback, cross-tab sync and `?section=` deep links |
 
 ### Cross-cutting
@@ -63,6 +63,19 @@ menu), mobile drawer, and breadcrumbs.
   project service, BIM volumes and the report builders — so the header's
   metric/imperial switch and Settings → Units are the same setting, and there is
   one copy of the conversion math.
+- **360° inspection** — `CameraRig` grew a turntable (`autoRotate`, driven in
+  degrees per second so a 120 Hz panel does not spin twice as fast), a
+  tight-framing `inspectBounds` that lifts the orbit centre to mid-height and
+  relaxes the site-wide 20 m minimum distance, exact-angle `nudgeAzimuth`
+  stepping and an azimuth read. `CityScene.inspect360` frames a spatial object
+  and publishes the azimuth ~8× a second straight into a DOM node — never into
+  React state, which would re-render the model tree for one number. BIM isolates
+  the target by narrowing the list handed to the renderer
+  (`isolateSceneObjects`, applied *after* the scene-mode filter so it works in
+  City / Model / Combined alike); the dataset is never edited, and an element
+  with no geometry of its own keeps the scene instead of emptying it. Entering an
+  inspection from a 2-D plan switches the shared view mode rather than opening a
+  second viewport, and leaving it flies back to the pose the user was at.
 - **Print / PDF** — `@page` A4 geometry plus break control (`report-block` stays
   together, `report-table` breaks with a repeated `<thead>`, headings never end a
   page alone) and `print:hidden` on the shell chrome, so a report prints as a
@@ -124,7 +137,10 @@ What drives it:
   `getBimDefaults`, `getRenderQualityCap`), never through the settings UI.
 - **3D renders on demand.** `CityScene` only calls `renderer.render()` when the
   camera moved or something was invalidated, and hover raycasting resolves at
-  most once per frame from a pending pointer position.
+  most once per frame from a pending pointer position. The one deliberate
+  exception is a playing 360° inspection, where the camera moves every frame by
+  definition — and it starts paused when motion is reduced, so on-demand
+  rendering is the default state.
 
 ---
 

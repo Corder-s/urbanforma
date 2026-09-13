@@ -220,6 +220,69 @@ export class CityScene {
     this.needsRender = true;
   }
 
+  // --- 360° inspection (BIM element / model turntable) ----------------------------------------
+
+  private inspectPose: { position: [number, number, number]; target: [number, number, number] } | null = null;
+  private inspectAngle: ((degrees: number) => void) | null = null;
+  private lastAngleAt = 0;
+
+  /**
+   * Frame a target for a 360° inspection: the linked spatial object when one is
+   * given, otherwise the whole site. The pose the user was at is remembered, so
+   * leaving the inspection flies back instead of dumping them somewhere new.
+   */
+  inspect360(objectId: string | null) {
+    const data = this.inputs?.data;
+    if (!data) return;
+    if (!this.inspectPose) this.inspectPose = this.rig.getPose();
+    const object = objectId ? data.objects.find((o) => o.id === objectId) ?? null : null;
+    const bounds = object ? geometryBounds(object.geometry) : data.siteBounds;
+    const props = object?.properties;
+    const height = props && "height" in props && typeof props.height === "number" ? props.height : 0;
+    // Orbit mid-height rather than the ground plane, so a tall element is
+    // looked at instead of up at. Capped: a 60 m tower should not become a
+    // horizon-level orbit.
+    this.rig.inspectBounds(bounds, height > 0 ? Math.min(16, height / 2) : 0);
+    this.needsRender = true;
+  }
+
+  /** Tour playback. The angle callback is throttled in the render loop. */
+  setTurntable(opts: { playing: boolean; speed: number; clockwise: boolean; onAngle?: (degrees: number) => void }) {
+    this.rig.setTurntable(opts.playing, opts.speed, opts.clockwise);
+    this.inspectAngle = opts.onAngle ?? null;
+    this.publishAngle(performance.now(), true);
+    this.needsRender = true;
+  }
+
+  /** Step the orbit by an exact angle — inspect every face without animating. */
+  nudge360(degrees: number) {
+    this.rig.nudgeAzimuth(degrees);
+    this.publishAngle(performance.now(), true);
+    this.needsRender = true;
+  }
+
+  /** Leave the inspection: stop the orbit, restore the limits, fly back. */
+  stopInspect360() {
+    this.rig.stopTurntable();
+    this.inspectAngle = null;
+    const pose = this.inspectPose;
+    this.inspectPose = null;
+    if (pose) this.rig.setPose(pose.position, pose.target, false);
+    this.needsRender = true;
+  }
+
+  /**
+   * Publish the azimuth about 8× a second, straight to whatever DOM node the
+   * caller owns. A 60 Hz React state update here would re-render the whole
+   * workspace (model tree included) for a number in a pill.
+   */
+  private publishAngle(now: number, force = false) {
+    if (!this.inspectAngle) return;
+    if (!force && now - this.lastAngleAt < 120) return;
+    this.lastAngleAt = now;
+    this.inspectAngle(this.rig.getAzimuth());
+  }
+
   highlight(id: string | null) {
     this.highlighted = id;
     this.buildings?.highlight(id);
@@ -271,6 +334,7 @@ export class CityScene {
 
   dispose() {
     this.disposed = true;
+    this.inspectAngle = null;
     cancelAnimationFrame(this.raf);
     this.unbindPointer();
     this.rig.dispose();
@@ -398,6 +462,7 @@ export class CityScene {
     if (this.disposed) return;
     this.resolveHover();
     const moved = this.rig.update(now);
+    if (moved) this.publishAngle(now);
     if (moved || this.needsRender) {
       this.renderer.render(this.scene, this.rig.camera);
       this.needsRender = false;
