@@ -170,3 +170,116 @@ body {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   Print / PDF — Reports (Step 16)
+
+   The document that prints is the same markup shown on screen:
+   `#report-document` (`.report-document`). App chrome is removed with
+   `print:hidden` utilities on the shell, and the rules below only handle the
+   things CSS on screen cannot express — page geometry, break control and
+   colour fidelity.
+
+   Pagination model:
+     • `@page` sets A4 with a real margin box, so nothing is clipped and the
+       browser's own header/footer (URL, page numbers) has room to print.
+     • `.report-block` = a unit that must stay together (metric rows, tiles,
+       charts, definition lists).
+     • `.report-table` = long tables, which are allowed to break, with their
+       `<thead>` repeated on every page (`display: table-header-group`).
+     • headings never end a page alone (`break-after: avoid`), and paragraphs
+       keep three lines together (orphans/widows).
+   ============================================================ */
+@page {
+  size: A4;
+  margin: 14mm 12mm 16mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* Keep token colours on paper: bars, tags and tiles are meaningful, not
+     decoration, and browsers drop backgrounds without this. */
+  .report-document,
+  .report-document * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report-document {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .report-cover,
+  .report-footer {
+    break-inside: avoid;
+  }
+
+  .report-section {
+    break-inside: auto;
+  }
+
+  /* A section heading always travels with at least its lead-in line. */
+  .report-section-head {
+    break-after: avoid;
+    break-inside: avoid;
+  }
+
+  .report-block {
+    break-inside: avoid;
+  }
+
+  .report-table {
+    break-inside: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  li {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  p,
+  dd,
+  dt {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* The contents list links to on-page anchors; URLs would be noise on paper. */
+  .report-document a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Horizontal scrolling is a screen affordance — tables print at full width. */
+  .report-table {
+    overflow: visible !important;
+  }
+
+  .report-table table {
+    min-width: 0 !important;
+  }
+}

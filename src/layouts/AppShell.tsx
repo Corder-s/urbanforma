@@ -43,15 +43,15 @@ export function AppShell() {
 
   return (
     <ShellContext.Provider value={shellValue}>
-      <div className="flex h-dvh min-h-0 w-full overflow-hidden bg-canvas">
+      <div className="flex h-dvh min-h-0 w-full overflow-hidden bg-canvas print:h-auto print:block print:overflow-visible">
         {/* desktop: grid region; mobile: drawer overlay */}
         <Sidebar />
         <MobileSidebar />
 
         {/* right column */}
-        <div className="flex min-w-0 flex-1 flex-col lg:h-dvh">
+        <div className="flex min-w-0 flex-1 flex-col lg:h-dvh print:h-auto print:w-full">
           <AppHeader />
-          <main id="app-content" className="min-h-0 flex-1 overflow-y-auto">
+          <main id="app-content" className="min-h-0 flex-1 overflow-y-auto print:h-auto print:overflow-visible">
             <Suspense fallback={<Loader className="h-full min-h-[50vh] bg-transparent" label="Loading view…" />}>
               <Outlet />
             </Suspense>

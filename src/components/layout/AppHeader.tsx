@@ -52,7 +52,7 @@ export function AppHeader() {
     // `relative z-40` lifts the whole header (and its dropdowns) above page
     // content. Without it, transformed/animated cards in <main> paint over
     // the notification and user menus.
-    <header className="relative z-40 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-white/90 px-4 backdrop-blur sm:px-6">
+    <header className="relative z-40 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-white/90 px-4 backdrop-blur sm:px-6 print:hidden">
       {/* mobile menu trigger */}
       <button
         type="button"

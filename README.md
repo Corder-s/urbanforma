@@ -43,7 +43,8 @@ menu), mobile drawer, and breadcrumbs.
 | **Analysis** | Environmental engine (solar, wind, heat, green, carbon, density, land-use, open-space, mobility) with 9 map overlays and per-category inspectors |
 | **Optimization** | Scenario generation with goals/weights/constraints, scoring, trade-offs, comparison, performance charts, pluggable provider |
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
-| Reports · BIM · Settings | Route-level "coming soon" placeholders |
+| **Reports** | Five report types, 15 configurable sections (enable + reorder), live document preview, revision/status tracking, print → PDF with app chrome stripped |
+| BIM · Settings | Route-level "coming soon" placeholders |
 
 ### Cross-cutting
 
@@ -53,6 +54,10 @@ menu), mobile drawer, and breadcrumbs.
 - **Accessibility** — focus trapping in dialogs, `aria-*` throughout, visible
   focus rings, and `prefers-reduced-motion` respected everywhere animations
   exist.
+- **Print / PDF** — `@page` A4 geometry plus break control (`report-block` stays
+  together, `report-table` breaks with a repeated `<thead>`, headings never end a
+  page alone) and `print:hidden` on the shell chrome, so a report prints as a
+  document rather than a screenshot of the app.
 
 ---
 
@@ -140,7 +145,8 @@ more characters** works. There is no hardcoded credential.
 | `/app/analysis` | Environmental analysis |
 | `/app/optimization` | Scenario optimization |
 | `/app/visualization` | 2D map + 3D city studio |
-| `/app/reports` · `/app/bim` · `/app/settings` | Coming-soon placeholders |
+| `/app/reports` | Report workspace (`?projectId=<id>&reportId=<id>`) |
+| `/app/bim` · `/app/settings` | Coming-soon placeholders |
 
 Signed-out visitors hitting `/app/*` are redirected to `/login`; signed-in
 visitors hitting `/login` are sent to `/app`.
@@ -153,7 +159,8 @@ src/
   components/
     ui/           Button (primary · secondary · secondaryDanger · ghost ·
                   onBrand · onBrandGhost) · Input · PasswordInput · Checkbox
-                  Select · FormSelect · Textarea · IconButton · Badge · Divider
+                  Select · FormSelect · Textarea · IconButton (xs · sm · md)
+                  Badge · Divider
                   Avatar · Logo · Loader · PanelDrawer · useDialogBehavior
     auth/         AuthLayout · LoginForm · CityVisual · ProtectedRoute · GuestRoute
     landing/      Hero · Features · Workflow · Analysis · Sustainability · CTA …
@@ -169,9 +176,14 @@ src/
     optimization/ providers · scoring · scenarios · workspace · comparison
     visualization/ 3d/ (three.js CityScene, meshes, CameraRig) · map/ (2D layers)
                   hooks (camera, layers, saved views, presentation, slideshow)
+    reports/      catalog (types + 15 sections) · report.service (CRUD, local)
+                  reportModel (reads the other 5 services) · reportData (pure
+                  derivations) · hooks (useReports, useReportModel) · components
+                  (Workspace, List, ConfigPanel, Preview, Sections, Charts,
+                  Tables, States, ConfirmDialog)
   layouts/        AppShell (lazy) · shellContext
   pages/          public pages + app/ workspace pages
-  styles/         fonts.css · tokens.css · globals.css
+  styles/         fonts.css · tokens.css · globals.css (incl. print stylesheet)
 public/fonts/     self-hosted Inter woff2 + SIL OFL license
 legacy/           previous static prototype (reference only)
 ```
@@ -191,6 +203,14 @@ gradients are used sparingly.
   works, but the shared kernel should be promoted to a neutral module so
   features stop depending on each other bidirectionally.
 - **Backend.** Every `*.service.ts` is a mock with the real REST contract
-  documented inline — swap them for Spring Boot + JWT calls.
+  documented inline — swap them for Spring Boot + JWT calls. Reports are the
+  clearest case: `report.service.ts` stores configuration in `localStorage` and
+  `reportModel.ts` assembles the document from five service calls, which is
+  exactly the shape of a future `GET /api/projects/:id/report-model` plus a
+  server-side PDF renderer.
+- **Reports print pagination.** Browsers cannot number physical pages (`@page`
+  margin boxes are unsupported), so the document uses numbered sections, a
+  repeated table header and a document-control footer; true page numbers arrive
+  with the backend PDF renderer.
 - **No test suite yet.** `npm run typecheck` and `npm run build` are the only
   automated gates.

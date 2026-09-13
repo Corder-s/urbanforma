@@ -16,7 +16,7 @@ export function Sidebar() {
   return (
     <aside
       aria-label="Primary navigation"
-      className="z-30 hidden h-full flex-col border-r border-line bg-white transition-[width] duration-300 ease-in-out lg:flex"
+      className="z-30 hidden h-full flex-col border-r border-line bg-white transition-[width] duration-300 ease-in-out lg:flex print:hidden"
       style={{ width: collapsed ? 76 : 256 }}
     >
       {/* brand + collapse control */}

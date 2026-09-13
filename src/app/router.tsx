@@ -18,6 +18,7 @@ import {
   loadProjectDetailPage,
   loadProjectsPage,
   loadRegisterPage,
+  loadReportsPage,
   loadVisualizationPage,
 } from "./routeLoaders";
 
@@ -55,6 +56,7 @@ const AnalysisPage = lazy(() => loadAnalysisPage().then((m) => ({ default: m.Ana
 const OptimizationPage = lazy(() =>
   loadOptimizationPage().then((m) => ({ default: m.OptimizationPage }))
 );
+const ReportsPage = lazy(() => loadReportsPage().then((m) => ({ default: m.ReportsPage })));
 const ComingSoonPage = lazy(() =>
   loadComingSoonPage().then((m) => ({ default: m.ComingSoonPage }))
 );
@@ -119,7 +121,7 @@ export const router = createBrowserRouter([
       { path: "analysis", element: <AnalysisPage /> },
       { path: "optimization", element: <OptimizationPage /> },
       { path: "visualization", element: <VisualizationPage /> },
-      { path: "reports", element: <ComingSoonPage /> },
+      { path: "reports", element: <ReportsPage /> },
       { path: "bim", element: <ComingSoonPage /> },
       { path: "settings", element: <ComingSoonPage /> },
       { path: "*", element: <Navigate to="/app" replace /> },

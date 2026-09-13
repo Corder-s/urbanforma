@@ -26,7 +26,7 @@ export function MobileSidebar() {
 
   return (
     <div
-      className={`fixed inset-0 z-50 lg:hidden ${
+      className={`fixed inset-0 z-50 lg:hidden print:hidden ${
         mobileOpen ? "" : "pointer-events-none"
       }`}
       aria-hidden={!mobileOpen}
