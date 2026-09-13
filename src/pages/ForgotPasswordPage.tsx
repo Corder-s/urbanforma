@@ -26,7 +26,7 @@ export function ForgotPasswordPage() {
   return (
     <AuthLayout>
       <div>
-        <div className="mb-7">
+        <div className="mb-7 text-center lg:text-left">
           <h1 className="text-[28px] font-extrabold tracking-tight text-ink sm:text-[32px]">
             Reset password
           </h1>

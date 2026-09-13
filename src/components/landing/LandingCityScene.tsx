@@ -25,6 +25,133 @@ interface BuildingSpec {
   antenna?: boolean;
 }
 
+/** The three viewing modes offered by the landing page's demo controls. */
+export type CityViewMode = "3d" | "map" | "satellite";
+
+/**
+ * Orthographic top-down projection for the map / satellite views, matched to
+ * the same 720x600 viewBox as the isometric scene so the two read as the same
+ * city from a different camera.
+ */
+const PLAN_CX = 360;
+const PLAN_CY = 300;
+const PLAN_S = 42;
+function plan(x: number, z: number): [number, number] {
+  return [PLAN_CX + x * PLAN_S, PLAN_CY + z * PLAN_S];
+}
+
+// Site geometry in grid units, shared by both cameras so the 3D / map /
+// satellite views always describe the same place.
+const GROUND: [number, number][] = [[-6.5, -0.2], [0.5, -6.6], [7, -0.4], [0.6, 6.2]];
+const PARK: [number, number][] = [[-0.9, 0.4], [0.1, -0.5], [1.1, 0.4], [0.1, 1.4]];
+const ROAD_A: [number, number][] = [[-6.2, 1.7], [0.2, -4.1], [0.7, -3.6], [-5.7, 2.2]];
+const ROAD_B: [number, number][] = [[-1.4, 5.6], [5.6, -0.8], [6.1, -0.3], [-0.9, 6.1]];
+const RIVER: [number, number][] = [[1.2, 4.4], [5.6, 3.4], [6.4, 0.6], [5.2, -2.4], [6.2, -4.6]];
+const BRIDGE: [number, number][] = [[2.6, 2.4], [6.4, -1.2]];
+const TREES: { x: number; z: number; s: number }[] = [
+  { x: -0.1, z: 0.7, s: 1 }, { x: 0.6, z: 0.5, s: 0.8 }, { x: -0.6, z: 0.2, s: 0.7 },
+  { x: -5.4, z: 3.2, s: 0.9 }, { x: 1.2, z: 4.2, s: 0.85 },
+];
+
+function polyOf(pts: [number, number][], proj: (x: number, z: number) => [number, number]): string {
+  return pts.map(([x, z]) => proj(x, z).join(",")).join(" ");
+}
+
+/** Cartographic vs aerial palettes for the two top-down cameras. */
+const PLAN_PALETTE = {
+  map: {
+    ground: "#f3f8fe", groundStroke: "#d3e1f5", road: "#ffffff", roadCasing: "#c9d8ee",
+    building: "#e2ecfb", buildingStroke: "#b6cbe9", park: "#cdeed6", water: "#a8dcf8",
+    bridge: "#ffffff", tree: "#3fa06a", label: "#64748b", grid: "#e3edfa",
+  },
+  satellite: {
+    ground: "#c8d2bf", groundStroke: "#aeb9a4", road: "#98a196", roadCasing: "#7c857a",
+    building: "#8d979f", buildingStroke: "#6f7a83", park: "#6e9160", water: "#4d7f96",
+    bridge: "#c3cabf", tree: "#40663a", label: "#f4f7f2", grid: "transparent",
+  },
+} as const;
+
+/**
+ * Top-down rendering of the same site, used by the Map and Satellite demo
+ * views. The isometric scene above only ever drew one camera, which is why the
+ * landing page's 3D / Map / Satellite buttons appeared to do nothing.
+ */
+function PlanScene({ mode }: { mode: "map" | "satellite" }) {
+  const c = PLAN_PALETTE[mode];
+  const aerial = mode === "satellite";
+  const river = RIVER.map(([x, z]) => plan(x, z));
+  const riverPath =
+    `M ${river[0][0]} ${river[0][1]}` +
+    ` C ${river[1][0]} ${river[1][1] - 26}, ${river[2][0] + 10} ${river[2][1]}, ${river[3][0]} ${river[3][1]}` +
+    ` C ${river[4][0] + 4} ${river[4][1] + 10}, ${river[4][0]} ${river[4][1]}, ${river[4][0]} ${river[4][1]}`;
+
+  return (
+    <svg viewBox="0 0 720 600" className="h-full w-full" role="img"
+      aria-label={aerial
+        ? "Aerial-style top-down view of the site: building rooftops, streets, park, river and tree canopy."
+        : "Top-down map view of the site: building footprints, street network, park, river and labels."}>
+      <defs>
+        <radialGradient id={`lp-vignette-${mode}`} cx="50%" cy="46%" r="72%">
+          <stop offset="62%" stopColor="rgba(0,0,0,0)" />
+          <stop offset="100%" stopColor={aerial ? "rgba(24,32,26,0.42)" : "rgba(37,99,235,0.10)"} />
+        </radialGradient>
+      </defs>
+
+      <polygon points={polyOf(GROUND, plan)} fill={c.ground} stroke={c.groundStroke} strokeWidth={2} />
+
+      {/* survey grid — maps only; aerial imagery has no grid */}
+      {!aerial && (
+        <g stroke={c.grid} strokeWidth={1}>
+          {[-6, -4, -2, 0, 2, 4, 6].map((v) => (
+            <line key={`v${v}`} x1={plan(v, -6.6)[0]} y1={plan(v, -6.6)[1]} x2={plan(v, 6.2)[0]} y2={plan(v, 6.2)[1]} />
+          ))}
+          {[-6, -4, -2, 0, 2, 4, 6].map((v) => (
+            <line key={`h${v}`} x1={plan(-6.5, v)[0]} y1={plan(-6.5, v)[1]} x2={plan(7, v)[0]} y2={plan(7, v)[1]} />
+          ))}
+        </g>
+      )}
+
+      <polygon points={polyOf(PARK, plan)} fill={c.park} />
+      <polygon points={polyOf(ROAD_A, plan)} fill={c.road} stroke={c.roadCasing} strokeWidth={aerial ? 1 : 2} />
+      <polygon points={polyOf(ROAD_B, plan)} fill={c.road} stroke={c.roadCasing} strokeWidth={aerial ? 1 : 2} />
+
+      <path d={riverPath} stroke={c.water} strokeWidth={24} strokeLinecap="round" fill="none" />
+      <line x1={plan(BRIDGE[0][0], BRIDGE[0][1])[0]} y1={plan(BRIDGE[0][0], BRIDGE[0][1])[1]}
+        x2={plan(BRIDGE[1][0], BRIDGE[1][1])[0]} y2={plan(BRIDGE[1][0], BRIDGE[1][1])[1]}
+        stroke={c.bridge} strokeWidth={6} strokeLinecap="round" />
+
+      {/* rooftops; aerial gets a cast shadow so heights still read from above */}
+      {BUILDINGS.map((b, i) => {
+        const [x0, y0] = plan(b.x - b.w / 2, b.z - b.d / 2);
+        const [x1, y1] = plan(b.x + b.w / 2, b.z + b.d / 2);
+        const w = x1 - x0, h = y1 - y0;
+        return (
+          <g key={i}>
+            {aerial && <rect x={x0 + 3} y={y0 + 4} width={w} height={h} rx={2} fill="rgba(30,38,32,0.28)" />}
+            <rect x={x0} y={y0} width={w} height={h} rx={2}
+              fill={c.building} stroke={c.buildingStroke} strokeWidth={aerial ? 0.8 : 1.4} />
+            {!aerial && <rect x={x0 + w * 0.28} y={y0 + h * 0.28} width={w * 0.44} height={h * 0.44} rx={1} fill={c.buildingStroke} opacity={0.35} />}
+          </g>
+        );
+      })}
+
+      {TREES.map((t, i) => {
+        const [tx, ty] = plan(t.x, t.z);
+        return <circle key={i} cx={tx} cy={ty} r={9 * t.s} fill={c.tree} opacity={aerial ? 0.9 : 0.8} />;
+      })}
+
+      {!aerial && (
+        <g fill={c.label} fontSize={13} fontWeight={700} fontFamily="Inter, sans-serif" letterSpacing={1.4}>
+          <text x={plan(0.1, 0.9)[0]} y={plan(0.1, 0.9)[1]} textAnchor="middle">PARK</text>
+          <text x={plan(4.4, 2.6)[0]} y={plan(4.4, 2.6)[1]} textAnchor="middle">RIVER</text>
+        </g>
+      )}
+
+      <rect x={0} y={0} width={720} height={600} fill={`url(#lp-vignette-${mode})`} />
+    </svg>
+  );
+}
+
 const TONES: Record<BuildingSpec["tone"], { top: string; left: string; right: string }> = {
   blue: { top: "#bfd9ff", left: "#7fb0f5", right: "#4c82dd" },
   deep: { top: "#a9c7f7", left: "#5b8ee7", right: "#2f64c4" },
@@ -117,7 +244,7 @@ const BUILDINGS: BuildingSpec[] = [
   { x: 4.8, z: 2.6, w: 1.2, d: 1.2, h: 42, tone: "cyan", delay: 700 },
 ];
 
-export function LandingCityScene({ className = "" }: { className?: string }) {
+export function LandingCityScene({ className = "", mode = "3d" }: { className?: string; mode?: CityViewMode }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const parallaxRef = useRef(true);
@@ -136,6 +263,26 @@ export function LandingCityScene({ className = "" }: { className?: string }) {
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
     setTilt({ x: py * -4, y: px * 6 });
+  }
+
+  // Map / Satellite are a second camera over the same site: top-down, no
+  // clouds (there is no sky in a plan view) and no entrance choreography.
+  if (mode !== "3d") {
+    return (
+      <div
+        ref={wrapRef}
+        onMouseMove={onMove}
+        onMouseLeave={() => parallaxRef.current && setTilt({ x: 0, y: 0 })}
+        className={`relative h-full w-full select-none ${className}`}
+      >
+        <div
+          className="relative z-10 h-full w-full transition-transform duration-500 ease-out will-change-transform"
+          style={{ transform: `perspective(1200px) rotateX(${tilt.x * 0.25}deg) rotateY(${tilt.y * 0.25}deg)` }}
+        >
+          <PlanScene mode={mode} />
+        </div>
+      </div>
+    );
   }
 
   const river = [iso(1.2, 4.4), iso(5.6, 3.4), iso(6.4, 0.6), iso(5.2, -2.4), iso(6.2, -4.6)];

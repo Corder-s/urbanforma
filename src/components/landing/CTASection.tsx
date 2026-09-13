@@ -29,12 +29,12 @@ export function CTASection() {
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link to="/login">
-                <Button size="lg" className="bg-white text-primary-dark shadow-float hover:bg-white/90">
+                <Button size="lg" variant="onBrand">
                   Get Started <ArrowRight size={18} />
                 </Button>
               </Link>
               <Link to="/login">
-                <Button size="lg" variant="secondary" className="border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white">
+                <Button size="lg" variant="onBrandGhost">
                   <LogIn size={18} /> Sign In
                 </Button>
               </Link>

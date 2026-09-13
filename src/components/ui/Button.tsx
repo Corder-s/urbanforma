@@ -4,7 +4,7 @@ import {
   type ReactNode,
 } from "react";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "onBrand" | "onBrandGhost";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -21,6 +21,15 @@ const variantClasses: Record<Variant, string> = {
   secondary:
     "text-primary bg-white border border-line hover:border-primary hover:bg-surface-2 shadow-soft",
   ghost: "text-muted hover:text-primary hover:bg-surface-2",
+  // For placement on the brand gradient (CTA band). These exist as real
+  // variants rather than className overrides because a `bg-white` passed via
+  // className cannot reliably beat the variant's `bg-primary`: both are
+  // single-class utilities, so the winner is decided by compiled CSS order,
+  // not attribute order — which left "Get Started" rendering blue-on-blue.
+  onBrand:
+    "text-primary-dark bg-white hover:bg-white/90 shadow-float focus-visible:ring-white/50",
+  onBrandGhost:
+    "text-white border border-white/40 bg-white/10 hover:bg-white/20 hover:text-white focus-visible:ring-white/40",
 };
 
 const sizeClasses: Record<Size, string> = {

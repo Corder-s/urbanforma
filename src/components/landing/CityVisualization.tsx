@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Box, Map, Satellite } from "lucide-react";
 import { Reveal } from "./Reveal";
-import { LandingCityScene } from "./LandingCityScene";
+import { LandingCityScene, type CityViewMode } from "./LandingCityScene";
 
-const MODES = [
+const MODES: { id: CityViewMode; label: string; icon: typeof Box }[] = [
   { id: "3d", label: "3D", icon: Box },
   { id: "map", label: "Map", icon: Map },
   { id: "satellite", label: "Satellite", icon: Satellite },
 ];
 
 export function CityVisualization() {
-  const [mode, setMode] = useState("3d");
+  const [mode, setMode] = useState<CityViewMode>("3d");
 
   return (
     <section className="py-20 sm:py-28">
@@ -52,7 +52,7 @@ export function CityVisualization() {
             </div>
 
             <div className="visual-sky aspect-[16/9] w-full sm:aspect-[16/8]">
-              <LandingCityScene />
+              <LandingCityScene mode={mode} />
             </div>
 
             <p className="absolute bottom-3 right-4 z-20 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold text-muted backdrop-blur">

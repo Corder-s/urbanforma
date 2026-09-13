@@ -75,11 +75,11 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             Back to Home
           </Link>
 
-          <div className="mt-10 animate-rise-in lg:mt-14">
+          <div className="mt-10 flex animate-rise-in justify-center lg:mt-14 lg:justify-start">
             <Logo tagline />
           </div>
 
-          <div className="flex flex-1 items-center">
+          <div className="flex flex-1 items-center justify-center lg:justify-start">
             <div className="w-full max-w-md animate-rise-in anim-delay-2 py-8 lg:py-10">
               {children}
             </div>
