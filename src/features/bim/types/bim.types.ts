@@ -285,6 +285,36 @@ export interface BimModeDef {
 }
 
 /** BIM ↔ planning ↔ analysis mapping row (§13/§14 of the step spec). */
+/**
+ * BIM-derived quantities, shaped for the Analysis service.
+ *
+ * This is a *reference payload*, not a second analysis engine: Step 13 still
+ * computes its metrics from planning geometry. It is the typed data a future
+ * `POST /api/analysis/bim-inputs` would carry, so the Analysis module can be fed
+ * from the model (height, footprint, floor area, volume, facade and roof
+ * surfaces) without the BIM module owning any analysis logic.
+ */
+export interface BimAnalysisInput {
+  elementId: string;
+  /** Planning / GIS object this element maps to (null when unmapped). */
+  objectId: string | null;
+  name: string;
+  landUse: string | null;
+  floors: number | null;
+  heightM: number | null;
+  footprintM2: number | null;
+  grossFloorAreaM2: number | null;
+  volumeM3: number | null;
+  /** Summed wall area of the modelled sub-elements (null when not modelled). */
+  facadeAreaM2: number | null;
+  /** Summed roof area (null when not modelled). */
+  roofAreaM2: number | null;
+  /** Levels modelled beneath this building. */
+  levelCount: number;
+  /** True when the building is broken down to walls / slabs / openings. */
+  detailed: boolean;
+}
+
 export interface BimPlanningLink {
   elementId: string;
   bimName: string;

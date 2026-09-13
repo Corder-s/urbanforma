@@ -9,7 +9,8 @@ import { loadReports } from "../../reports/services/report.service";
 import type { ReportConfig } from "../../reports/types/report.types";
 import type { SpatialDataset } from "../../visualization/types/visualization.types";
 import { coordinationChecks, planningLinks, type BimIndex, type BimQuantities } from "../lib/bimModel";
-import type { BimModel, BimPlanningLink, CoordinationCheck } from "../types/bim.types";
+import { getBimAnalysisInputs } from "../services/bim.service";
+import type { BimAnalysisInput, BimModel, BimPlanningLink, CoordinationCheck } from "../types/bim.types";
 
 export type CoordinationLoad =
   | { status: "idle" }
@@ -24,6 +25,8 @@ export interface BimCoordinationApi {
   reports: ReportConfig[];
   checks: CoordinationCheck[];
   links: BimPlanningLink[];
+  /** Per-building quantities the Analysis service could consume (BIM → Analysis). */
+  analysisInputs: BimAnalysisInput[];
   reload: () => void;
 }
 
@@ -107,12 +110,16 @@ export function useBimCoordination(
 
   const reload = useCallback(() => setAttempt((a) => a + 1), []);
 
+  // Derived from the index that already exists — the analysis engine is not
+  // called and nothing is recomputed here.
+  const analysisInputs = useMemo<BimAnalysisInput[]>(() => (index ? getBimAnalysisInputs(index) : []), [index]);
+
   const checks = useMemo<CoordinationCheck[]>(() => {
     if (!dataset || !index || !quantities) return [];
-    return coordinationChecks({ dataset, index, quantities, models, planningDoc, analysis, optimization, reports });
-  }, [dataset, index, quantities, models, planningDoc, analysis, optimization, reports]);
+    return coordinationChecks({ dataset, index, quantities, models, planningDoc, analysis, optimization, reports, analysisInputs });
+  }, [dataset, index, quantities, models, planningDoc, analysis, optimization, reports, analysisInputs]);
 
   const links = useMemo<BimPlanningLink[]>(() => (dataset && index ? planningLinks(index, dataset) : []), [dataset, index]);
 
-  return { load, planningDoc, analysis, optimization, reports, checks, links, reload };
+  return { load, planningDoc, analysis, optimization, reports, checks, links, analysisInputs, reload };
 }

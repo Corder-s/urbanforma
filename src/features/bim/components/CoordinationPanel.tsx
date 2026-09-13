@@ -31,9 +31,13 @@ const TONE: Record<CoordinationCheck["status"], DocTone> = {
  * than dressed up as a passing check.
  */
 export function CoordinationPanel({ coordination, projectId, onSelectElement, onClose }: CoordinationPanelProps) {
-  const { checks, links, load } = coordination;
+  const { checks, links, load, analysisInputs } = coordination;
   const ready = checks.filter((c) => c.status === "ready").length;
   const warnings = checks.filter((c) => c.status === "warning").length;
+
+  const detailed = analysisInputs.filter((i) => i.detailed).length;
+  const facadeTotal = analysisInputs.reduce((sum, i) => sum + (i.facadeAreaM2 ?? 0), 0);
+  const roofTotal = analysisInputs.reduce((sum, i) => sum + (i.roofAreaM2 ?? 0), 0);
 
   const rows = useMemo(() => links.map((l) => ({ ...l, id: l.elementId })), [links]);
   const columns: DocColumn<BimPlanningLink & { id: string }>[] = [
@@ -122,6 +126,18 @@ export function CoordinationPanel({ coordination, projectId, onSelectElement, on
                 );
               })}
             </ul>
+          )}
+
+          {analysisInputs.length > 0 && (
+            <p className="mt-2.5 rounded-xl border border-line bg-surface-2 px-2.5 py-2 text-[11.5px] leading-relaxed text-muted">
+              <strong className="font-extrabold text-ink">BIM → Analysis.</strong> The model exposes height, footprint, floor area and
+              volume for {analysisInputs.length} building{analysisInputs.length === 1 ? "" : "s"}
+              {detailed > 0
+                ? `, plus facade (${formatArea(facadeTotal)}) and roof (${formatArea(roofTotal)}) surfaces for the ${detailed} modelled in detail,`
+                : ","}{" "}
+              as a typed feed (<code className="font-mono text-[11px] text-ink">getBimAnalysisInputs</code>). The Step 13 engine is
+              unchanged and still computes its metrics from planning geometry — nothing is recalculated here.
+            </p>
           )}
         </section>
 

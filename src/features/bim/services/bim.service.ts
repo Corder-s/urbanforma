@@ -11,9 +11,10 @@ import {
   PROCESS_STEP_MS,
   UPLOAD_STEP_MS,
 } from "../data/bim.data";
-import { deriveElements, estimateModelBytes, versionCounts } from "../lib/bimModel";
+import { analysisInputs, deriveElements, estimateModelBytes, versionCounts, type BimIndex } from "../lib/bimModel";
 import type { SpatialDataset } from "../../visualization/types/visualization.types";
 import type {
+  BimAnalysisInput,
   BimCategory,
   BimElement,
   BimFilters,
@@ -28,6 +29,7 @@ import type {
   BimModelStatus,
   BimModelVersion,
   BimPrefs,
+  BimProperty,
   BimSceneMode,
 } from "../types/bim.types";
 
@@ -571,7 +573,7 @@ export async function getBimReportSummary(projectId: string, dataset: SpatialDat
     models = (await getModels(projectId, dataset)).models;
   }
   const model = getActiveModel(models, null);
-  const issues = loadIssues(projectId) ?? [];
+  const issues = await getIssues(projectId);
   const openIssues = issues.filter((i) => i.status !== "resolved").length;
   if (!model || !dataset) {
     return {
@@ -620,4 +622,59 @@ export async function getBimReportSummary(projectId: string, dataset: SpatialDat
     openIssues,
     unavailable: false,
   };
+}
+
+// ---------------------------------------------------------------------------
+// The service surface the UI calls — named for the future REST contract
+//
+//   React → bimService → Java/Spring Boot → BIM processing service
+//         → IFC/BIM engine → object storage
+//
+// Each function is local today (a derived element index plus `localStorage`)
+// and maps 1:1 onto an endpoint, so replacing the bodies with `fetch` calls
+// does not change a single call site. `getModels`, `getElements`,
+// `createIssue`, `updateIssue` and `uploadModel` live above; these complete the
+// set.
+// ---------------------------------------------------------------------------
+
+/** `GET /api/projects/:projectId/bim/models/:modelId` — one model record. */
+export async function getModel(
+  projectId: string,
+  modelId: string,
+  dataset: SpatialDataset | null
+): Promise<BimModel | null> {
+  const { models } = await getModels(projectId, dataset);
+  return models.find((m) => m.id === modelId) ?? null;
+}
+
+/** `GET /api/projects/:projectId/bim/elements/:elementId` — one element of the index. */
+export function getElement(index: BimIndex | null, elementId: string): BimElement | null {
+  return index?.byId.get(elementId) ?? null;
+}
+
+/** `GET /api/projects/:projectId/bim/elements/:elementId/properties` — the element's property sets. */
+export function getProperties(element: BimElement | null): BimProperty[] {
+  return element?.properties ?? [];
+}
+
+/** `GET /api/projects/:projectId/bim/issues` — stored issues (empty when none were raised). */
+export async function getIssues(projectId: string): Promise<BimIssue[]> {
+  return loadIssues(projectId) ?? [];
+}
+
+/**
+ * `GET /api/projects/:projectId/bim/elements?q=` — element search.
+ *
+ * Re-exported from the derivation lib so callers go through the service: the
+ * query runs against an index built once per model, never per keystroke.
+ */
+export { searchElements } from "../lib/bimModel";
+
+/**
+ * The BIM → Analysis payload: per-building height, footprint, floor area,
+ * volume and (where modelled) facade and roof surfaces. Reference data only —
+ * the Step 13 engine is untouched and still computes from planning geometry.
+ */
+export function getBimAnalysisInputs(index: BimIndex): BimAnalysisInput[] {
+  return analysisInputs(index);
 }

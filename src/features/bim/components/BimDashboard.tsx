@@ -3,6 +3,7 @@ import {
   ArrowRight,
   BarChart3,
   Box,
+  Boxes,
   ClipboardCheck,
   FileText,
   Flag,
@@ -37,6 +38,8 @@ interface BimDashboardProps {
   siteAreaHa: number;
   onOpenMode: (mode: "model" | "coordination" | "issues") => void;
   onSelectElement: (elementId: string) => void;
+  /** Activate a model record from the "Recent models" list. */
+  onSelectModel: (modelId: string) => void;
   onImport: () => void;
   onSync: () => void;
   syncing: boolean;
@@ -63,6 +66,7 @@ export function BimDashboard({
   siteAreaHa,
   onOpenMode,
   onSelectElement,
+  onSelectModel,
   onImport,
   onSync,
   syncing,
@@ -71,6 +75,7 @@ export function BimDashboard({
   const ready = checks.filter((c) => c.status === "ready").length;
   const missing = checks.filter((c) => c.status === "missing").length;
   const warnings = checks.filter((c) => c.status === "warning").length;
+  const recentModels = [...models].sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)).slice(0, 4);
   const topIssues = [...issues]
     .sort((a, b) => SEVERITY_META[a.severity].rank - SEVERITY_META[b.severity].rank || Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
     .slice(0, 4);
@@ -130,7 +135,7 @@ export function BimDashboard({
         </section>
 
         {/* quantities */}
-        <MetricsCards quantities={quantities} model={model} openIssues={issueCounts.open + issueCounts.inReview} />
+        <MetricsCards quantities={quantities} model={model} openIssues={issueCounts.open + issueCounts.inReview} modelCount={models.length} />
 
         <div className="grid gap-3 lg:grid-cols-2">
           {/* structure */}
@@ -218,6 +223,61 @@ export function BimDashboard({
                 );
               })}
             </ul>
+          </section>
+
+          {/* recent models */}
+          <section aria-labelledby="bim-overview-models" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+            <div className="flex items-center gap-2">
+              <Boxes size={15} className="shrink-0 text-primary" aria-hidden="true" />
+              <h3 id="bim-overview-models" className="min-w-0 flex-1 text-[13.5px] font-extrabold text-ink">
+                Recent models
+              </h3>
+              <button
+                type="button"
+                onClick={() => onOpenMode("coordination")}
+                className="inline-flex shrink-0 items-center gap-1 text-[11.5px] font-bold text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+              >
+                Versions <ArrowRight size={12} aria-hidden="true" />
+              </button>
+            </div>
+            <ul className="mt-2 grid gap-1">
+              {recentModels.map((m) => {
+                const meta = MODEL_STATUS_META[m.status];
+                const active = m.id === model?.id;
+                return (
+                  <li key={m.id}>
+                    <button
+                      type="button"
+                      onClick={() => onSelectModel(m.id)}
+                      disabled={active}
+                      aria-current={active ? "true" : undefined}
+                      className="flex w-full items-start gap-2 rounded-xl border border-line px-2.5 py-1.5 text-left transition-colors enabled:hover:border-primary enabled:hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-primary/20 disabled:cursor-default disabled:bg-surface-2"
+                    >
+                      <Badge tone={meta.tone} className="mt-px shrink-0">
+                        {meta.label}
+                      </Badge>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[12px] font-bold text-ink">
+                          {m.name}
+                          {active && <span className="ml-1.5 font-semibold text-primary">· active</span>}
+                        </span>
+                        <span className="block truncate text-[11px] text-muted">
+                          {m.format} · {m.schema} · v{m.version} · {formatBytes(m.sizeBytes)} · {relativeTime(m.updatedAt)}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mt-2.5 flex flex-wrap items-center gap-2">
+              <Button size="sm" variant="secondary" onClick={onImport}>
+                <UploadCloud size={14} aria-hidden="true" /> Import a model
+              </Button>
+              <p className="text-[11px] leading-snug text-muted">
+                Records are stored locally; file processing needs the BIM backend, so uploads report their real state.
+              </p>
+            </div>
           </section>
 
           {/* issues */}

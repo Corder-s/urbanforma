@@ -1,12 +1,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Box, Building2, Check, ChevronDown, Layers3, Map, RefreshCw, UploadCloud } from "lucide-react";
+import { ArrowLeft, Box, Boxes, Building2, Check, ChevronDown, Layers3, Map, RefreshCw, UploadCloud } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { IconButton } from "../../../components/ui/IconButton";
 import { VisualizationProjectSwitcher } from "../../visualization/components/VisualizationProjectSwitcher";
-import { MODES, SCENE_MODES } from "../data/bim.data";
+import { MODES, MODEL_STATUS_META, SCENE_MODES, relativeTime } from "../data/bim.data";
 import type { BimProjectSummary } from "../services/bim.service";
-import type { BimMode, BimSceneMode, BimViewMode } from "../types/bim.types";
+import type { BimMode, BimModel, BimSceneMode, BimViewMode } from "../types/bim.types";
 
 interface BimToolbarProps {
   projects: BimProjectSummary[];
@@ -28,6 +28,11 @@ interface BimToolbarProps {
   inspectorOpen: boolean;
   onToggleInspector: () => void;
   onSwitchProject: (id: string) => void;
+  /** Registered model records — the toolbar's model selector (§2). */
+  models: BimModel[];
+  activeModel: BimModel | null;
+  onSelectModel: (modelId: string) => void;
+  onManageVersions: () => void;
 }
 
 const SCENE_ICON: Record<BimSceneMode, typeof Box> = { bim: Box, city: Building2, combined: Layers3 };
@@ -61,6 +66,10 @@ export function BimToolbar({
   inspectorOpen,
   onToggleInspector,
   onSwitchProject,
+  models,
+  activeModel,
+  onSelectModel,
+  onManageVersions,
 }: BimToolbarProps) {
   const backTo = projectId ? `/app/projects/${projectId}` : "/app/projects";
   return (
@@ -75,6 +84,7 @@ export function BimToolbar({
           <ArrowLeft size={19} />
         </Link>
         <VisualizationProjectSwitcher projects={projects} currentId={projectId} currentName={projectName} subtitle="BIM Integration & Coordination" onSwitch={onSwitchProject} />
+        <ModelMenu models={models} activeModel={activeModel} onSelect={onSelectModel} onManage={onManageVersions} disabled={!ready} />
       </div>
 
       <div role="tablist" aria-label="BIM mode" className="mx-auto hidden shrink-0 items-center gap-0.5 rounded-xl border border-line bg-surface-2 p-0.5 xl:flex">
@@ -262,6 +272,153 @@ function SceneModeMenu({ mode, onSelect, disabled }: { mode: BimSceneMode; onSel
               </li>
             );
           })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Model selector — which registered model record the workspace shows.
+ *
+ * Records are metadata: selecting one re-derives its element index from the
+ * project geometry (demo models) or shows why an upload could not be processed.
+ * Same menu idiom as the scene picker, so keyboard and screen-reader behaviour
+ * match the rest of the toolbar.
+ */
+function ModelMenu({
+  models,
+  activeModel,
+  onSelect,
+  onManage,
+  disabled,
+}: {
+  models: BimModel[];
+  activeModel: BimModel | null;
+  onSelect: (modelId: string) => void;
+  onManage: () => void;
+  disabled: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const id = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    listRef.current?.querySelector<HTMLButtonElement>('[aria-checked="true"]')?.focus();
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative hidden min-w-0 lg:block">
+      <button
+        ref={triggerRef}
+        type="button"
+        disabled={disabled}
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={id}
+        title={activeModel ? `Model record: ${activeModel.fileName}` : "No model record"}
+        className={[
+          "inline-flex h-9 min-w-0 shrink-0 items-center gap-1.5 rounded-lg border border-line bg-surface-2 px-2.5 text-[12.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-40",
+          open ? "border-primary/40 text-primary" : "text-ink hover:border-line-strong",
+        ].join(" ")}
+      >
+        <Boxes size={16} className="shrink-0 text-muted" aria-hidden="true" />
+        <span className="max-w-[160px] truncate">{activeModel?.name ?? "No model"}</span>
+        {activeModel && (
+          <span className="hidden shrink-0 rounded-md bg-white px-1.5 text-[10.5px] font-extrabold text-muted 2xl:inline">
+            v{activeModel.version}
+          </span>
+        )}
+        <ChevronDown size={14} className={`shrink-0 text-faint transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`} aria-hidden="true" />
+      </button>
+      {open && (
+        <ul
+          ref={listRef}
+          id={id}
+          role="menu"
+          aria-label="BIM model records"
+          className="absolute left-0 top-full z-30 mt-1 w-80 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          onKeyDown={(e) => {
+            const items = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
+            const i = items.indexOf(document.activeElement as HTMLButtonElement);
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              items[(i + 1) % items.length]?.focus();
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              items[(i - 1 + items.length) % items.length]?.focus();
+            }
+          }}
+        >
+          <li className="px-2.5 pb-1 pt-1.5 text-[10.5px] font-bold uppercase tracking-widest text-faint" role="presentation">
+            Model records
+          </li>
+          {models.map((m) => {
+            const active = m.id === activeModel?.id;
+            const meta = MODEL_STATUS_META[m.status];
+            return (
+              <li key={m.id} role="none">
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={active}
+                  title={m.statusNote ?? m.fileName}
+                  onClick={() => {
+                    onSelect(m.id);
+                    setOpen(false);
+                    triggerRef.current?.focus();
+                  }}
+                  className={[
+                    "flex w-full items-start gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
+                    active ? "bg-primary/10 text-primary" : "text-ink hover:bg-surface-2",
+                  ].join(" ")}
+                >
+                  <span className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-white text-primary shadow-soft" : "bg-surface-2 text-muted"}`} aria-hidden="true">
+                    <Boxes size={16} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[13px] font-bold">{m.name}</span>
+                    <span className="block truncate text-[11.5px] leading-snug text-muted">
+                      {m.format} · {m.schema} · v{m.version} · {meta.label} · {relativeTime(m.updatedAt)}
+                    </span>
+                  </span>
+                  {active && <Check size={15} className="mt-1.5 shrink-0" aria-hidden="true" />}
+                </button>
+              </li>
+            );
+          })}
+          <li role="none" className="mt-1 border-t border-line pt-1">
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                onManage();
+              }}
+              className="flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[12.5px] font-bold text-primary transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+            >
+              <Layers3 size={15} aria-hidden="true" /> Manage versions & revisions
+            </button>
+          </li>
         </ul>
       )}
     </div>

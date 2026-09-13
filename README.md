@@ -44,7 +44,7 @@ menu), mobile drawer, and breadcrumbs.
 | **Optimization** | Scenario generation with goals/weights/constraints, scoring, trade-offs, comparison, performance charts, pluggable provider |
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
 | **Reports** | Five report types, 18 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers), an axonometric massing model drawn from the live dataset and a BIM model & quantities section, live document preview, revision/status tracking, print → PDF with app chrome stripped |
-| **BIM** | Model registry + derived element index (site → building → level → component), model tree with debounced search, properties inspector, filters, layers, quantities, 2D/3D viewport reuse (scene-synced, no second engine), versions & revisions, coordination checks against planning/analysis/optimization/reports, issue tracking, honest import pipeline states |
+| **BIM** | Toolbar project + model-record selectors, derived element index (site → building → level → component) with IFC-style GlobalIds and property sets, model tree with debounced search (name · id · GlobalId · category · level), properties inspector, typed filters, 8 BIM layers, metric cards, 2D/3D viewport reuse (scene-synced, no second engine), versions & revisions, coordination checks against planning/analysis/optimization/reports plus a BIM → Analysis quantity feed, issue tracking, recent-models dashboard, honest import pipeline states |
 | Settings | Route-level "coming soon" placeholder |
 
 ### Cross-cutting
@@ -185,9 +185,12 @@ src/
                   Charts, Tables, States, ConfirmDialog)
     bim/          types · data (demo model records, layers, facets, issue seeds,
                   formats) · lib/bimModel (derives the element index + quantities
-                  + coordination checks from the live spatial dataset — the only
-                  place geometry is walked) · bim.service (models, versions,
-                  issues, import pipeline states, localStorage-backed) · hooks
+                  + planning links + analysis inputs + coordination checks from
+                  the live spatial dataset — the only place geometry is walked) ·
+                  bim.service (getModels/getModel/getElements/getElement/
+                  searchElements/getProperties/getIssues/createIssue/updateIssue/
+                  uploadModel/getBimAnalysisInputs — local today, each documented
+                  with the REST endpoint it becomes) · hooks
                   (prefs, models, filters, issues, coordination, workspace) ·
                   components (Workspace, Dashboard, Toolbar, ModelTree,
                   PropertiesInspector, FiltersPanel, LayersPanel, MetricsCards,
@@ -226,7 +229,9 @@ gradients are used sparingly.
   pretending to parse. The intended backend is Java/Spring → BIM processing
   service → IFC engine (e.g. IfcOpenShell/web-ifc) → object storage, after which
   `deriveElements` is replaced by the server's element index and the UI does not
-  change.
+  change. `getBimAnalysisInputs` is the matching seam toward Step 13: it hands
+  the Analysis service per-building height, footprint, floor area, volume and
+  facade/roof surfaces, while the analysis engine itself stays untouched.
 - **Reports print pagination.** Browsers cannot number physical pages (`@page`
   margin boxes are unsupported), so the document uses numbered sections, a
   repeated table header and a document-control footer; true page numbers arrive

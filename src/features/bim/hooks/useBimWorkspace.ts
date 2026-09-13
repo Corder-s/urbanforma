@@ -6,7 +6,7 @@ import {
   type VisualizationState,
 } from "../../visualization/hooks/useVisualizationState";
 import { useMapView, type MapViewApi } from "../../visualization/hooks/useMapView";
-import { getBimProjects, getLastBimProject, type BimProjectSummary } from "../services/bim.service";
+import { getElement, getBimProjects, getLastBimProject, type BimProjectSummary } from "../services/bim.service";
 import type { CityViewHandle } from "../../visualization/components/3d/CityView";
 import { primaryElementByPlanningId, selectSceneObjects, visiblePlanningIds } from "../lib/bimModel";
 import { useBimPrefs, type BimPrefsApi } from "./useBimPrefs";
@@ -216,10 +216,10 @@ export function useBimWorkspace(): BimWorkspaceApi {
   // Deep link (?elementId=) → selection, once the model is derived.
   useEffect(() => {
     if (!paramElementId || !index) return;
-    if (!index.byId.has(paramElementId)) return;
-    if (paramElementId === selectedElementId) return;
+    const linked = getElement(index, paramElementId);
+    if (!linked || paramElementId === selectedElementId) return;
     setSelectedElementId(paramElementId);
-    const objectId = index.byId.get(paramElementId)?.planningRef?.objectId ?? null;
+    const objectId = linked.planningRef?.objectId ?? null;
     if (objectId) vizSelect(objectId);
   }, [paramElementId, index, selectedElementId, vizSelect]);
 

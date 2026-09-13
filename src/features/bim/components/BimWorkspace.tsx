@@ -196,6 +196,10 @@ export function BimWorkspace() {
       inspectorOpen={openPanel === "side"}
       onToggleInspector={() => togglePanel("side")}
       onSwitchProject={w.setProjectId}
+      models={models.models}
+      activeModel={models.activeModel}
+      onSelectModel={models.setActiveModelId}
+      onManageVersions={() => setMode("coordination")}
     />
   );
 
@@ -439,6 +443,7 @@ export function BimWorkspace() {
             siteAreaHa={dataset?.summary.siteAreaHa ?? 0}
             onOpenMode={setMode}
             onSelectElement={showInModel}
+            onSelectModel={models.setActiveModelId}
             onImport={() => {
               setImportResult(null);
               setImportOpen(true);

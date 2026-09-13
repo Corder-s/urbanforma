@@ -16,6 +16,7 @@ import { Button } from "../../../components/ui/Button";
 import { IconButton } from "../../../components/ui/IconButton";
 import { CATEGORY_ICON, DISCIPLINE_LABEL, SEVERITY_META, formatArea, formatBytes, formatMetres, formatVolumeM3 } from "../data/bim.data";
 import type { BimIndex } from "../lib/bimModel";
+import { getProperties } from "../services/bim.service";
 import type { BimElement, BimIssue, BimModel, BimProperty } from "../types/bim.types";
 
 interface PropertiesInspectorProps {
@@ -72,7 +73,7 @@ export function PropertiesInspector({ element, index, model, projectId, issues, 
   const groups = useMemo(() => {
     if (!element) return [];
     const map = new Map<string, BimProperty[]>();
-    for (const p of element.properties) {
+    for (const p of getProperties(element)) {
       const list = map.get(p.group);
       if (list) list.push(p);
       else map.set(p.group, [p]);

@@ -19,6 +19,7 @@ import type { OptimizationState } from "../../optimization/types/optimization.ty
 import type { ReportConfig } from "../../reports/types/report.types";
 import { DISCIPLINE_LAYER, FACADE_MATERIALS, ISSUE_TEMPLATES, ROOF_MATERIALS, formatArea, levelName } from "../data/bim.data";
 import type {
+  BimAnalysisInput,
   BimCategory,
   BimDiscipline,
   BimElement,
@@ -1265,6 +1266,57 @@ export function planningLinks(index: BimIndex, dataset: SpatialDataset, limit = 
   return out;
 }
 
+/**
+ * Per-building quantities the Analysis service could consume (BIM → Analysis).
+ *
+ * Walks the already-built index — no geometry is re-derived and no analysis is
+ * recomputed here. Facade and roof surfaces are summed from the modelled
+ * sub-elements, so they exist only for buildings broken down past LOD 200.
+ */
+export function analysisInputs(index: BimIndex): BimAnalysisInput[] {
+  const out: BimAnalysisInput[] = [];
+  for (const b of index.buildings) {
+    let facade = 0;
+    let roof = 0;
+    let levels = 0;
+    let sawDetail = false;
+    const walk = (id: string) => {
+      for (const child of index.childrenOf.get(id) ?? []) {
+        if (child.category === "wall") {
+          facade += child.area ?? 0;
+          sawDetail = true;
+        } else if (child.category === "roof") {
+          roof += child.area ?? 0;
+          sawDetail = true;
+        } else if (child.category === "level") {
+          levels += 1;
+        }
+        walk(child.id);
+      }
+    };
+    walk(b.id);
+    const valueOf = (label: string) => b.properties.find((p) => p.label === label)?.value ?? null;
+    const footprint = b.area ?? null;
+    const floors = b.floors ?? null;
+    out.push({
+      elementId: b.id,
+      objectId: b.planningRef?.objectId ?? null,
+      name: b.name,
+      landUse: valueOf("Land use"),
+      floors,
+      heightM: b.height ?? null,
+      footprintM2: footprint,
+      grossFloorAreaM2: footprint !== null && floors !== null ? round(footprint * floors, 2) : null,
+      volumeM3: b.volume ?? null,
+      facadeAreaM2: sawDetail ? round(facade, 2) : null,
+      roofAreaM2: sawDetail ? round(roof, 2) : null,
+      levelCount: levels,
+      detailed: sawDetail,
+    });
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------------------
 // Coordination checks — evidence from real modules only
 // ---------------------------------------------------------------------------
@@ -1278,6 +1330,8 @@ export interface CoordinationInput {
   analysis: AnalysisResult | null;
   optimization: OptimizationState | null;
   reports: ReportConfig[];
+  /** What the model could hand the Analysis service (see `analysisInputs`). */
+  analysisInputs?: BimAnalysisInput[];
 }
 
 /**
@@ -1287,6 +1341,7 @@ export interface CoordinationInput {
  */
 export function coordinationChecks(input: CoordinationInput): CoordinationCheck[] {
   const { dataset, index, quantities, models, planningDoc, analysis, optimization, reports } = input;
+  const bimInputs = input.analysisInputs ?? [];
   const checks: CoordinationCheck[] = [
     {
       id: "geometry",
@@ -1332,13 +1387,18 @@ export function coordinationChecks(input: CoordinationInput): CoordinationCheck[
     });
   }
 
+  const detailedCount = bimInputs.filter((i) => i.detailed).length;
+  const feedNote =
+    bimInputs.length > 0
+      ? ` The model can supply height, footprint, floor area, volume${detailedCount > 0 ? " and facade/roof surfaces" : ""} for ${bimInputs.length} building${bimInputs.length === 1 ? "" : "s"}${detailedCount > 0 ? ` (${detailedCount} modelled in detail)` : ""} — Analysis still computes from planning geometry in this release.`
+      : "";
   checks.push({
     id: "analysis",
     label: "Analysis results",
     status: analysis ? "ready" : "missing",
     detail: analysis
-      ? `${analysis.metrics.length} metrics available for the modelled site (overall score ${Math.round(analysis.overallScore)}/100).`
-      : "No analysis run for this project yet — open Analysis to compute metrics.",
+      ? `${analysis.metrics.length} metrics available for the modelled site (overall score ${Math.round(analysis.overallScore)}/100).${feedNote}`
+      : `No analysis run for this project yet — open Analysis to compute metrics.${feedNote}`,
   });
 
   const scenarios = optimization?.generation?.scenarios ?? [];
