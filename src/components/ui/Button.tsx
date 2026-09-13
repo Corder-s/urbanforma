@@ -4,7 +4,7 @@ import {
   type ReactNode,
 } from "react";
 
-type Variant = "primary" | "secondary" | "ghost" | "onBrand" | "onBrandGhost";
+type Variant = "primary" | "secondary" | "secondaryDanger" | "ghost" | "onBrand" | "onBrandGhost";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -30,6 +30,13 @@ const variantClasses: Record<Variant, string> = {
     "text-primary-dark bg-white hover:bg-white/90 shadow-float focus-visible:ring-white/50",
   onBrandGhost:
     "text-white border border-white/40 bg-white/10 hover:bg-white/20 hover:text-white focus-visible:ring-white/40",
+  // Destructive-action outline button. Exists as a variant for the same reason
+  // onBrand does: `border-danger/40` passed via className loses to the
+  // secondary variant's `border-line`, because `line` is declared after
+  // `danger` in the theme and same-specificity utilities resolve by compiled
+  // CSS order. The border is what makes a destructive action read as one.
+  secondaryDanger:
+    "text-danger bg-white border border-danger/40 hover:border-danger hover:bg-danger/5 shadow-soft",
 };
 
 const sizeClasses: Record<Size, string> = {

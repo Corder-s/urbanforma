@@ -42,7 +42,7 @@ export function ConfirmDialog({ open, title, description, confirmLabel, cancelLa
           <Button size="sm" variant="secondary" onClick={onCancel}>
             {cancelLabel}
           </Button>
-          <Button ref={confirmRef} size="sm" variant={tone === "danger" ? "secondary" : "primary"} onClick={onConfirm} className={tone === "danger" ? "border-danger/40 text-danger hover:bg-danger/5" : ""}>
+          <Button ref={confirmRef} size="sm" variant={tone === "danger" ? "secondaryDanger" : "primary"} onClick={onConfirm}>
             {confirmLabel}
           </Button>
         </div>

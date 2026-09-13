@@ -21,7 +21,9 @@ touching the UI.
 
 - **Landing page** — hero, intro, feature grid, workflow, analysis preview,
   sustainability, philosophy, CTA, footer, with scroll-reveal and an animated
-  SVG city scene.
+  SVG city scene whose demo controls switch between three real cameras over the
+  same site geometry: isometric **3D**, top-down **Map** (grid, footprints,
+  labels) and aerial **Satellite** (rooftop shadows, canopy, vignette).
 - **Auth** — login (premium split-screen with an animated isometric smart-city
   built in pure SVG/CSS), register, forgot-password, logout. Inline validation
   (no alerts), password visibility toggle, remember-me, loading states with
@@ -149,8 +151,10 @@ visitors hitting `/login` are sent to `/app`.
 src/
   app/            App · router · routeLoaders · useLinkPrefetch
   components/
-    ui/           Button · Input · PasswordInput · Checkbox · Select · FormSelect
-                  Textarea · IconButton · Badge · Divider · Avatar · Logo · Loader
+    ui/           Button (primary · secondary · secondaryDanger · ghost ·
+                  onBrand · onBrandGhost) · Input · PasswordInput · Checkbox
+                  Select · FormSelect · Textarea · IconButton · Badge · Divider
+                  Avatar · Logo · Loader · PanelDrawer · useDialogBehavior
     auth/         AuthLayout · LoginForm · CityVisual · ProtectedRoute · GuestRoute
     landing/      Hero · Features · Workflow · Analysis · Sustainability · CTA …
     dashboard/    PortfolioOverview · RecentProjects · QuickActions · ActivityFeed …
