@@ -7,6 +7,7 @@ import type {
 } from "../../optimization/types/optimization.types";
 import type { ScoredScenario } from "../../optimization/services/optimization.service";
 import type { PresentationView, SpatialDataset } from "../../visualization/types/visualization.types";
+import type { BimReportSummary } from "../../bim/services/bim.service";
 
 /** The five report flavours offered by the Reports workspace. */
 export type ReportType =
@@ -28,6 +29,7 @@ export type ReportSectionId =
   | "planningOverview"
   | "urbanForm"
   | "modelView"
+  | "bim"
   | "environmental"
   | "mobility"
   | "optimization"
@@ -158,6 +160,11 @@ export interface ReportModel {
   } | null;
   /** Step 15 saved views, referenced by the visualization section. */
   savedViews: PresentationView[];
+  /**
+   * Step 17 BIM model record, derived quantities and coordination summary —
+   * null when no model could be derived from this project's spatial dataset.
+   */
+  bim: BimReportSummary | null;
   /** Which sources were unavailable, so sections can say so honestly. */
-  missing: ("project" | "planning" | "analysis" | "optimization" | "visualization")[];
+  missing: ("project" | "planning" | "analysis" | "optimization" | "visualization" | "bim")[];
 }

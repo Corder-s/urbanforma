@@ -5,8 +5,8 @@ Planning · 3D City Modeling · Environmental Analysis · Smart Infrastructure �
 Optimization · BIM).
 
 The frontend is built out across a public marketing site, a full authentication
-layer, and an authenticated workspace with six domain modules — roughly **35.4k
-lines of TypeScript/React across 280 files**. All data is served by mock
+layer, and an authenticated workspace with seven domain modules — roughly
+**48.2k lines of TypeScript/React across 327 files**. All data is served by mock
 service layers written to be swapped for a Java Spring Boot + JWT API without
 touching the UI.
 
@@ -43,8 +43,9 @@ menu), mobile drawer, and breadcrumbs.
 | **Analysis** | Environmental engine (solar, wind, heat, green, carbon, density, land-use, open-space, mobility) with 9 map overlays and per-category inspectors |
 | **Optimization** | Scenario generation with goals/weights/constraints, scoring, trade-offs, comparison, performance charts, pluggable provider |
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
-| **Reports** | Five report types, 17 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers) and an axonometric massing model drawn from the live dataset, live document preview, revision/status tracking, print → PDF with app chrome stripped |
-| BIM · Settings | Route-level "coming soon" placeholders |
+| **Reports** | Five report types, 18 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers), an axonometric massing model drawn from the live dataset and a BIM model & quantities section, live document preview, revision/status tracking, print → PDF with app chrome stripped |
+| **BIM** | Model registry + derived element index (site → building → level → component), model tree with debounced search, properties inspector, filters, layers, quantities, 2D/3D viewport reuse (scene-synced, no second engine), versions & revisions, coordination checks against planning/analysis/optimization/reports, issue tracking, honest import pipeline states |
+| Settings | Route-level "coming soon" placeholder |
 
 ### Cross-cutting
 
@@ -146,7 +147,8 @@ more characters** works. There is no hardcoded credential.
 | `/app/optimization` | Scenario optimization |
 | `/app/visualization` | 2D map + 3D city studio |
 | `/app/reports` | Report workspace (`?projectId=<id>&reportId=<id>`) |
-| `/app/bim` · `/app/settings` | Coming-soon placeholders |
+| `/app/bim` | BIM integration & model coordination (`?projectId=<id>&elementId=<id>`) |
+| `/app/settings` | Coming-soon placeholder |
 
 Signed-out visitors hitting `/app/*` are redirected to `/login`; signed-in
 visitors hitting `/login` are sent to `/app`.
@@ -176,11 +178,21 @@ src/
     optimization/ providers · scoring · scenarios · workspace · comparison
     visualization/ 3d/ (three.js CityScene, meshes, CameraRig) · map/ (2D layers)
                   hooks (camera, layers, saved views, presentation, slideshow)
-    reports/      catalog (types + 15 sections) · report.service (CRUD, local)
-                  reportModel (reads the other 5 services) · reportData (pure
+    reports/      catalog (types + 18 sections) · report.service (CRUD, local)
+                  reportModel (reads the other 6 services) · reportData (pure
                   derivations) · hooks (useReports, useReportModel) · components
-                  (Workspace, List, ConfigPanel, Preview, Sections, Charts,
-                  Tables, States, ConfirmDialog)
+                  (Workspace, List, ConfigPanel, Preview, Sections, Figures,
+                  Charts, Tables, States, ConfirmDialog)
+    bim/          types · data (demo model records, layers, facets, issue seeds,
+                  formats) · lib/bimModel (derives the element index + quantities
+                  + coordination checks from the live spatial dataset — the only
+                  place geometry is walked) · bim.service (models, versions,
+                  issues, import pipeline states, localStorage-backed) · hooks
+                  (prefs, models, filters, issues, coordination, workspace) ·
+                  components (Workspace, Dashboard, Toolbar, ModelTree,
+                  PropertiesInspector, FiltersPanel, LayersPanel, MetricsCards,
+                  Viewport, CoordinationPanel, VersionsPanel, IssuesPanel,
+                  IssueInspector, IssueDialog, ImportDialog, StatusBar, States)
   layouts/        AppShell (lazy) · shellContext
   pages/          public pages + app/ workspace pages
   styles/         fonts.css · tokens.css · globals.css (incl. print stylesheet)
@@ -208,6 +220,13 @@ gradients are used sparingly.
   `reportModel.ts` assembles the document from five service calls, which is
   exactly the shape of a future `GET /api/projects/:id/report-model` plus a
   server-side PDF renderer.
+- **BIM processing.** `bim.service.ts` registers model records and derives the
+  element index from the project's own spatial dataset in the browser; file
+  upload reports `Failed — no BIM processing service connected` rather than
+  pretending to parse. The intended backend is Java/Spring → BIM processing
+  service → IFC engine (e.g. IfcOpenShell/web-ifc) → object storage, after which
+  `deriveElements` is replaced by the server's element index and the UI does not
+  change.
 - **Reports print pagination.** Browsers cannot number physical pages (`@page`
   margin boxes are unsupported), so the document uses numbered sections, a
   repeated table header and a document-control footer; true page numbers arrive

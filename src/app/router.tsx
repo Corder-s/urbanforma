@@ -6,6 +6,7 @@ import { Loader } from "../components/ui/Loader";
 import {
   loadAnalysisPage,
   loadAppShell,
+  loadBimPage,
   loadComingSoonPage,
   loadCreateProjectPage,
   loadDashboardPage,
@@ -57,6 +58,7 @@ const OptimizationPage = lazy(() =>
   loadOptimizationPage().then((m) => ({ default: m.OptimizationPage }))
 );
 const ReportsPage = lazy(() => loadReportsPage().then((m) => ({ default: m.ReportsPage })));
+const BimPage = lazy(() => loadBimPage().then((m) => ({ default: m.BimPage })));
 const ComingSoonPage = lazy(() =>
   loadComingSoonPage().then((m) => ({ default: m.ComingSoonPage }))
 );
@@ -122,7 +124,7 @@ export const router = createBrowserRouter([
       { path: "optimization", element: <OptimizationPage /> },
       { path: "visualization", element: <VisualizationPage /> },
       { path: "reports", element: <ReportsPage /> },
-      { path: "bim", element: <ComingSoonPage /> },
+      { path: "bim", element: <BimPage /> },
       { path: "settings", element: <ComingSoonPage /> },
       { path: "*", element: <Navigate to="/app" replace /> },
     ],

@@ -7,7 +7,7 @@ export interface SectionMeta {
   /** Shown in the config panel so planners know what they are toggling. */
   blurb: string;
   /** Which ReportModel source the section depends on (for honest empty states). */
-  needs: ("project" | "planning" | "analysis" | "optimization" | "visualization")[];
+  needs: ("project" | "planning" | "analysis" | "optimization" | "visualization" | "bim")[];
 }
 
 export const SECTION_CATALOG: SectionMeta[] = [
@@ -18,6 +18,7 @@ export const SECTION_CATALOG: SectionMeta[] = [
   { id: "planningOverview", label: "Planning Overview", blurb: "What is proposed: buildings, streets, parks, coverage and density.", needs: ["planning"] },
   { id: "urbanForm", label: "Urban Form", blurb: "Massing and land-use distribution of the proposed plan.", needs: ["planning"] },
   { id: "modelView", label: "3D Model View", blurb: "Axonometric massing figure drawn from the same site model, at true height.", needs: ["planning"] },
+  { id: "bim", label: "BIM Model & Coordination", blurb: "Model record, element count, derived quantities and what the model agrees with.", needs: ["bim"] },
   { id: "environmental", label: "Environmental Analysis", blurb: "Solar, heat, wind, green and carbon performance with scores.", needs: ["analysis"] },
   { id: "mobility", label: "Mobility Analysis", blurb: "Accessibility, walkability and street-network performance.", needs: ["analysis"] },
   { id: "optimization", label: "Optimization", blurb: "Goals, weights, constraints and the evaluated scenario set.", needs: ["optimization"] },
@@ -79,6 +80,7 @@ export const REPORT_TYPES: ReportTypeMeta[] = [
       "planningOverview",
       "urbanForm",
       "modelView",
+      "bim",
       "environmental",
       "mobility",
       "optimization",

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { formatDate, formatNumber, formatSiteArea } from "../../projects/project.service";
 import { getCategory, STATUS_META } from "../../analysis/data/analysis.data";
 import {
@@ -26,7 +27,8 @@ import type { ReportComparisonRow, ReportConfig, ReportMetric, ReportModel } fro
 /** A label / value row of the document's definition tables. */
 export interface DocRow {
   label: string;
-  value: string;
+  /** Usually text; a section may pass a small tag instead (e.g. a status). */
+  value: ReactNode;
   note?: string;
 }
 
@@ -451,6 +453,32 @@ export function viewRows(model: ReportModel): ViewRow[] {
     annotations: v.annotations.length,
     createdAt: formatDate(v.createdAt),
   }));
+}
+
+export interface BimQuantityRow {
+  id: string;
+  quantity: string;
+  value: string;
+  note: string;
+}
+
+/**
+ * BIM quantities for the report document (Step 17).
+ *
+ * Taken from the derived model index, so the report and the BIM workspace can
+ * never disagree; nothing is stored in the report itself.
+ */
+export function bimQuantityRows(model: ReportModel): BimQuantityRow[] {
+  const bim = model.bim;
+  if (!bim || bim.unavailable) return [];
+  return [
+    { id: "gfa", quantity: "Gross floor area", value: `${formatNumber(Math.round(bim.grossFloorAreaM2))} m²`, note: `${bim.buildings} buildings` },
+    { id: "volume", quantity: "Built volume", value: `${formatNumber(Math.round(bim.volumeM3))} m³`, note: "Sum of element volumes" },
+    { id: "footprint", quantity: "Building footprint", value: `${formatNumber(Math.round(bim.footprintM2))} m²`, note: "Ground-contact area" },
+    { id: "roads", quantity: "Road & path length", value: `${formatNumber(Math.round(bim.roadLengthM))} m`, note: "Centreline length" },
+    { id: "landscape", quantity: "Landscape area", value: `${formatNumber(Math.round(bim.landscapeM2))} m²`, note: "Green, water and planting" },
+    { id: "elements", quantity: "Model elements", value: formatNumber(bim.elements), note: `${bim.levels} levels · ${bim.detailedBuildings} buildings in detail` },
+  ];
 }
 
 export function provenanceRows(model: ReportModel, report: ReportConfig): DocRow[] {

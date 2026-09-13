@@ -22,6 +22,7 @@ export const loadVisualizationPage = () => import("../pages/app/VisualizationPag
 export const loadAnalysisPage = () => import("../pages/app/AnalysisPage");
 export const loadOptimizationPage = () => import("../pages/app/OptimizationPage");
 export const loadReportsPage = () => import("../pages/app/ReportsPage");
+export const loadBimPage = () => import("../pages/app/BimPage");
 export const loadComingSoonPage = () => import("../pages/app/ComingSoonPage");
 
 /**
@@ -47,7 +48,7 @@ const LOADERS: Record<string, () => Promise<unknown>> = {
   "/app/optimization": loadOptimizationPage,
   "/app/visualization": loadVisualizationPage,
   "/app/reports": loadReportsPage,
-  "/app/bim": loadComingSoonPage,
+  "/app/bim": loadBimPage,
   "/app/settings": loadComingSoonPage,
   "/app/projects/:id": loadProjectDetailPage,
 };

@@ -10,6 +10,7 @@ import {
   type ScoredScenario,
 } from "../../optimization/services/optimization.service";
 import { getSavedViews } from "../../visualization/services/visualization.service";
+import { getBimReportSummary } from "../../bim/services/bim.service";
 import type { PlanningDocument } from "../../planning/types/planning.types";
 import type { OptimizationContext, OptimizationScenario, OptimizationState } from "../../optimization/types/optimization.types";
 import type { SpatialDataset, SpatialObjectType } from "../../visualization/types/visualization.types";
@@ -132,7 +133,7 @@ export function enabledSections(config: ReportConfig): ReportSectionConfig[] {
   return config.sections.filter((s) => s.enabled).sort((a, b) => a.order - b.order);
 }
 
-const MISSING_ORDER: ReportModel["missing"] = ["project", "planning", "analysis", "optimization", "visualization"];
+const MISSING_ORDER: ReportModel["missing"] = ["project", "planning", "analysis", "optimization", "visualization", "bim"];
 
 /**
  * Assemble the report model for a project. Each source is guarded: a failure
@@ -199,6 +200,16 @@ export async function buildReportModel(projectId: string): Promise<ReportModel> 
   const analysis = context?.analysis ?? null;
   if (!analysis) failed.add("analysis");
 
+  // BIM (Step 17) reuses the same spatial dataset: the model index is derived
+  // here for the report only, never persisted by this call.
+  const bim = dataset
+    ? await getBimReportSummary(projectId, dataset).catch(() => {
+        failed.add("bim");
+        return null;
+      })
+    : null;
+  if (!dataset) failed.add("bim");
+
   const planning = buildPlanningSummary(dataset, planningDoc);
   if (!planning) failed.add("planning");
 
@@ -220,6 +231,7 @@ export async function buildReportModel(projectId: string): Promise<ReportModel> 
           }
         : null,
     savedViews: savedViews ?? [],
+    bim,
     missing: MISSING_ORDER.filter((m) => failed.has(m)),
   };
 }

@@ -4,6 +4,7 @@ import { getCategory } from "../../analysis/data/analysis.data";
 import { COMPARE_METRICS, METRICS } from "../../optimization/data/optimization.data";
 import {
   beforeAfterRows,
+  bimQuantityRows,
   constraintRows,
   environmentalMetrics,
   executiveSummary,
@@ -31,7 +32,7 @@ import type { ScenarioRow } from "../lib/reportData";
 import { enabledSections } from "../lib/reportModel";
 import type { ReportConfig, ReportMetric, ReportModel, ReportSectionId } from "../types/report.types";
 import { MetricBarList, ScoreBars, ShareBar, TrendChart, type MetricBarProps } from "./ReportCharts";
-import { BulletList, DataTable, DefinitionList, DeltaCell, StatusTag, VERDICT_GLYPH, verdictTone } from "./ReportTables";
+import { BulletList, DataTable, DefinitionList, DeltaCell, StatusTag, VERDICT_GLYPH, verdictTone, type DocTone } from "./ReportTables";
 import { ModelViewFigure, PlanFigure } from "./ReportFigures";
 import { SectionUnavailable } from "./ReportStates";
 
@@ -746,6 +747,63 @@ function ProjectInformationSection({ model, report }: SectionProps) {
 }
 
 // ---------------------------------------------------------------------------
+// 7b. BIM model & coordination (Step 17)
+// ---------------------------------------------------------------------------
+
+const BIM_STATUS_TONE: Record<string, DocTone> = { ready: "accent", processing: "watch", failed: "poor" };
+
+function BimSection({ model }: SectionProps) {
+  const bim = model.bim;
+  if (!bim || bim.unavailable) {
+    return (
+      <SectionUnavailable
+        label="The BIM model"
+        hint="No model could be derived for this project. Draw a plan in Planning Studio, or register a model in the BIM workspace, then generate the report again."
+      />
+    );
+  }
+  const rows = bimQuantityRows(model);
+  return (
+    <div className="space-y-4">
+      <DefinitionList
+        rows={[
+          { label: "Model", value: bim.modelName, note: bim.fileName },
+          { label: "Format & schema", value: `${bim.format.toUpperCase()} · ${bim.schema}`, note: `Version ${bim.version}` },
+          {
+            label: "Status",
+            value: <StatusTag tone={BIM_STATUS_TONE[bim.status] ?? "neutral"}>{bim.status === "ready" ? "Ready" : bim.status === "processing" ? "Processing" : "Failed"}</StatusTag>,
+            note:
+              bim.source === "demo"
+                ? "Derived in the browser from this project's planning dataset — no IFC file was parsed."
+                : "Registered locally; geometry parsed by the connected BIM service.",
+          },
+          { label: "Elements", value: formatNumber(bim.elements), note: `${bim.buildings} buildings · ${bim.levels} levels` },
+          { label: "Open issues", value: String(bim.openIssues), note: bim.openIssues === 0 ? "None recorded" : "Tracked in the BIM workspace" },
+          { label: "Last updated", value: formatDate(bim.updatedAt) },
+        ]}
+      />
+      <DataTable
+        caption="Derived model quantities"
+        dense
+        columns={[
+          { key: "quantity", header: "Quantity", render: (r) => <span className="font-semibold">{r.quantity}</span> },
+          { key: "value", header: "Value", align: "right", render: (r) => <span className="font-bold">{r.value}</span> },
+          { key: "note", header: "Basis", render: (r) => <span className="text-muted">{r.note}</span> },
+        ]}
+        rows={rows}
+        empty="No quantities could be derived from this model."
+      />
+      <p className="report-block text-[11.5px] leading-relaxed text-muted">
+        Quantities are computed from the model geometry in the BIM workspace and are read live for this document, so they
+        always match what the workspace shows. File import (IFC / glTF parsing, storage and server-side coordination) is a
+        planned integration: until it is connected, models registered here are described by their metadata and derived from
+        the project's own plan data.
+      </p>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Dispatcher
 // ---------------------------------------------------------------------------
 
@@ -757,6 +815,7 @@ const RENDERERS: Record<ReportSectionId, (props: SectionProps) => ReactElement> 
   planningOverview: PlanningOverviewSection,
   urbanForm: UrbanFormSection,
   modelView: ModelViewSection,
+  bim: BimSection,
   environmental: EnvironmentalSection,
   mobility: MobilitySection,
   optimization: OptimizationSection,
