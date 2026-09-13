@@ -114,7 +114,7 @@ export function AnalysisCompare({ rows, projectName, onClose, bare = false }: An
   );
   if (bare) return <div className="p-4">{body}</div>;
   return (
-    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="false" aria-labelledby="analysis-compare-title" className="w-full max-w-xl rounded-2xl border border-line bg-white p-4 shadow-float outline-none animate-pop motion-reduce:animate-none sm:p-5 focus-visible:ring-4 focus-visible:ring-primary/20">
+    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="false" aria-labelledby="analysis-compare-title" className="w-full max-w-xl rounded-2xl border border-line bg-surface p-4 shadow-float outline-none animate-pop motion-reduce:animate-none sm:p-5 focus-visible:ring-4 focus-visible:ring-primary/20">
       {body}
     </section>
   );

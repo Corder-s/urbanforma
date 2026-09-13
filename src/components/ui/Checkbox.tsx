@@ -25,8 +25,8 @@ export function Checkbox({ checked, onChange, label, id }: CheckboxProps) {
           className={[
             "grid h-5 w-5 place-items-center rounded-[7px] border transition duration-150",
             checked
-              ? "border-primary bg-primary text-white"
-              : "border-line-strong bg-white text-transparent hover:border-primary",
+              ? "border-primary bg-primary text-on-brand"
+              : "border-line-strong bg-surface text-transparent hover:border-primary",
             "peer-focus-visible:ring-4 peer-focus-visible:ring-primary/20",
           ].join(" ")}
           aria-hidden="true"

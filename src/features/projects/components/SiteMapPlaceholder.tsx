@@ -200,16 +200,16 @@ export function SiteMapPlaceholder({ site, variant = 0, className = "" }: SiteMa
 
       {/* overlays: coordinates chip + legend (HTML so text stays crisp) */}
       <figcaption className="pointer-events-none absolute inset-x-3 top-3 flex flex-wrap items-start justify-between gap-2">
-        <span className="rounded-lg border border-line bg-white/95 px-2.5 py-1 text-[11px] font-bold text-ink">
+        <span className="rounded-lg border border-line bg-surface/95 px-2.5 py-1 text-[11px] font-bold text-ink">
           {formatCoordinates(site.center)}
         </span>
-        <span className="rounded-lg border border-line bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-muted">
+        <span className="rounded-lg border border-line bg-surface/95 px-2.5 py-1 text-[11px] font-semibold text-muted">
           Map preview — GIS provider connects later
         </span>
       </figcaption>
       <ul
         aria-label="Map legend"
-        className="pointer-events-none absolute bottom-3 right-3 hidden gap-3 rounded-lg border border-line bg-white/95 px-2.5 py-1.5 text-[11px] font-semibold text-muted sm:flex"
+        className="pointer-events-none absolute bottom-3 right-3 hidden gap-3 rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 text-[11px] font-semibold text-muted sm:flex"
       >
         <li className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm border-2 border-dashed border-primary" aria-hidden="true" /> Site boundary

@@ -26,7 +26,7 @@ export function ActivityTimeline({ activities }: { activities: ProjectActivity[]
   return (
     <section aria-labelledby="activity-title" className="flex h-full flex-col">
       <SectionHeading id="activity-title" title="Recent Activity" hint={`${activities.length} recent events`} />
-      <div className="flex-1 rounded-3xl border border-line bg-white p-5 shadow-soft">
+      <div className="flex-1 rounded-3xl border border-line bg-surface p-5 shadow-soft">
         {activities.length === 0 ? (
           <p className="rounded-xl bg-surface-2 px-3 py-2 text-[13px] text-muted">No activity recorded yet.</p>
         ) : (

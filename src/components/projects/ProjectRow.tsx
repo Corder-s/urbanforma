@@ -8,7 +8,7 @@ import { ProjectStatusBadge } from "../dashboard/ProjectStatusBadge";
 import { ProjectCardMenu } from "./ProjectCardMenu";
 
 const openLinkClass =
-  "inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-primary shadow-soft transition hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
+  "inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-line bg-surface px-4 text-sm font-semibold text-primary shadow-soft transition hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
 
 /** Compact horizontal list row for the list view. */
 export function ProjectRow({
@@ -23,7 +23,7 @@ export function ProjectRow({
   return (
     // Hover uses shadow/border only (no transform) so the ⋯ menu of an open row
     // is never trapped beneath the following row.
-    <article className="group relative grid grid-cols-[1fr] items-center gap-4 rounded-3xl border border-line bg-white p-3 shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-primary/30 hover:shadow-card focus-within:z-10 hover:z-10 sm:grid-cols-[180px_1.6fr_1.2fr_auto] sm:gap-5 sm:p-4">
+    <article className="group relative grid grid-cols-[1fr] items-center gap-4 rounded-3xl border border-line bg-surface p-3 shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-primary/30 hover:shadow-card focus-within:z-10 hover:z-10 sm:grid-cols-[180px_1.6fr_1.2fr_auto] sm:gap-5 sm:p-4">
       {/* thumb */}
       <Link
         to={detail}

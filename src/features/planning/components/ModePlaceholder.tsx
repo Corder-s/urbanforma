@@ -31,7 +31,7 @@ export function ModePlaceholder({ mode, onBackToPlan }: ModePlaceholderProps) {
   const projectId = params.get("projectId");
   return (
     <div className="grid h-full place-items-center overflow-y-auto bg-[#F1F5FB] p-6">
-      <div className="w-full max-w-md rounded-3xl border border-dashed border-line-strong bg-white/80 p-6 text-center sm:p-8">
+      <div className="w-full max-w-md rounded-3xl border border-dashed border-line-strong bg-surface/80 p-6 text-center sm:p-8">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
           <Icon size={26} />
         </span>

@@ -80,7 +80,7 @@ export function ProjectHeader({ project, onArchive }: ProjectHeaderProps) {
               <DraftingCompass size={18} /> Open Planning Studio
             </Button>
           </Link>
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-line bg-white shadow-soft">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-line bg-surface shadow-soft">
             <ProjectCardMenu project={project} onArchive={onArchive} />
           </div>
         </div>

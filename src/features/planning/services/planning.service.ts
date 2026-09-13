@@ -1,3 +1,4 @@
+import { isPersonalizationEnabled } from "../../settings/services/settings.service";
 import { getProject, ProjectNotFoundError } from "../../projects/project.service";
 import type { Project } from "../../projects/project.types";
 import { buildBlankSite, buildDemoDocument, DEFAULT_LAYERS, getRecipe, PLANNING_RECIPES } from "../data/planning.data";
@@ -154,6 +155,8 @@ export function hasLocalPlan(projectId: string): boolean {
 }
 
 export function rememberLastProject(projectId: string): void {
+  // Privacy → Personalization off: skip writing convenience history.
+  if (!isPersonalizationEnabled()) return;
   try {
     window.localStorage.setItem(LAST_PROJECT_KEY, projectId);
   } catch {

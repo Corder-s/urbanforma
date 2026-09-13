@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { formatDate, formatNumber, formatSiteArea } from "../../projects/project.service";
+import { formatDate, formatNumber } from "../../projects/project.service";
+import { formatKilometres, formatSiteArea, formatSpeed } from "../../settings/lib/units";
 import { getCategory, STATUS_META } from "../../analysis/data/analysis.data";
 import {
   COMPARE_METRICS,
@@ -110,11 +111,11 @@ export function formatAnalysisNumber(value: number, unit: AnalysisMetric["unit"]
     case "score":
       return `${Math.round(value)}`;
     case "ha":
-      return `${value.toFixed(1)} ha`;
+      return formatSiteArea(value);
     case "km":
-      return `${value.toFixed(2)} km`;
+      return formatKilometres(value);
     case "m/s":
-      return `${value.toFixed(1)} m/s`;
+      return formatSpeed(value);
     case "people/ha":
       return `${Math.round(value)} people/ha`;
     case "FAR":

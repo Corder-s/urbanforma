@@ -31,7 +31,7 @@ export function BimStatusBar({
   revision,
 }: BimStatusBarProps) {
   return (
-    <div className="flex h-8 shrink-0 items-center gap-2 overflow-hidden border-t border-line bg-white px-2.5 text-[11px] text-muted sm:gap-3 sm:px-3">
+    <div className="flex h-8 shrink-0 items-center gap-2 overflow-hidden border-t border-line bg-surface px-2.5 text-[11px] text-muted sm:gap-3 sm:px-3">
       <span className="inline-flex min-w-0 items-center gap-1.5">
         <Box size={12} className="shrink-0 text-faint" aria-hidden="true" />
         <span className="truncate font-bold text-ink">{model ? `${model.name} · v${model.version}` : "No model"}</span>

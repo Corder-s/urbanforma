@@ -26,7 +26,7 @@ export function ProjectOverview({ project }: { project: ProjectDetail }) {
   const gridId = useId();
   const currentStage = project.stages.find((s) => s.key === project.currentStage);
   return (
-    <section aria-labelledby="overview-title" className="rounded-3xl border border-line bg-white shadow-card">
+    <section aria-labelledby="overview-title" className="rounded-3xl border border-line bg-surface shadow-card">
       <h2 id="overview-title" className="sr-only">
         Project overview
       </h2>
@@ -51,7 +51,7 @@ export function ProjectOverview({ project }: { project: ProjectDetail }) {
             </defs>
             <rect width="100%" height="100%" fill={`url(#${gridId})`} />
           </svg>
-          <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-xl border border-line bg-white/95 px-3 py-1.5 text-[12px] font-bold text-ink">
+          <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-xl border border-line bg-surface/95 px-3 py-1.5 text-[12px] font-bold text-ink">
             <MapPin size={14} className="text-primary" aria-hidden="true" />
             {project.location}
           </div>

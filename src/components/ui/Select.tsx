@@ -23,7 +23,7 @@ interface SelectProps {
 export function Select({ label, value, onChange, options, id, className = "" }: SelectProps) {
   return (
     <div className={["relative shrink-0", className].join(" ")}>
-      <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-line bg-white px-3 shadow-soft transition-colors hover:border-line-strong focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
+      <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-line bg-surface px-3 shadow-soft transition-colors hover:border-line-strong focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
         <span className="text-[11px] font-bold uppercase tracking-wider text-faint">
           {label}
         </span>

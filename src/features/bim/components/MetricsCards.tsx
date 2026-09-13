@@ -73,7 +73,7 @@ export function MetricsCards({ quantities, model, openIssues, modelCount, compac
   return (
     <div className={`grid gap-2 ${compact ? "grid-cols-2" : "sm:grid-cols-2 xl:grid-cols-4"}`}>
       {tiles.map((t) => (
-        <article key={t.id} className="rounded-2xl border border-line bg-white p-3 shadow-soft">
+        <article key={t.id} className="rounded-2xl border border-line bg-surface p-3 shadow-soft">
           <div className="flex items-start gap-2">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
               <t.icon size={15} />

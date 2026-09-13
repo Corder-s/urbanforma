@@ -14,7 +14,7 @@ export function ContextPanel({ state, onClose }: ContextPanelProps) {
   const visible = LAYER_DEFS.filter((l) => layers[l.key]).length;
 
   return (
-    <section aria-labelledby="context-title" className="flex h-full min-h-0 flex-col bg-white">
+    <section aria-labelledby="context-title" className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-line px-4">
         <h2 id="context-title" className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-faint">
           <Layers size={14} aria-hidden="true" /> Context layers

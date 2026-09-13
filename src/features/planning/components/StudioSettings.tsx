@@ -38,7 +38,7 @@ export function StudioSettings({ state, projectId, onClose, onReload }: StudioSe
       ref={ref}
       role="dialog"
       aria-label="Studio settings"
-      className="absolute right-3 top-2 z-30 w-72 max-w-[calc(100%-1.5rem)] rounded-2xl border border-line bg-white p-3 shadow-float animate-pop motion-reduce:animate-none"
+      className="absolute right-3 top-2 z-30 w-72 max-w-[calc(100%-1.5rem)] rounded-2xl border border-line bg-surface p-3 shadow-float animate-pop motion-reduce:animate-none"
     >
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-[11px] font-bold uppercase tracking-widest text-faint">Studio settings</h2>

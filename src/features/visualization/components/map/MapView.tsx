@@ -270,8 +270,8 @@ export function MapView({ state, map, annotations = NO_ANNOTATIONS, presentation
 
         {/* ground + grid */}
         <rect width="100%" height="100%" fill={basemap.contextGround} />
-        {view.scale > 0.4 && <rect width="100%" height="100%" fill={`url(#${patternId}-minor)`} />}
-        <rect width="100%" height="100%" fill={`url(#${patternId}-major)`} />
+        {settings.grid && view.scale > 0.4 && <rect width="100%" height="100%" fill={`url(#${patternId}-minor)`} />}
+        {settings.grid && <rect width="100%" height="100%" fill={`url(#${patternId}-major)`} />}
 
         <g transform={`translate(${view.tx} ${view.ty}) scale(${view.scale})`}>
           <rect x={world.x} y={world.y} width={world.width} height={world.height} fill={basemap.ground} stroke={basemap.grid} strokeWidth={1 / view.scale} />
@@ -311,7 +311,7 @@ export function MapView({ state, map, annotations = NO_ANNOTATIONS, presentation
 
       {/* north arrow */}
       {showNorth && (
-      <div className="pointer-events-none absolute left-3 top-3 grid h-11 w-11 place-items-center rounded-xl border border-line bg-white/90 shadow-soft" aria-label="North is up" role="img">
+      <div className="pointer-events-none absolute left-3 top-3 grid h-11 w-11 place-items-center rounded-xl border border-line bg-surface/90 shadow-soft" aria-label="North is up" role="img">
         <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
           <path d="M13 3 L17 15 L13 12.5 L9 15 Z" fill="#2563EB" />
           <path d="M13 12.5 L17 15 L13 23 L9 15 Z" fill="#CBD5E1" />
@@ -324,7 +324,7 @@ export function MapView({ state, map, annotations = NO_ANNOTATIONS, presentation
 
       {/* scale bar */}
       {showScale && (
-      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg border border-line bg-white/90 px-2 py-1 shadow-soft" aria-label={`Scale bar: ${map.scaleBar.label}`} role="img">
+      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg border border-line bg-surface/90 px-2 py-1 shadow-soft" aria-label={`Scale bar: ${map.scaleBar.label}`} role="img">
         <div className="flex items-end gap-1.5">
           <div className="h-2 border-b-2 border-l-2 border-r-2 border-ink" style={{ width: Math.max(24, Math.min(160, map.scaleBar.px)) }} aria-hidden="true" />
           <span className="text-[10.5px] font-bold leading-none text-ink">{map.scaleBar.label}</span>

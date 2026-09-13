@@ -91,7 +91,7 @@ export function SpatialSearch({ state, onClose }: SpatialSearchProps) {
   };
 
   return (
-    <div role="dialog" aria-label="Search spatial objects" className="flex max-h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-float">
+    <div role="dialog" aria-label="Search spatial objects" className="flex max-h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-float">
       <div className="flex items-center gap-2 border-b border-line px-3">
         <Search size={16} className="shrink-0 text-faint" aria-hidden="true" />
         <input
@@ -147,7 +147,7 @@ export function SpatialSearch({ state, onClose }: SpatialSearchProps) {
                 onClick={() => choose(h.o)}
                 className={["flex cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-2", active ? "bg-primary/10" : "hover:bg-surface-2"].join(" ")}
               >
-                <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-white text-primary" : "bg-surface-2 text-muted"}`}>
+                <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-surface text-primary" : "bg-surface-2 text-muted"}`}>
                   <Icon size={15} aria-hidden="true" />
                 </span>
                 <span className="min-w-0 flex-1">

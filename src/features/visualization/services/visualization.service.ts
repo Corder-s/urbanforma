@@ -1,3 +1,4 @@
+import { isPersonalizationEnabled } from "../../settings/services/settings.service";
 import { getDemoScenario, getProject, getProjectDetails, ProjectNotFoundError } from "../../projects/project.service";
 import { getPlanningState, getPlanningProjects, getSiteInfo } from "../../planning/services/planning.service";
 import type { PlanningProjectSummary } from "../../planning/services/planning.service";
@@ -172,6 +173,8 @@ export function savePrefs(projectId: string, prefs: VisualizationPrefs): void {
 }
 
 export function rememberLastVisualizedProject(projectId: string): void {
+  // Privacy → Personalization off: skip writing convenience history.
+  if (!isPersonalizationEnabled()) return;
   try {
     window.localStorage.setItem(VIEW_STORAGE_KEY, projectId);
   } catch {

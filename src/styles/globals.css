@@ -56,6 +56,39 @@ body {
   border-radius: 12px;
 }
 
+/* ---------- app-level preferences (Settings → Appearance / Accessibility) ----------
+   The provider sets these attributes on <html> from the persisted settings, so a
+   preference applies everywhere without a single component knowing about it.
+   They complement — never override — the matching OS preferences: the reduced
+   motion media query above still wins for users who ask their system for it. */
+
+/* "Reduce motion" chosen in the app (OS-level reduce is handled above). */
+html[data-motion="reduced"] {
+  scroll-behavior: auto;
+}
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* "Always show focus rings" — helpful for keyboard users who also click. */
+html[data-focus="always"] :focus {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: 12px;
+}
+
+/* "Larger interface" — scales every rem-based size (text, controls, spacing).
+   Fixed pixel labels keep their size, so this is a boost rather than a zoom. */
+html[data-scale="large"] {
+  font-size: 112.5%;
+  scroll-padding-top: 96px;
+}
+
 /* entrance stagger helpers */
 .anim-delay-1 { animation-delay: 0.08s; }
 .anim-delay-2 { animation-delay: 0.16s; }

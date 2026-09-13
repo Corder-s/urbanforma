@@ -30,7 +30,7 @@ export function ProjectInsights({ insights }: { insights: ProjectInsight[] }) {
           return (
             <li
               key={ins.id}
-              className={`flex flex-col gap-3 rounded-2xl border border-line border-l-4 bg-white p-4 shadow-soft ${lvl.accent}`}
+              className={`flex flex-col gap-3 rounded-2xl border border-line border-l-4 bg-surface p-4 shadow-soft ${lvl.accent}`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-muted">

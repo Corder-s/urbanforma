@@ -80,7 +80,7 @@ export function ProjectSwitcher({ projects, currentId, currentName, onSwitch, di
           id={menuId}
           role="menu"
           aria-label="Switch project"
-          className="absolute left-0 top-full z-30 mt-1 max-h-[min(60vh,420px)] w-72 max-w-[calc(100vw_-_1.5rem)] overflow-y-auto rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          className="absolute left-0 top-full z-30 mt-1 max-h-[min(60vh,420px)] w-72 max-w-[calc(100vw_-_1.5rem)] overflow-y-auto rounded-2xl border border-line bg-surface p-1.5 shadow-float animate-pop motion-reduce:animate-none"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault();

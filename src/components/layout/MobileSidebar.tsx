@@ -34,7 +34,7 @@ export function MobileSidebar() {
       {/* backdrop */}
       <div
         onClick={closeMobile}
-        className={`absolute inset-0 bg-ink/40 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-scrim/40 backdrop-blur-sm transition-opacity duration-300 ${
           mobileOpen ? "opacity-100" : "opacity-0"
         }`}
       />
@@ -45,7 +45,7 @@ export function MobileSidebar() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
-        className={`absolute left-0 top-0 flex h-full w-[280px] max-w-[85vw] flex-col bg-white shadow-float transition-transform duration-300 ease-in-out ${
+        className={`absolute left-0 top-0 flex h-full w-[280px] max-w-[85vw] flex-col bg-surface shadow-float transition-transform duration-300 ease-in-out ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

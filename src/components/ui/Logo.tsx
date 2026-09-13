@@ -14,7 +14,7 @@ export function Logo({
   return (
     <div className={["flex items-center gap-3", className].join(" ")}>
       <span
-        className="grid shrink-0 place-items-center rounded-2xl bg-white shadow-soft ring-1 ring-line"
+        className="grid shrink-0 place-items-center rounded-2xl bg-surface shadow-soft ring-1 ring-line"
         style={{ width: size + 10, height: size + 10 }}
       >
         <svg

@@ -33,7 +33,7 @@ export function PerformanceChart({ current, scenarios, activeId }: PerformanceCh
   const y = (v: number) => padT + (1 - v / 100) * (H - padT - padB);
 
   return (
-    <section aria-labelledby={`${id}-title`} className="rounded-2xl border border-line bg-white p-4">
+    <section aria-labelledby={`${id}-title`} className="rounded-2xl border border-line bg-surface p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h3 id={`${id}-title`} className="text-[15px] font-extrabold text-ink">
@@ -44,7 +44,7 @@ export function PerformanceChart({ current, scenarios, activeId }: PerformanceCh
         <ul className="flex flex-wrap gap-x-3 gap-y-1" aria-label="Series">
           {series.map((s) => (
             <li key={s.key} className={`inline-flex items-center gap-1.5 text-[11.5px] font-bold ${s.key === activeId ? "text-primary" : "text-ink"}`}>
-              <span className="grid h-4 w-4 place-items-center rounded-[4px] text-[9px] font-extrabold text-white" style={{ backgroundColor: s.color }} aria-hidden="true">
+              <span className="grid h-4 w-4 place-items-center rounded-[4px] text-[9px] font-extrabold text-on-brand" style={{ backgroundColor: s.color }} aria-hidden="true">
                 {s.letter}
               </span>
               {s.label}

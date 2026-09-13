@@ -326,6 +326,7 @@ export const ISSUE_TEMPLATES: BimIssueTemplate[] = [
 // ---------------------------------------------------------------------------
 
 export { formatArea, formatMetres } from "../../planning/lib/geometry";
+import { formatVolume } from "../../settings/lib/units";
 
 export function formatBytes(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
@@ -335,9 +336,9 @@ export function formatBytes(bytes: number): string {
   return `${value >= 10 || i === 0 ? Math.round(value) : value.toFixed(1)} ${units[i]}`;
 }
 
+/** Unit-aware (Settings → Units); kept under its BIM-facing name. */
 export function formatVolumeM3(m3: number): string {
-  if (!Number.isFinite(m3)) return "—";
-  return `${m3.toLocaleString("en-US", { maximumFractionDigits: 0 })} m³`;
+  return formatVolume(m3);
 }
 
 /** Date + time for model records, versions and issues. */

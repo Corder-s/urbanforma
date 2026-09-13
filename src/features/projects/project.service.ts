@@ -64,10 +64,15 @@ function allProjects(): Project[] {
   return [...createdProjects, ...DEV_PROJECTS];
 }
 
-/** Format a hectare value for display: 51 → "51.0 ha", 9.4 → "9.4 ha". */
-export function formatSiteArea(ha: number): string {
-  return `${ha.toFixed(1)} ha`;
-}
+/**
+ * Format a hectare value for display: 51 → "51.0 ha" (or "126.0 ac" when the
+ * workspace is set to imperial — see Settings → Units). Implemented once in the
+ * settings units library and re-exported here because most modules already
+ * import their formatters from this service.
+ */
+import { formatSiteArea } from "../settings/lib/units";
+
+export { formatSiteArea };
 
 /** Fetch all projects (dev data today; GET /api/projects in the future). */
 export async function getProjects(scenario?: DashboardScenario): Promise<Project[]> {

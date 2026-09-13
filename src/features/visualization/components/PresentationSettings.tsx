@@ -32,7 +32,7 @@ export function PresentationSettings({ state, idPrefix = "pres" }: PresentationS
           {THEMES.map((t) => {
             const on = p.theme === t.id;
             return (
-              <button key={t.id} type="button" role="radio" aria-checked={on} onClick={() => presentation.setTheme(t.id as PresentationTheme)} title={t.hint} className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-left transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${on ? "border-primary bg-primary/5" : "border-line bg-white hover:border-line-strong"}`}>
+              <button key={t.id} type="button" role="radio" aria-checked={on} onClick={() => presentation.setTheme(t.id as PresentationTheme)} title={t.hint} className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-left transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${on ? "border-primary bg-primary/5" : "border-line bg-surface hover:border-line-strong"}`}>
                 <span className="h-7 w-7 shrink-0 rounded-md border border-line" style={{ background: t.swatch }} aria-hidden="true" />
                 <span className="min-w-0">
                   <span className="block truncate text-[12.5px] font-bold text-ink">{t.label}</span>

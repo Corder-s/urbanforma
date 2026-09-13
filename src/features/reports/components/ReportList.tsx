@@ -78,7 +78,7 @@ export function ReportList({
   };
 
   return (
-    <section aria-labelledby="reports-list-heading" className="rounded-3xl border border-line bg-white p-4 shadow-soft sm:p-5">
+    <section aria-labelledby="reports-list-heading" className="rounded-3xl border border-line bg-surface p-4 shadow-soft sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 id="reports-list-heading" className="text-[15px] font-extrabold tracking-tight text-ink">
           Reports
@@ -134,7 +134,7 @@ export function ReportList({
                 key={report.id}
                 className={[
                   "rounded-2xl border p-3 transition-colors",
-                  selected ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-line bg-white hover:border-line-strong",
+                  selected ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-line bg-surface hover:border-line-strong",
                 ].join(" ")}
               >
                 {editing ? (

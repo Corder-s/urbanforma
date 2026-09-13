@@ -84,7 +84,7 @@ export function BimDashboard({
     <div className="h-full min-h-0 flex-1 overflow-y-auto overscroll-contain bg-canvas">
       <div className="mx-auto grid max-w-6xl gap-3 p-3">
         {/* model header */}
-        <section aria-labelledby="bim-overview-model" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+        <section aria-labelledby="bim-overview-model" className="rounded-3xl border border-line bg-surface p-4 shadow-soft">
           <div className="flex flex-wrap items-start gap-3">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary" aria-hidden="true">
               <Box size={21} />
@@ -139,7 +139,7 @@ export function BimDashboard({
 
         <div className="grid gap-3 lg:grid-cols-2">
           {/* structure */}
-          <section aria-labelledby="bim-overview-structure" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+          <section aria-labelledby="bim-overview-structure" className="rounded-3xl border border-line bg-surface p-4 shadow-soft">
             <div className="flex items-center gap-2">
               <Layers3 size={15} className="shrink-0 text-primary" aria-hidden="true" />
               <h3 id="bim-overview-structure" className="min-w-0 flex-1 text-[13.5px] font-extrabold text-ink">
@@ -186,7 +186,7 @@ export function BimDashboard({
           </section>
 
           {/* coordination summary */}
-          <section aria-labelledby="bim-overview-coordination" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+          <section aria-labelledby="bim-overview-coordination" className="rounded-3xl border border-line bg-surface p-4 shadow-soft">
             <div className="flex items-center gap-2">
               <ClipboardCheck size={15} className="shrink-0 text-primary" aria-hidden="true" />
               <h3 id="bim-overview-coordination" className="min-w-0 flex-1 text-[13.5px] font-extrabold text-ink">
@@ -226,7 +226,7 @@ export function BimDashboard({
           </section>
 
           {/* recent models */}
-          <section aria-labelledby="bim-overview-models" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+          <section aria-labelledby="bim-overview-models" className="rounded-3xl border border-line bg-surface p-4 shadow-soft">
             <div className="flex items-center gap-2">
               <Boxes size={15} className="shrink-0 text-primary" aria-hidden="true" />
               <h3 id="bim-overview-models" className="min-w-0 flex-1 text-[13.5px] font-extrabold text-ink">
@@ -281,7 +281,7 @@ export function BimDashboard({
           </section>
 
           {/* issues */}
-          <section aria-labelledby="bim-overview-issues" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+          <section aria-labelledby="bim-overview-issues" className="rounded-3xl border border-line bg-surface p-4 shadow-soft">
             <div className="flex items-center gap-2">
               <Flag size={15} className="shrink-0 text-primary" aria-hidden="true" />
               <h3 id="bim-overview-issues" className="min-w-0 flex-1 text-[13.5px] font-extrabold text-ink">
@@ -329,7 +329,7 @@ export function BimDashboard({
           </section>
 
           {/* provenance */}
-          <section aria-labelledby="bim-overview-source" className="rounded-3xl border border-line bg-white p-4 shadow-soft">
+          <section aria-labelledby="bim-overview-source" className="rounded-3xl border border-line bg-surface p-4 shadow-soft">
             <div className="flex items-center gap-2">
               <Info size={15} className="shrink-0 text-primary" aria-hidden="true" />
               <h3 id="bim-overview-source" className="min-w-0 flex-1 text-[13.5px] font-extrabold text-ink">
@@ -358,7 +358,7 @@ export function BimDashboard({
                   <Link
                     key={l.to}
                     to={l.to}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-2.5 py-1.5 text-[12px] font-bold text-muted shadow-soft transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-[12px] font-bold text-muted shadow-soft transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
                   >
                     <l.icon size={13} aria-hidden="true" />
                     {l.label}
@@ -375,7 +375,7 @@ export function BimDashboard({
 
 function Cell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-white px-2.5 py-1.5">
+    <div className="bg-surface px-2.5 py-1.5">
       <dt className="text-[10.5px] font-bold uppercase tracking-wide text-muted">{label}</dt>
       <dd className="mt-0.5 truncate text-[12px] font-bold text-ink" title={value}>
         {value}

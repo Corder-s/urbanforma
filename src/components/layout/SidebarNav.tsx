@@ -82,7 +82,7 @@ function HelpMenu({ collapsed }: { collapsed: boolean }) {
           id={panelId}
           role="menu"
           className={[
-            "absolute z-50 w-60 origin-bottom-left animate-pop rounded-2xl border border-line bg-white p-1.5 shadow-float",
+            "absolute z-50 w-60 origin-bottom-left animate-pop rounded-2xl border border-line bg-surface p-1.5 shadow-float",
             collapsed ? "bottom-0 left-full ml-3" : "bottom-full left-0 mb-2",
           ].join(" ")}
         >

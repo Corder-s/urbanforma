@@ -25,7 +25,7 @@ export function PortfolioOverview({ portfolio }: { portfolio: PortfolioSummary }
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {metrics.map((m, i) => (
           <Reveal key={m.label} delay={i * 70} className="h-full">
-            <div className="flex h-full items-center gap-3 rounded-2xl border border-line bg-white p-4 shadow-soft">
+            <div className="flex h-full items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-soft">
               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface-2 text-primary">
                 <m.icon size={20} />
               </span>

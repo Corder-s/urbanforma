@@ -27,7 +27,7 @@ export function LandingNavbar() {
       className={[
         "fixed inset-x-0 top-0 z-50 transition duration-300",
         scrolled
-          ? "border-b border-line bg-white/85 backdrop-blur-md shadow-soft"
+          ? "border-b border-line bg-surface/85 backdrop-blur-md shadow-soft"
           : "border-b border-transparent bg-transparent",
       ].join(" ")}
     >
@@ -59,7 +59,7 @@ export function LandingNavbar() {
 
         <button
           type="button"
-          className="grid h-10 w-10 place-items-center rounded-xl border border-line bg-white text-ink md:hidden focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+          className="grid h-10 w-10 place-items-center rounded-xl border border-line bg-surface text-ink md:hidden focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
@@ -71,7 +71,7 @@ export function LandingNavbar() {
       {/* mobile drawer */}
       <div
         className={[
-          "md:hidden overflow-hidden border-t border-line bg-white transition-[max-height] duration-300 ease-out",
+          "md:hidden overflow-hidden border-t border-line bg-surface transition-[max-height] duration-300 ease-out",
           open ? "max-h-[420px]" : "max-h-0 border-t-transparent",
         ].join(" ")}
       >

@@ -27,7 +27,7 @@ export function PresentationHeader({ state, show, root }: PresentationViewProps)
     if (show.slide) setAnnounced(`Slide ${show.index + 1} of ${show.total}: ${show.slide.title}`);
   }, [show.slide, show.index, show.total]);
   return (
-    <div className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-line bg-white px-2 sm:px-3" role="region" aria-label="Presentation">
+    <div className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-2 sm:px-3" role="region" aria-label="Presentation">
       <p className="min-w-0 truncate text-[13px] font-bold text-ink">
         {state.presentation.presentation?.title ?? "Presentation"}
         {show.slide && <span className="font-medium text-muted"> · {show.slide.title}</span>}
@@ -38,7 +38,7 @@ export function PresentationHeader({ state, show, root }: PresentationViewProps)
             {fullscreen.active ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
           </button>
         )}
-        <button ref={exitRef} type="button" onClick={show.exit} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-white px-2.5 text-[12.5px] font-bold text-ink hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20" title="Exit presentation (Esc)">
+        <button ref={exitRef} type="button" onClick={show.exit} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 text-[12.5px] font-bold text-ink hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20" title="Exit presentation (Esc)">
           <X size={15} aria-hidden="true" /> Exit
         </button>
       </div>
@@ -50,12 +50,12 @@ export function PresentationHeader({ state, show, root }: PresentationViewProps)
   );
 }
 
-const navBtn = "inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-white/95 px-3 text-[12.5px] font-bold text-ink shadow-float transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none";
+const navBtn = "inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-surface/95 px-3 text-[12.5px] font-bold text-ink shadow-float transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none";
 
 export function SlideNavigation({ show }: { show: SlideshowApi }) {
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-3 sm:p-4">
-      <div className="pointer-events-auto flex items-center gap-1.5 rounded-2xl bg-white/60 p-1 shadow-soft backdrop-blur-[2px]" role="toolbar" aria-label="Slide navigation">
+      <div className="pointer-events-auto flex items-center gap-1.5 rounded-2xl bg-surface/60 p-1 shadow-soft backdrop-blur-[2px]" role="toolbar" aria-label="Slide navigation">
         <button type="button" onClick={() => show.go(-1)} disabled={show.index <= 0} className={navBtn} aria-label="Previous slide" title="Previous (←)">
           <ChevronLeft size={16} aria-hidden="true" /> <span className="hidden sm:inline">Previous</span>
         </button>

@@ -12,7 +12,7 @@ const btn =
 export function CanvasControls({ camera }: CanvasControlsProps) {
   return (
     <div className="absolute bottom-3 right-3 flex flex-col items-end gap-2">
-      <div className="flex flex-col overflow-hidden rounded-xl border border-line bg-white shadow-soft" role="group" aria-label="Zoom controls">
+      <div className="flex flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-soft" role="group" aria-label="Zoom controls">
         <button type="button" className={btn} onClick={camera.zoomIn} disabled={!camera.canZoomIn} aria-label="Zoom in" title="Zoom in (+)">
           <Plus size={17} />
         </button>
@@ -29,7 +29,7 @@ export function CanvasControls({ camera }: CanvasControlsProps) {
           <Minus size={17} />
         </button>
       </div>
-      <div className="flex overflow-hidden rounded-xl border border-line bg-white shadow-soft" role="group" aria-label="View controls">
+      <div className="flex overflow-hidden rounded-xl border border-line bg-surface shadow-soft" role="group" aria-label="View controls">
         <button type="button" className={`${btn} border-r border-line`} onClick={camera.fitSite} aria-label="Fit site" title="Fit site (F)">
           <Maximize2 size={16} />
         </button>

@@ -51,7 +51,7 @@ export function ProjectInformation({ project }: { project: ProjectDetail }) {
   return (
     <section aria-labelledby="info-title">
       <SectionHeading id="info-title" title="Project Information" />
-      <dl className="grid gap-x-8 rounded-3xl border border-line bg-white px-5 shadow-soft sm:px-6 md:grid-cols-2">
+      <dl className="grid gap-x-8 rounded-3xl border border-line bg-surface px-5 shadow-soft sm:px-6 md:grid-cols-2">
         {fields.map((f) => (
           <div
             key={f.label}

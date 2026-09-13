@@ -24,7 +24,7 @@ export function Avatar({ user, size = 44, className = "" }: AvatarProps) {
         alt={user.name}
         style={style}
         className={[
-          "rounded-full object-cover ring-2 ring-white shadow-soft",
+          "rounded-full object-cover ring-2 ring-surface shadow-soft",
           className,
         ].join(" ")}
       />
@@ -36,7 +36,7 @@ export function Avatar({ user, size = 44, className = "" }: AvatarProps) {
       aria-hidden="true"
       style={style}
       className={[
-        "grid place-items-center rounded-full bg-gradient-to-br from-primary to-accent font-bold text-white ring-2 ring-white shadow-soft",
+        "grid place-items-center rounded-full bg-gradient-to-br from-primary to-accent font-bold text-on-brand ring-2 ring-surface shadow-soft",
         className,
       ].join(" ")}
     >

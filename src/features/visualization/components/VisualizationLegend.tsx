@@ -17,7 +17,7 @@ interface VisualizationLegendProps {
  * always accompany the swatches.
  */
 export function VisualizationLegend({ buildingStyle, theme, plain = false }: VisualizationLegendProps) {
-  const card = plain || !theme ? "rounded-xl border border-line bg-white/95 shadow-soft" : theme.card;
+  const card = plain || !theme ? "rounded-xl border border-line bg-surface/95 shadow-soft" : theme.card;
   const caption = plain || !theme ? "text-faint" : theme.caption;
   const text = plain || !theme ? "text-ink" : theme.value;
   const rows = LEGEND_FEATURES.filter((f) => !(f.id === "buildings" && buildingStyle !== "simple" && buildingStyle !== "architectural"));

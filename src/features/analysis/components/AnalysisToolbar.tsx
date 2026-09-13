@@ -35,7 +35,7 @@ interface AnalysisToolbarProps {
 export function AnalysisToolbar({ projects, projectId, projectName, ready, running, mode, onMode, viewMode, onViewMode, onRun, compareOpen, onToggleCompare, onExport, exportedNotice, inspectorOpen, onToggleInspector, onSwitchProject }: AnalysisToolbarProps) {
   const backTo = projectId ? `/app/projects/${projectId}` : "/app/projects";
   return (
-    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-white px-2 sm:px-3">
+    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-surface px-2 sm:px-3">
       {/* left */}
       <div className="flex min-w-0 flex-1 items-center gap-1 sm:gap-2">
         <Link
@@ -63,7 +63,7 @@ export function AnalysisToolbar({ projects, projectId, projectName, ready, runni
               onClick={() => onMode(m.id)}
               className={[
                 "inline-flex h-8 items-center rounded-[9px] px-3 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50",
-                active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
               ].join(" ")}
             >
               {m.label}
@@ -94,7 +94,7 @@ export function AnalysisToolbar({ projects, projectId, projectName, ready, runni
                 title={v.label}
                 className={[
                   "inline-flex h-8 items-center gap-1.5 rounded-[9px] px-2 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50 sm:px-2.5",
-                  active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                  active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
                 ].join(" ")}
               >
                 <Icon size={15} aria-hidden="true" />
@@ -194,7 +194,7 @@ function ExportMenu({ disabled, onExport, notice }: { disabled: boolean; onExpor
           id={id}
           role="menu"
           aria-label="Export"
-          className="absolute right-0 top-full z-30 mt-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          className="absolute right-0 top-full z-30 mt-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-surface p-1.5 shadow-float animate-pop motion-reduce:animate-none"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault();
@@ -239,7 +239,7 @@ function ExportMenu({ disabled, onExport, notice }: { disabled: boolean; onExpor
         {notice ?? ""}
       </span>
       {notice && (
-        <span className="absolute right-0 top-full z-20 mt-1 inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-white px-2.5 py-1.5 text-[12px] font-semibold text-ink shadow-float animate-pop motion-reduce:animate-none" aria-hidden="true">
+        <span className="absolute right-0 top-full z-20 mt-1 inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 py-1.5 text-[12px] font-semibold text-ink shadow-float animate-pop motion-reduce:animate-none" aria-hidden="true">
           <Check size={14} className="text-success" /> {notice}
         </span>
       )}

@@ -17,7 +17,7 @@ export function SpatialStatusBar({ state, map }: { state: VisualizationState; ma
   const selected = selectedObject ? (selectedObject.type === "building" ? `Building ${selectedObject.name}` : selectedObject.name) : "None";
   const visibleFeatures = visibleObjects.filter((o) => o.selectable && o.type !== "boundary").length;
   return (
-    <div className="flex h-8 shrink-0 items-center gap-4 overflow-hidden border-t border-line bg-white px-3 text-xs sm:gap-5" aria-label="Spatial status">
+    <div className="flex h-8 shrink-0 items-center gap-4 overflow-hidden border-t border-line bg-surface px-3 text-xs sm:gap-5" aria-label="Spatial status">
       <Item label="Selected" value={selected} className="min-w-0 max-w-[40%] shrink" />
       <Item label="View" value={viewMode === "2d" ? "2D Map" : "3D City"} />
       <Item label="Scenario" value={scenarioLabel} className="min-w-0 shrink" />

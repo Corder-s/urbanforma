@@ -97,7 +97,7 @@ export function AnalysisMetricCard({ metric, icon: Icon, title, summary, selecte
       )}
     </>
   );
-  const cls = `w-full rounded-2xl border bg-white text-left shadow-soft transition-colors motion-reduce:transition-none ${dense ? "p-3" : "p-4"} ${selected ? "border-primary ring-4 ring-primary/10" : "border-line"}`;
+  const cls = `w-full rounded-2xl border bg-surface text-left shadow-soft transition-colors motion-reduce:transition-none ${dense ? "p-3" : "p-4"} ${selected ? "border-primary ring-4 ring-primary/10" : "border-line"}`;
   if (interactive)
     return (
       <button type="button" onClick={() => onSelect(metric)} aria-pressed={selected} aria-label={`${title ?? metric.name}: ${value}${suffix}. ${STATUS_META[metric.status].label}. Show details`} className={`${cls} hover:border-primary/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20`}>

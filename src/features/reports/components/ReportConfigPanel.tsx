@@ -59,7 +59,7 @@ export function ReportConfigPanel({
   }, [report.title, report.description]);
 
   return (
-    <section aria-labelledby="report-config-heading" className="rounded-3xl border border-line bg-white p-4 shadow-soft sm:p-5">
+    <section aria-labelledby="report-config-heading" className="rounded-3xl border border-line bg-surface p-4 shadow-soft sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 id="report-config-heading" className="text-[15px] font-extrabold tracking-tight text-ink">
           Report configuration
@@ -151,7 +151,7 @@ export function ReportConfigPanel({
                   key={section.id}
                   className={[
                     "flex items-start gap-2 rounded-xl border px-2.5 py-2 transition-colors",
-                    section.enabled ? "border-line bg-white" : "border-dashed border-line bg-surface-2/40",
+                    section.enabled ? "border-line bg-surface" : "border-dashed border-line bg-surface-2/40",
                   ].join(" ")}
                 >
                   <span className="mt-0.5 w-5 shrink-0 text-center text-[11px] font-bold tabular-nums text-faint">

@@ -121,7 +121,7 @@ export function ScenarioCityPreview({ current, derived, scenarioName, camera, se
   if (failed) {
     return (
       <div className="grid h-full w-full place-items-center bg-canvas p-6" role="status">
-        <div className="max-w-sm rounded-2xl border border-line bg-white p-6 text-center shadow-soft">
+        <div className="max-w-sm rounded-2xl border border-line bg-surface p-6 text-center shadow-soft">
           <div className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
             <Box className="h-5 w-5" aria-hidden="true" />
           </div>
@@ -148,7 +148,7 @@ export function ScenarioCityPreview({ current, derived, scenarioName, camera, se
         {`3D scene showing ${buildingCount} buildings${derived ? `; ${derived.addedIds.length} added, ${derived.removed.length} removed` : ""}.`}
       </p>
       {hovered && hovered.id !== selectedId && hovered.type === "building" && (
-        <div className="pointer-events-none absolute left-3 top-3 rounded-lg border border-line bg-white/95 px-2.5 py-1.5 text-xs font-semibold text-ink shadow-soft" aria-hidden="true">
+        <div className="pointer-events-none absolute left-3 top-3 rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 text-xs font-semibold text-ink shadow-soft" aria-hidden="true">
           {hovered.name}
           <span className="ml-1.5 font-medium text-muted">
             · {hovered.properties.floors} fl{hoverKind ? ` · ${LEGEND[hoverKind].label}` : ""}

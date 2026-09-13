@@ -22,7 +22,7 @@ export function AnalysisRecommendations({ considerations, onOpenCategory, bare =
         const cat = getCategory(c.category);
         const Icon = cat.icon;
         return (
-          <li key={c.id} className="flex items-start gap-3 rounded-xl border border-line bg-white px-3 py-2.5">
+          <li key={c.id} className="flex items-start gap-3 rounded-xl border border-line bg-surface px-3 py-2.5">
             <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
               <Icon size={14} />
             </span>

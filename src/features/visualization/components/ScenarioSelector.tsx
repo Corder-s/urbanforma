@@ -37,10 +37,10 @@ export function ScenarioSelector({ state, compact = false }: ScenarioSelectorPro
               onClick={() => setScenario(o.id)}
               className={[
                 "flex w-full items-start gap-2.5 rounded-lg border px-2.5 py-2 text-left transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                active ? "border-primary bg-primary/5" : "border-line bg-white hover:border-line-strong hover:bg-surface-2",
+                active ? "border-primary bg-primary/5" : "border-line bg-surface hover:border-line-strong hover:bg-surface-2",
               ].join(" ")}
             >
-              <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md text-[10.5px] font-extrabold ${active ? "bg-primary text-white" : "bg-surface-2 text-muted"}`} aria-hidden="true">
+              <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md text-[10.5px] font-extrabold ${active ? "bg-primary text-on-brand" : "bg-surface-2 text-muted"}`} aria-hidden="true">
                 {o.letter ?? "•"}
               </span>
               <span className="min-w-0 flex-1">

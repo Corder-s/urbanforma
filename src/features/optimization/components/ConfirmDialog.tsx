@@ -29,8 +29,8 @@ export function ConfirmDialog({ open, title, description, confirmLabel, cancelLa
 
   if (!open) return null;
   return (
-    <div className="absolute inset-0 z-40 grid place-items-center bg-ink/30 p-4" onMouseDown={(e) => e.target === e.currentTarget && onCancel()}>
-      <div ref={ref} role="alertdialog" aria-modal="true" aria-labelledby={`${id}-title`} aria-describedby={`${id}-desc`} className="w-full max-w-md rounded-2xl border border-line bg-white p-5 shadow-float animate-pop motion-reduce:animate-none">
+    <div className="absolute inset-0 z-40 grid place-items-center bg-scrim/30 p-4" onMouseDown={(e) => e.target === e.currentTarget && onCancel()}>
+      <div ref={ref} role="alertdialog" aria-modal="true" aria-labelledby={`${id}-title`} aria-describedby={`${id}-desc`} className="w-full max-w-md rounded-2xl border border-line bg-surface p-5 shadow-float animate-pop motion-reduce:animate-none">
         <h2 id={`${id}-title`} className="text-[16px] font-extrabold text-ink">
           {title}
         </h2>

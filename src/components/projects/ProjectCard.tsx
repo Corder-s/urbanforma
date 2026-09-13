@@ -9,7 +9,7 @@ import { Badge } from "../ui/Badge";
 import { ProjectCardMenu } from "./ProjectCardMenu";
 
 const openLinkClass =
-  "inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-primary shadow-soft transition hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
+  "inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-surface px-4 text-sm font-semibold text-primary shadow-soft transition hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
 
 /** Grid project card — visual preview (~40%) then details. */
 export function ProjectCard({
@@ -25,7 +25,7 @@ export function ProjectCard({
     // No `overflow-hidden` on the card itself — it would clip the ⋯ menu. The
     // thumbnail link clips its own image instead. Hover uses shadow/border only
     // (no transform) so an open menu is never trapped under a neighbouring card.
-    <article className="group relative flex h-full flex-col rounded-3xl border border-line bg-white shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-primary/30 hover:shadow-card focus-within:z-10 hover:z-10">
+    <article className="group relative flex h-full flex-col rounded-3xl border border-line bg-surface shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-primary/30 hover:shadow-card focus-within:z-10 hover:z-10">
       <Link
         to={detail}
         aria-label={`Open ${project.name}`}

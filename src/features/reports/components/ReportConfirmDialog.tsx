@@ -49,7 +49,7 @@ export function ReportConfirmDialog({
         aria-modal="true"
         aria-labelledby={`${id}-title`}
         aria-describedby={`${id}-desc`}
-        className="w-full max-w-md rounded-2xl border border-line bg-white p-5 shadow-float animate-pop motion-reduce:animate-none"
+        className="w-full max-w-md rounded-2xl border border-line bg-surface p-5 shadow-float animate-pop motion-reduce:animate-none"
       >
         <h2 id={`${id}-title`} className="text-[16px] font-extrabold tracking-tight text-ink">
           {title}

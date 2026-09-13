@@ -9,7 +9,7 @@ import type { BimModel } from "../types/bim.types";
  * the module reads like the rest of the app.
  */
 
-const card = "w-full max-w-md rounded-3xl border border-line bg-white p-6 text-center shadow-card sm:p-8";
+const card = "w-full max-w-md rounded-3xl border border-line bg-surface p-6 text-center shadow-card sm:p-8";
 
 /** Always-visible honesty notice: what this model actually is. */
 export function DemoModelNote({ model, elementCount, className = "" }: { model: BimModel; elementCount: number; className?: string }) {

@@ -241,6 +241,8 @@ export interface VisualizationSettings {
   /** Map furniture. */
   northArrow: boolean;
   scaleBar: boolean;
+  /** 2-D reference grid (Settings → Map can change the default). */
+  grid: boolean;
 }
 
 /** Alias used by the presentation model (spec naming). */

@@ -20,6 +20,7 @@ import {
   loadProjectsPage,
   loadRegisterPage,
   loadReportsPage,
+  loadSettingsPage,
   loadVisualizationPage,
 } from "./routeLoaders";
 
@@ -59,6 +60,7 @@ const OptimizationPage = lazy(() =>
 );
 const ReportsPage = lazy(() => loadReportsPage().then((m) => ({ default: m.ReportsPage })));
 const BimPage = lazy(() => loadBimPage().then((m) => ({ default: m.BimPage })));
+const SettingsPage = lazy(() => loadSettingsPage().then((m) => ({ default: m.SettingsPage })));
 const ComingSoonPage = lazy(() =>
   loadComingSoonPage().then((m) => ({ default: m.ComingSoonPage }))
 );
@@ -125,7 +127,7 @@ export const router = createBrowserRouter([
       { path: "visualization", element: <VisualizationPage /> },
       { path: "reports", element: <ReportsPage /> },
       { path: "bim", element: <BimPage /> },
-      { path: "settings", element: <ComingSoonPage /> },
+      { path: "settings", element: <SettingsPage /> },
       { path: "*", element: <Navigate to="/app" replace /> },
     ],
   },

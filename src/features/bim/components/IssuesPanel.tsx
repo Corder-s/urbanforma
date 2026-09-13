@@ -44,7 +44,7 @@ export function IssuesPanel({ issues, counts, seeded, selectedId, onSelect, onNe
   const filtersActive = severities.length > 0 || statuses.length > 0 || query.trim().length > 0;
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex shrink-0 items-center gap-1.5 border-b border-line px-2.5 py-2">
         <Flag size={15} className="shrink-0 text-primary" aria-hidden="true" />
         <h2 className="min-w-0 flex-1 truncate text-[12.5px] font-extrabold uppercase tracking-wide text-ink">Issues</h2>
@@ -63,7 +63,7 @@ export function IssuesPanel({ issues, counts, seeded, selectedId, onSelect, onNe
             placeholder="Search issues…"
             autoComplete="off"
             aria-label="Search issues"
-            className="h-9 w-full rounded-lg border border-line bg-white pl-8 pr-8 text-[12.5px] text-ink placeholder:text-faint focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+            className="h-9 w-full rounded-lg border border-line bg-surface pl-8 pr-8 text-[12.5px] text-ink placeholder:text-faint focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
           />
           {query && (
             <button type="button" onClick={() => setQuery("")} aria-label="Clear issue search" className="absolute right-1.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-faint hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
@@ -83,7 +83,7 @@ export function IssuesPanel({ issues, counts, seeded, selectedId, onSelect, onNe
                 onClick={() => toggleSeverity(s)}
                 className={[
                   "inline-flex items-center gap-1 rounded-lg border px-1.5 py-0.5 text-[11px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                  on ? "border-primary/40 bg-primary/10 text-primary" : "border-line bg-white text-muted hover:text-ink",
+                  on ? "border-primary/40 bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:text-ink",
                 ].join(" ")}
               >
                 {SEVERITY_META[s].label}
@@ -104,7 +104,7 @@ export function IssuesPanel({ issues, counts, seeded, selectedId, onSelect, onNe
                 onClick={() => toggleStatus(s)}
                 className={[
                   "inline-flex items-center gap-1 rounded-lg border px-1.5 py-0.5 text-[11px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                  on ? "border-primary/40 bg-primary/10 text-primary" : "border-line bg-white text-muted hover:text-ink",
+                  on ? "border-primary/40 bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:text-ink",
                 ].join(" ")}
               >
                 {ISSUE_STATUS_META[s].label}
@@ -160,7 +160,7 @@ export function IssuesPanel({ issues, counts, seeded, selectedId, onSelect, onNe
                   <div
                     className={[
                       "rounded-xl border px-2.5 py-2 transition-colors",
-                      active ? "border-primary/50 bg-primary/5" : "border-line bg-white hover:border-line-strong hover:bg-surface-2",
+                      active ? "border-primary/50 bg-primary/5" : "border-line bg-surface hover:border-line-strong hover:bg-surface-2",
                     ].join(" ")}
                   >
                     <button type="button" onClick={() => onSelect(active ? null : issue.id)} aria-expanded={active} className="flex w-full items-start gap-2 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-primary/20 rounded-lg">

@@ -17,6 +17,11 @@ interface AuthContextValue {
   isLoading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
+  /**
+   * Replace the in-memory user after a profile edit (Settings → Profile). The
+   * service persists it into the current session; this only refreshes the tree.
+   */
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -69,6 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((nextUser: User) => setUser(nextUser), []);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -76,8 +83,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading,
       login,
       logout,
+      updateUser,
     }),
-    [user, isLoading, login, logout]
+    [user, isLoading, login, logout, updateUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

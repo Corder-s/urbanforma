@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../features/settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
@@ -21,6 +22,9 @@ import { AttentionPanel } from "../../components/dashboard/AttentionPanel";
 import { EnvironmentalSnapshotCard } from "../../components/dashboard/EnvironmentalSnapshotCard";
 
 export function DashboardPage() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const { user } = useAuth();
   const [state, setState] = useState<DashboardState>({ status: "loading" });
 

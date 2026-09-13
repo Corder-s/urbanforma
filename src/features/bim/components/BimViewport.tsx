@@ -72,7 +72,7 @@ export function BimViewport({
 
       {/* scene mode (top-centre, md+) */}
       <div className="pointer-events-none absolute inset-x-0 top-3 z-10 hidden justify-center px-3 md:flex">
-        <div className="pointer-events-auto flex items-center gap-0.5 rounded-xl border border-line bg-white/95 p-0.5 shadow-soft backdrop-blur" role="group" aria-label="Scene content">
+        <div className="pointer-events-auto flex items-center gap-0.5 rounded-xl border border-line bg-surface/95 p-0.5 shadow-soft backdrop-blur" role="group" aria-label="Scene content">
           {SCENE_MODES.map((m) => {
             const on = sceneMode === m.id;
             return (
@@ -104,7 +104,7 @@ export function BimViewport({
       {/* model chip (bottom-left, above the 2-D scale bar) */}
       {model && (
         <div className={`pointer-events-none absolute left-3 z-10 w-[min(320px,calc(100%-1.5rem))] ${is2d ? "bottom-14" : "bottom-3"}`}>
-          <div className="pointer-events-auto rounded-xl border border-line bg-white/95 p-2.5 shadow-soft backdrop-blur">
+          <div className="pointer-events-auto rounded-xl border border-line bg-surface/95 p-2.5 shadow-soft backdrop-blur">
             <div className="flex items-start gap-2">
               <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
                 <Box size={14} />
@@ -137,7 +137,7 @@ export function BimViewport({
             <button
               type="button"
               onClick={onLatestRevision}
-              className="shrink-0 rounded-lg border border-warning/40 bg-white px-2 py-0.5 text-[11px] font-bold text-warning transition-colors hover:bg-warning/10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-warning/30"
+              className="shrink-0 rounded-lg border border-warning/40 bg-surface px-2 py-0.5 text-[11px] font-bold text-warning transition-colors hover:bg-warning/10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-warning/30"
             >
               Back to latest
             </button>
@@ -148,7 +148,7 @@ export function BimViewport({
       {/* nothing in this scene */}
       {sceneObjectCount === 0 && !historical && (
         <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center p-6">
-          <div className="pointer-events-auto max-w-sm rounded-2xl border border-line bg-white/95 p-5 text-center shadow-soft">
+          <div className="pointer-events-auto max-w-sm rounded-2xl border border-line bg-surface/95 p-5 text-center shadow-soft">
             <span className="mx-auto grid h-10 w-10 place-items-center rounded-xl bg-surface-2 text-muted" aria-hidden="true">
               <EyeOff size={18} />
             </span>
@@ -173,7 +173,7 @@ function SelectedElementChip({ element, onFocus, onClear }: { element: BimElemen
     element.height ? `${element.height.toFixed(1)} m high` : null,
   ].filter((v): v is string => !!v);
   return (
-    <div className="rounded-xl border border-line bg-white/95 p-2.5 shadow-soft backdrop-blur">
+    <div className="rounded-xl border border-line bg-surface/95 p-2.5 shadow-soft backdrop-blur">
       <div className="flex items-start gap-2">
         <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
           <Icon size={14} />

@@ -46,7 +46,7 @@ interface FigureProps {
 function NorthArrow({ angle = 0 }: { angle?: number }) {
   return (
     <span
-      className="pointer-events-none absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full border border-line bg-white/90 text-ink shadow-soft"
+      className="pointer-events-none absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full border border-line bg-surface/90 text-ink shadow-soft"
       aria-hidden="true"
       style={{ transform: angle ? `rotate(${angle}deg)` : undefined }}
     >
@@ -70,10 +70,10 @@ function FigureFrame({
 }) {
   return (
     <figure className="report-block report-figure">
-      <div className="relative overflow-hidden rounded-xl border border-line bg-white">
+      <div className="relative overflow-hidden rounded-xl border border-line bg-surface">
         {children}
         {label && (
-          <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-md border border-line bg-white/90 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-muted shadow-soft">
+          <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-md border border-line bg-surface/90 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-muted shadow-soft">
             {label}
           </span>
         )}
@@ -176,7 +176,7 @@ export function ModelViewFigure({ data, label }: FigureProps) {
       meta={`Site ${facts.siteWidthM} × ${facts.siteDepthM} m · ${scene.buildings.length} volumes · tallest ${facts.tallestM} m`}
       legend={legend}
     >
-      <div className="h-[260px] sm:h-[340px] bg-white">
+      <div className="h-[260px] sm:h-[340px] bg-surface">
         <svg
           viewBox={scene.viewBox}
           preserveAspectRatio="xMidYMid meet"

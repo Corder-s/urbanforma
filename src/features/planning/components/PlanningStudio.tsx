@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPlanningProjects, type PlanningProjectSummary } from "../services/planning.service";
@@ -29,6 +30,9 @@ import { CanvasLoading, NoProjectSelected, ProjectNotFound, StudioError, StudioL
  * never scrolls — only the panels' own lists do.
  */
 export function PlanningStudio() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
   const projectId = params.get("projectId");
@@ -246,7 +250,7 @@ export function PlanningStudio() {
       />
 
       {/* mobile-only mode selector row */}
-      <div role="tablist" aria-label="Studio mode" className="flex shrink-0 items-center gap-1 border-b border-line bg-white px-2 py-1.5 md:hidden">
+      <div role="tablist" aria-label="Studio mode" className="flex shrink-0 items-center gap-1 border-b border-line bg-surface px-2 py-1.5 md:hidden">
         {(["plan", "context", "3d"] as const).map((m) => (
           <button
             key={m}
@@ -267,7 +271,7 @@ export function PlanningStudio() {
       {/* workspace */}
       <div className="relative grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[216px_minmax(0,1fr)] xl:grid-cols-[216px_minmax(0,1fr)_296px] 2xl:grid-cols-[232px_minmax(0,1fr)_320px]">
         {/* left: tools (docked lg+) */}
-        <div className={`hidden min-h-0 border-r border-line bg-white lg:block ${preview ? "lg:hidden" : ""}`}>
+        <div className={`hidden min-h-0 border-r border-line bg-surface lg:block ${preview ? "lg:hidden" : ""}`}>
           <PlanningToolPanel active={state.tool} onSelect={state.setTool} />
         </div>
 
@@ -277,7 +281,7 @@ export function PlanningStudio() {
           {settingsOpen && ready && <StudioSettings state={state} projectId={projectId} onClose={closeSettings} onReload={reload} />}
           {preview && (
             <div className="pointer-events-none absolute left-1/2 top-3 -translate-x-1/2">
-              <span className="rounded-full bg-ink/85 px-3 py-1 text-[12px] font-bold text-white shadow-soft">Preview — panels hidden · press Preview again to exit</span>
+              <span className="rounded-full bg-scrim/85 px-3 py-1 text-[12px] font-bold text-on-brand shadow-soft">Preview — panels hidden · press Preview again to exit</span>
             </div>
           )}
 
@@ -315,7 +319,7 @@ export function PlanningStudio() {
         </div>
 
         {/* right: inspector + context (docked xl+) */}
-        <div className={`hidden min-h-0 flex-col border-l border-line bg-white xl:flex ${preview ? "xl:hidden" : ""}`}>
+        <div className={`hidden min-h-0 flex-col border-l border-line bg-surface xl:flex ${preview ? "xl:hidden" : ""}`}>
           <div className="min-h-0 flex-[3] overflow-hidden border-b border-line">
             <InspectorPanel state={state} />
           </div>

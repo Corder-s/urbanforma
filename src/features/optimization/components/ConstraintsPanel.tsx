@@ -37,7 +37,7 @@ export function ConstraintsPanel({ constraints, currentChecks, onChange, disable
           const toggleId = `${inputId}-enabled`;
           const decimals = def.step < 1 ? 2 : 0;
           return (
-            <li key={def.id} className={`rounded-xl border p-3 ${c.enabled ? "border-line bg-white" : "border-dashed border-line bg-surface-2/60"}`}>
+            <li key={def.id} className={`rounded-xl border p-3 ${c.enabled ? "border-line bg-surface" : "border-dashed border-line bg-surface-2/60"}`}>
               <div className="flex items-start justify-between gap-2">
                 <label htmlFor={inputId} className="min-w-0 text-[12.5px] font-bold text-ink">
                   {def.label}
@@ -74,7 +74,7 @@ export function ConstraintsPanel({ constraints, currentChecks, onChange, disable
                       if (!Number.isFinite(v)) return;
                       onChange(def.id, { value: Math.max(def.min, Math.min(def.max, v)) });
                     }}
-                    className="h-8 w-full min-w-0 rounded-lg border border-line bg-white px-2 text-right text-[12.5px] font-bold tabular-nums text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 disabled:opacity-40"
+                    className="h-8 w-full min-w-0 rounded-lg border border-line bg-surface px-2 text-right text-[12.5px] font-bold tabular-nums text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 disabled:opacity-40"
                   />
                   <span className="w-9 shrink-0 text-[10.5px] font-bold text-muted">{def.unit === "people" ? "ppl" : def.unit}</span>
                 </div>

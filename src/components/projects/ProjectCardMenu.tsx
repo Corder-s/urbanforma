@@ -80,7 +80,7 @@ export function ProjectCardMenu({ project, onArchive }: ProjectCardMenuProps) {
           role="menu"
           aria-label={`Actions for ${project.name}`}
           className={[
-            "absolute right-0 z-50 w-56 animate-pop rounded-2xl border border-line bg-white p-1.5 shadow-float",
+            "absolute right-0 z-50 w-56 animate-pop rounded-2xl border border-line bg-surface p-1.5 shadow-float",
             openUp ? "bottom-full mb-1 origin-bottom-right" : "top-full mt-1 origin-top-right",
           ].join(" ")}
         >

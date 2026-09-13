@@ -1,3 +1,4 @@
+import { isPersonalizationEnabled } from "../../settings/services/settings.service";
 import { getDemoScenario } from "../../projects/project.service";
 import { getSpatialData, getVisualizationProjects, ProjectNotFoundError, type VisualizationProjectSummary } from "../../visualization/services/visualization.service";
 import type { SpatialDataset } from "../../visualization/types/visualization.types";
@@ -175,6 +176,8 @@ export function saveAnalysisPrefs(projectId: string, prefs: AnalysisPrefs): void
 }
 
 export function rememberLastAnalyzedProject(projectId: string): void {
+  // Privacy → Personalization off: skip writing convenience history.
+  if (!isPersonalizationEnabled()) return;
   try {
     window.localStorage.setItem(ANALYSIS_LAST_PROJECT_KEY, projectId);
   } catch {

@@ -33,7 +33,7 @@ export function ScenarioCard({ scenario, active, compared, compareDisabled, onVi
   const titleId = `scenario-card-${scenario.id}-title`;
   const changeCount = scenario.spatialState.counts.added + scenario.spatialState.counts.modified + scenario.spatialState.counts.removed;
   return (
-    <article aria-labelledby={titleId} aria-current={active ? "true" : undefined} className={["flex h-full flex-col rounded-2xl border bg-white transition-shadow", active ? "border-primary/50 shadow-soft ring-2 ring-primary/15" : "border-line hover:shadow-soft", dense ? "p-3" : "p-4"].join(" ")}>
+    <article aria-labelledby={titleId} aria-current={active ? "true" : undefined} className={["flex h-full flex-col rounded-2xl border bg-surface transition-shadow", active ? "border-primary/50 shadow-soft ring-2 ring-primary/15" : "border-line hover:shadow-soft", dense ? "p-3" : "p-4"].join(" ")}>
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2.5">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-[13px] font-extrabold text-primary" aria-hidden="true">
@@ -76,7 +76,7 @@ export function ScenarioCard({ scenario, active, compared, compareDisabled, onVi
           type="button"
           onClick={() => onView(scenario.id)}
           aria-pressed={active}
-          className={["inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg px-2.5 text-[12px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20", active ? "bg-primary text-white" : "border border-line bg-white text-primary hover:border-primary hover:bg-surface-2"].join(" ")}
+          className={["inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg px-2.5 text-[12px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20", active ? "bg-primary text-on-brand" : "border border-line bg-surface text-primary hover:border-primary hover:bg-surface-2"].join(" ")}
         >
           <Eye size={14} aria-hidden="true" /> {active ? "Viewing" : "View Scenario"}
         </button>

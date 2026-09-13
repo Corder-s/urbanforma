@@ -5,8 +5,8 @@ import { SectionHeading } from "../../../components/dashboard/SectionHeading";
 
 const STATUS_STYLE: Record<StageStatus, { pill: string; ring: string }> = {
   Completed: { pill: "bg-success/10 text-success ring-success/20", ring: "bg-success/10 text-success ring-success/30" },
-  "In Progress": { pill: "bg-primary/10 text-primary ring-primary/20", ring: "bg-primary text-white ring-primary" },
-  "Not Started": { pill: "bg-surface-2 text-muted ring-line", ring: "bg-white text-faint ring-line-strong" },
+  "In Progress": { pill: "bg-primary/10 text-primary ring-primary/20", ring: "bg-primary text-on-brand ring-primary" },
+  "Not Started": { pill: "bg-surface-2 text-muted ring-line", ring: "bg-surface text-faint ring-line-strong" },
 };
 
 function StageIcon({ status }: { status: StageStatus }) {
@@ -34,7 +34,7 @@ function StageRow({ stage, index, isCurrent }: { stage: PlanningStage; index: nu
           <span className="text-faint">{String(index + 1).padStart(2, "0")}</span>
           {stage.label}
           {isCurrent && (
-            <span className="rounded-md bg-primary px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            <span className="rounded-md bg-primary px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-brand">
               Current
             </span>
           )}
@@ -63,7 +63,7 @@ export function ProjectProgress({ project }: { project: ProjectDetail }) {
         id="progress-title" title="Planning Progress"
         hint={`${completed} of ${project.stages.length} stages completed`}
       />
-      <div className="rounded-3xl border border-line bg-white p-5 shadow-soft sm:p-6">
+      <div className="rounded-3xl border border-line bg-surface p-5 shadow-soft sm:p-6">
         <div className="mb-2 flex items-center justify-between">
           <p className="text-sm font-semibold text-muted">Overall Progress</p>
           <p className="text-lg font-extrabold text-ink">{project.progress}%</p>

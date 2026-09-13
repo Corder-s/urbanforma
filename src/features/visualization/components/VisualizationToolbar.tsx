@@ -53,9 +53,9 @@ const VIEW_MODES: { id: ViewMode; label: string; short: string; icon: LucideIcon
  */
 export function VisualizationToolbar({ projects, projectId, projectName, ready, mode, onMode, viewMode, onViewMode, basemap, onBasemap, openPanel, onTogglePanel, onCapture, capturing, onShare, fullscreen, fullscreenSupported, onToggleFullscreen, onSwitchProject, panelsDocked }: VisualizationToolbarProps) {
   const backTo = projectId ? `/app/projects/${projectId}` : "/app/projects";
-  const tab = (active: boolean, disabled = false) => ["inline-flex h-8 items-center gap-1.5 rounded-[9px] px-2.5 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20", disabled ? "opacity-50" : "", active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink"].join(" ");
+  const tab = (active: boolean, disabled = false) => ["inline-flex h-8 items-center gap-1.5 rounded-[9px] px-2.5 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20", disabled ? "opacity-50" : "", active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink"].join(" ");
   return (
-    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-white px-2 sm:px-3">
+    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-surface px-2 sm:px-3">
       {/* left (shrinks; the name truncates) */}
       <div className="flex min-w-0 items-center gap-1 sm:gap-2">
         <Link to={backTo} aria-label={projectId ? "Back to project" : "Back to projects"} title={projectId ? "Back to Project" : "Back to Projects"} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
@@ -187,7 +187,7 @@ function MoreMenu({ disabled, children }: { disabled: boolean; children: React.R
           id={id}
           role="menu"
           aria-label="More tools"
-          className="absolute right-0 top-full z-30 mt-1 w-60 rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          className="absolute right-0 top-full z-30 mt-1 w-60 rounded-2xl border border-line bg-surface p-1.5 shadow-float animate-pop motion-reduce:animate-none"
           onClick={(e) => {
             if ((e.target as Element).closest("[role='menuitem']")) setOpen(false);
           }}

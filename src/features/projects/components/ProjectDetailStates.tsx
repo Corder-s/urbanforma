@@ -18,7 +18,7 @@ export function ProjectDetailSkeleton() {
           <div className={`h-11 w-52 ${block}`} />
         </div>
       </div>
-      <div className="grid overflow-hidden rounded-3xl border border-line bg-white lg:grid-cols-[1.15fr_1fr]">
+      <div className="grid overflow-hidden rounded-3xl border border-line bg-surface lg:grid-cols-[1.15fr_1fr]">
         <div className="h-56 bg-surface-2 lg:h-72" />
         <div className="space-y-3 p-6">
           <div className={`h-5 w-28 ${block}`} />
@@ -51,7 +51,7 @@ export function ProjectDetailSkeleton() {
 export function ProjectNotFound({ projectId }: { projectId?: string }) {
   return (
     <div className="grid place-items-center px-6 py-16">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-10 text-center shadow-card">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-10 text-center shadow-card">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-surface-2 text-primary ring-1 ring-primary/15">
           <SearchX size={26} />
         </span>
@@ -80,7 +80,7 @@ export function ProjectNotFound({ projectId }: { projectId?: string }) {
 export function ProjectDetailError({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="grid place-items-center px-6 py-16">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-10 text-center shadow-card">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-10 text-center shadow-card">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-danger/10 text-danger">
           <FolderSearch size={26} />
         </span>

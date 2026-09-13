@@ -15,7 +15,7 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
     <section aria-labelledby="activity-title">
       <SectionHeading id="activity-title" title="Recent Activity" />
       <Reveal>
-        <ol className="relative space-y-1 rounded-3xl border border-line bg-white p-5 shadow-soft">
+        <ol className="relative space-y-1 rounded-3xl border border-line bg-surface p-5 shadow-soft">
           {items.map((a, i) => (
             <li key={a.id} className="relative flex gap-3.5 pb-4 last:pb-0">
               {/* timeline connector */}

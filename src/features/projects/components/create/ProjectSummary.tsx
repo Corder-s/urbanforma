@@ -47,10 +47,10 @@ export function ProjectSummary({ form }: { form: CreateProjectForm }) {
   ];
 
   return (
-    <aside aria-labelledby="summary-title" className="rounded-3xl border border-line bg-white shadow-card">
+    <aside aria-labelledby="summary-title" className="rounded-3xl border border-line bg-surface shadow-card">
       <div className="relative h-28 overflow-hidden rounded-t-3xl bg-surface-2">
         <ProjectThumb variant={3} label="New project preview" className="h-full w-full opacity-90" />
-        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-lg border border-line bg-white/95 px-2.5 py-1 text-[11.5px] font-bold text-primary">
+        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface/95 px-2.5 py-1 text-[11.5px] font-bold text-primary">
           <ClipboardList size={13} aria-hidden="true" /> New project
         </span>
       </div>

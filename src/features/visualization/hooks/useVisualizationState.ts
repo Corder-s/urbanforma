@@ -1,6 +1,32 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MAX_ANNOTATIONS } from "../data/presentation.data";
 import { DEFAULT_LAYERS, DEFAULT_SETTINGS } from "../data/visualization.data";
+import { getMapDefaults, getVisualizationDefaults } from "../../settings/services/settings.service";
+
+/** Read once per mount: the Settings defaults a fresh project starts from. */
+function workspaceDefaults(): { viewMode: ViewMode; basemap: BasemapId; settings: VisualizationSettings } {
+  const map = getMapDefaults();
+  const scene = getVisualizationDefaults();
+  return {
+    viewMode: map.defaultMode,
+    basemap: map.defaultBasemap,
+    settings: {
+      ...DEFAULT_SETTINGS,
+      grid: map.showGrid,
+      scaleBar: map.showScale,
+      northArrow: map.showNorth,
+      terrain: map.terrain,
+      buildingStyle: scene.buildingStyle,
+      buildingShadows: scene.buildingShadows,
+      heightEmphasis: scene.heightEmphasis,
+      trees: scene.trees,
+      labels: scene.labels,
+      roadNetwork: scene.roadNetwork,
+      atmosphere: scene.atmosphere,
+      timeOfDay: scene.timeOfDay,
+    },
+  };
+}
 import { scenarioBadge, type ScenarioOption } from "../lib/scenarios";
 import { loadPrefs, rememberLastVisualizedProject, savePrefs } from "../services/visualization.service";
 import type {
@@ -109,13 +135,24 @@ export function useVisualizationState(projectId: string | null): VisualizationSt
   // --- per-project preferences ---------------------------------------------------
   // Kept in one object tagged with the project it was loaded for, so the save
   // effect never writes defaults over a project's stored preferences.
-  const [prefs, setPrefs] = useState<TaggedPrefs>({ for: null, viewMode: "2d", basemap: "urban", layers: DEFAULT_LAYERS, settings: DEFAULT_SETTINGS, scenario: null });
+  // Defaults for a project that has never been opened here: the workspace
+  // preferences from Settings → Map / Visualization. A project's own stored
+  // preferences always win, so this never overrides somebody's saved scene.
+  const [defaults] = useState(() => workspaceDefaults());
+  const [prefs, setPrefs] = useState<TaggedPrefs>({ for: null, viewMode: defaults.viewMode, basemap: defaults.basemap, layers: DEFAULT_LAYERS, settings: defaults.settings, scenario: null });
   useEffect(() => {
     if (!projectId) return;
     const stored = loadPrefs(projectId);
-    setPrefs({ for: projectId, viewMode: stored?.viewMode ?? "2d", basemap: stored?.basemap ?? "urban", layers: stored?.layers ?? DEFAULT_LAYERS, settings: stored?.settings ?? DEFAULT_SETTINGS, scenario: stored?.scenario ?? null });
+    setPrefs({
+      for: projectId,
+      viewMode: stored?.viewMode ?? defaults.viewMode,
+      basemap: stored?.basemap ?? defaults.basemap,
+      layers: stored?.layers ?? DEFAULT_LAYERS,
+      settings: stored?.settings ?? defaults.settings,
+      scenario: stored?.scenario ?? null,
+    });
     rememberLastVisualizedProject(projectId);
-  }, [projectId]);
+  }, [projectId, defaults]);
   // Persistence is debounced. The scene-settings sliders (time of day, sun
   // intensity / position, camera height) call updateSettings on every
   // pointermove and `prefs` is a fresh object each time, so writing

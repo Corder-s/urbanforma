@@ -75,7 +75,7 @@ export function LayerPanel({ state, onClose, idPrefix = "layer" }: LayerPanelPro
                           <span
                             className={[
                               "grid h-[18px] w-[18px] place-items-center rounded-[6px] border transition-colors",
-                              checked ? "border-primary bg-primary text-white" : "border-line-strong bg-white text-transparent",
+                              checked ? "border-primary bg-primary text-on-brand" : "border-line-strong bg-surface text-transparent",
                               "peer-focus-visible:ring-4 peer-focus-visible:ring-primary/20",
                             ].join(" ")}
                             aria-hidden="true"

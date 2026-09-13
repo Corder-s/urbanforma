@@ -12,7 +12,7 @@ interface SavedViewsProps {
   onNotice: (text: string) => void;
 }
 
-const inputCls = "h-9 w-full rounded-lg border border-line bg-white px-2.5 text-[12.5px] font-semibold text-ink placeholder:text-faint focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15";
+const inputCls = "h-9 w-full rounded-lg border border-line bg-surface px-2.5 text-[12.5px] font-semibold text-ink placeholder:text-faint focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15";
 
 function describe(v: PresentationView, scenarioName: (id: string | null) => string): string {
   const c = v.camera;
@@ -97,7 +97,7 @@ export function SavedViews({ state, camera2d, onNotice }: SavedViewsProps) {
           const isRenaming = renaming === v.id;
           const Icon = v.viewMode === "3d" ? Box : MapIcon;
           return (
-            <li key={v.id} className={`relative rounded-lg border ${active ? "border-primary bg-primary/5" : "border-line bg-white"}`}>
+            <li key={v.id} className={`relative rounded-lg border ${active ? "border-primary bg-primary/5" : "border-line bg-surface"}`}>
               {isRenaming ? (
                 <form
                   className="flex items-center gap-1 p-1.5"
@@ -128,7 +128,7 @@ export function SavedViews({ state, camera2d, onNotice }: SavedViewsProps) {
                     aria-current={active ? "true" : undefined}
                     className="flex min-w-0 flex-1 items-center gap-2.5 rounded-md py-2 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
                   >
-                    <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-primary text-white" : "bg-surface-2 text-muted"}`} aria-hidden="true">
+                    <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-primary text-on-brand" : "bg-surface-2 text-muted"}`} aria-hidden="true">
                       <Icon size={15} />
                     </span>
                     <span className="min-w-0">
@@ -141,7 +141,7 @@ export function SavedViews({ state, camera2d, onNotice }: SavedViewsProps) {
                       <MoreHorizontal size={16} />
                     </button>
                     {menu === v.id && (
-                      <div role="menu" aria-label={`${v.name} actions`} className="absolute right-0 top-full z-20 mt-1 w-44 rounded-xl border border-line bg-white p-1 shadow-float">
+                      <div role="menu" aria-label={`${v.name} actions`} className="absolute right-0 top-full z-20 mt-1 w-44 rounded-xl border border-line bg-surface p-1 shadow-float">
                         {[
                           {
                             label: "Open",

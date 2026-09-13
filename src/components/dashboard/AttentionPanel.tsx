@@ -11,7 +11,7 @@ export function AttentionPanel({ items }: { items: AttentionItem[] }) {
     <section aria-labelledby="attention-title">
       <SectionHeading id="attention-title" title="Needs Your Attention" />
       <Reveal className="h-full">
-        <div className="flex h-full flex-col gap-3 rounded-3xl border border-line bg-white p-5 shadow-soft">
+        <div className="flex h-full flex-col gap-3 rounded-3xl border border-line bg-surface p-5 shadow-soft">
           {items.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-2 py-8 text-center">
               <span className="grid h-12 w-12 place-items-center rounded-full bg-success/10 text-success">

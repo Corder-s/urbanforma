@@ -89,6 +89,7 @@ export const DEFAULT_SETTINGS: VisualizationSettings = {
   heightEmphasis: false,
   northArrow: true,
   scaleBar: true,
+  grid: true,
 };
 
 // ---------------------------------------------------------------------------

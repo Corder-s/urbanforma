@@ -45,7 +45,7 @@ menu), mobile drawer, and breadcrumbs.
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
 | **Reports** | Five report types, 18 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers), an axonometric massing model drawn from the live dataset and a BIM model & quantities section, live document preview, revision/status tracking, print → PDF with app chrome stripped |
 | **BIM** | Toolbar project + model-record selectors, derived element index (site → building → level → component) with IFC-style GlobalIds and property sets, model tree with debounced search (name · id · GlobalId · category · level), properties inspector, typed filters, 8 BIM layers, metric cards, 2D/3D viewport reuse (scene-synced, no second engine), versions & revisions, coordination checks against planning/analysis/optimization/reports plus a BIM → Analysis quantity feed, issue tracking, recent-models dashboard, honest import pipeline states |
-| Settings | Route-level "coming soon" placeholder |
+| **Settings** | Thirteen panels: profile, account, accessibility, appearance (light / dark / system + three accents), units (metric / imperial with a live preview table), map & GIS defaults, visualization defaults, BIM defaults, notification categories, privacy, data & storage (inventory, per-category clear, JSON export), about, and a danger zone — all driven by one typed `AppSettings` tree with debounced persistence, a Saved/Saving indicator, corruption fallback, cross-tab sync and `?section=` deep links |
 
 ### Cross-cutting
 
@@ -55,6 +55,14 @@ menu), mobile drawer, and breadcrumbs.
 - **Accessibility** — focus trapping in dialogs, `aria-*` throughout, visible
   focus rings, and `prefers-reduced-motion` respected everywhere animations
   exist.
+- **Preferences** — one typed settings tree in `localStorage`
+  (`urbanforma.settings`, schema-versioned, sanitized on read, migrated or
+  discarded when corrupt), applied as `data-*` attributes on `<html>` *before*
+  the first paint so a dark theme never flashes light. Units are centralized in
+  `features/settings/lib/units.ts` and delegated to by planning geometry, the
+  project service, BIM volumes and the report builders — so the header's
+  metric/imperial switch and Settings → Units are the same setting, and there is
+  one copy of the conversion math.
 - **Print / PDF** — `@page` A4 geometry plus break control (`report-block` stays
   together, `report-table` breaks with a repeated `<thead>`, headings never end a
   page alone) and `print:hidden` on the shell chrome, so a report prints as a
@@ -107,6 +115,12 @@ What drives it:
 - **`text-rendering: optimizeSpeed`** instead of `optimizeLegibility`, which
   forces per-glyph kerning/ligature passes and is a documented bottleneck on
   long strings (tables, inspectors, project lists).
+- **Settings stays light.** `/app/settings` is its own ~49 KB chunk that pulls
+  in no 3D engine, GIS renderer, PDF writer or BIM model — only the settings
+  feature, the auth session and shared UI primitives. The dependency arrow
+  points *at* settings: modules read their defaults through tiny synchronous
+  accessors in `settings.service` (`getMapDefaults`, `getVisualizationDefaults`,
+  `getBimDefaults`, `getRenderQualityCap`), never through the settings UI.
 - **3D renders on demand.** `CityScene` only calls `renderer.render()` when the
   camera moved or something was invalidated, and hover raycasting resolves at
   most once per frame from a pending pointer position.
@@ -148,7 +162,7 @@ more characters** works. There is no hardcoded credential.
 | `/app/visualization` | 2D map + 3D city studio |
 | `/app/reports` | Report workspace (`?projectId=<id>&reportId=<id>`) |
 | `/app/bim` | BIM integration & model coordination (`?projectId=<id>&elementId=<id>`) |
-| `/app/settings` | Coming-soon placeholder |
+| `/app/settings` | Settings workspace (`?section=<id>` deep links) |
 
 Signed-out visitors hitting `/app/*` are redirected to `/login`; signed-in
 visitors hitting `/login` are sent to `/app`.
@@ -183,6 +197,14 @@ src/
                   derivations) · hooks (useReports, useReportModel) · components
                   (Workspace, List, ConfigPanel, Preview, Sections, Figures,
                   Charts, Tables, States, ConfirmDialog)
+    settings/     types (AppSettings tree + section metadata) · lib (units
+                  conversion & formatting, applyPreferences, sections, labels,
+                  useMediaQuery, download) · settings.service (storage, sanitize
+                  + migrate, merge/patch, export, data inventory & clears, and
+                  the defaults other modules read) · hooks (useSettings provider
+                  with debounced writes + cross-tab sync, useUnitPreferences) ·
+                  components (SettingsPage, SettingsNav, controls, ConfirmAction
+                  and the 13 section panels)
     bim/          types · data (demo model records, layers, facets, issue seeds,
                   formats) · lib/bimModel (derives the element index + quantities
                   + planning links + analysis inputs + coordination checks from
@@ -210,6 +232,27 @@ Background `#F5F9FF` · Surface `#FFFFFF` · Primary `#2563EB`
 secondary text `#64748B` · Success `#16A34A` · Border `#DCE6F2`. Blue/cyan
 gradients are used sparingly.
 
+Those are the **light** values, and they are the values the app has always
+shipped. `tokens.css` declares every colour as an RGB triplet (`--color-*-rgb`)
+with hex aliases, and a theme is nothing but a re-declaration of the same
+triplets under an attribute selector — `html[data-theme="dark"]` (plus
+`@media (prefers-color-scheme: dark)` when the user chose *System*),
+`[data-accent="cyan"|"slate"]`, `[data-contrast="high"]` — which keeps Tailwind's
+opacity modifiers (`bg-primary/10`) working in every theme. Two tokens are
+deliberately never themed: `on-brand` (foreground on brand fills must stay white)
+and `scrim` (a modal backdrop must stay a scrim). Interface preferences ride the
+same mechanism as `data-motion`, `data-focus` and `data-scale`.
+
+The Tailwind key is spelled `"on-brand"` on purpose: a camelCase `onBrand` key
+generates nothing, because Tailwind does not kebab-case theme keys, which left
+~40 existing `text-on-brand` / `bg-on-brand` utilities dead (primary buttons were
+inheriting their label colour).
+
+Map, 3D, BIM and chart canvases keep their light drawing surface by design —
+their palettes are calibrated for legibility on white, so inverting them would
+misrepresent the data. They sit inside themed chrome instead, and Settings says
+so out loud.
+
 ## 🗺️ Known follow-ups
 
 - **Cross-feature imports.** `analysis` and `optimization` each import ~30
@@ -236,5 +279,14 @@ gradients are used sparingly.
   margin boxes are unsupported), so the document uses numbered sections, a
   repeated table header and a document-control footer; true page numbers arrive
   with the backend PDF renderer.
+- **Settings is frontend-only.** Profile fields are written into the session
+  blob (`auth.service.updateProfile`), notification categories gate the header's
+  preview items, and the two privacy switches for analytics and usage data are
+  disabled reservations — nothing is transmitted anywhere, because there is no
+  server to transmit to. The panels say so rather than implying a consent flow
+  that does not exist. With Spring Boot these become `GET/PATCH /api/me/settings`
+  (the provider's `loading → ready` state machine and its debounced `patch` are
+  already shaped for it), real notification delivery, password change and avatar
+  upload.
 - **No test suite yet.** `npm run typecheck` and `npm run build` are the only
   automated gates.

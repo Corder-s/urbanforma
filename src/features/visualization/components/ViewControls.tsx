@@ -14,7 +14,7 @@ const btn = "grid h-9 w-9 place-items-center text-muted transition-colors hover:
 /** Camera controls shared by both renderers (zoom for 2D, presets for both). */
 export function ViewControls({ state, map, compact = false }: ViewControlsProps) {
   const is3d = state.viewMode === "3d";
-  const groupCls = compact ? "flex items-center divide-x divide-line overflow-hidden rounded-xl border border-line bg-white shadow-soft" : "flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-white shadow-soft";
+  const groupCls = compact ? "flex items-center divide-x divide-line overflow-hidden rounded-xl border border-line bg-surface shadow-soft" : "flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface shadow-soft";
   return (
     <div className={compact ? "flex items-center gap-2" : "flex flex-col gap-2"} role="group" aria-label="View controls">
       {!is3d && (

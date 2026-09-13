@@ -45,14 +45,14 @@ export const PresentationSlide = memo(function PresentationSlide({ slide, view, 
   ];
   return (
     <li className={horizontal ? "w-[188px] shrink-0 snap-start" : ""} data-slide-id={slide.id}>
-      <div className={`relative rounded-xl border-2 bg-white transition-colors motion-reduce:transition-none ${active ? "border-primary shadow-glow" : "border-line hover:border-line-strong"}`}>
+      <div className={`relative rounded-xl border-2 bg-surface transition-colors motion-reduce:transition-none ${active ? "border-primary shadow-glow" : "border-line hover:border-line-strong"}`}>
         <button type="button" onClick={() => actions.open(slide)} aria-current={active ? "true" : undefined} aria-label={`Slide ${index + 1}: ${slide.title}. ${option?.name ?? "Current Plan"}. ${view?.viewMode === "3d" ? "3D" : "2D"} view.`} className="block w-full rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
           <div className="relative aspect-[16/10] overflow-hidden rounded-t-[10px] bg-surface-2">
             {option && view ? <MiniPlan data={option.dataset} layers={view.visibleLayers} settings={view.sceneSettings} basemap={view.basemap} thumbnail padding={60} title="" /> : <div className="h-full w-full animate-pulse bg-surface-2 motion-reduce:animate-none" aria-hidden="true" />}
-            <span className={`absolute left-1.5 top-1.5 grid h-5 min-w-[20px] place-items-center rounded-md px-1 text-[10.5px] font-extrabold tabular-nums ${active ? "bg-primary text-white" : "bg-white/95 text-ink shadow-soft"}`} aria-hidden="true">
+            <span className={`absolute left-1.5 top-1.5 grid h-5 min-w-[20px] place-items-center rounded-md px-1 text-[10.5px] font-extrabold tabular-nums ${active ? "bg-primary text-on-brand" : "bg-surface/95 text-ink shadow-soft"}`} aria-hidden="true">
               {index + 1}
             </span>
-            <span className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-md bg-white/95 text-muted shadow-soft" aria-hidden="true">
+            <span className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-md bg-surface/95 text-muted shadow-soft" aria-hidden="true">
               <Icon size={12} />
             </span>
           </div>
@@ -69,7 +69,7 @@ export const PresentationSlide = memo(function PresentationSlide({ slide, view, 
             <MoreHorizontal size={15} />
           </button>
           {menuOpen && (
-            <div role="menu" aria-label={`Slide ${index + 1} actions`} className={`absolute z-20 w-52 rounded-xl border border-line bg-white p-1 shadow-float ${horizontal ? "bottom-full right-0 mb-1" : "right-0 top-full mt-1"}`}>
+            <div role="menu" aria-label={`Slide ${index + 1} actions`} className={`absolute z-20 w-52 rounded-xl border border-line bg-surface p-1 shadow-float ${horizontal ? "bottom-full right-0 mb-1" : "right-0 top-full mt-1"}`}>
               {items.map((item) => {
                 const ItemIcon = item.icon;
                 return (

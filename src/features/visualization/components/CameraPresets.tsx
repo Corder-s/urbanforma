@@ -29,7 +29,7 @@ export function CameraPresets({ state, layout = "grid", size = "md" }: CameraPre
             className={[
               "inline-flex min-w-0 items-center justify-center rounded-lg border font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
               size === "sm" ? "h-8 px-2.5 text-[11.5px]" : "h-9 px-2.5 text-[12.5px]",
-              active ? "border-primary bg-primary/10 text-primary" : "border-line bg-white text-ink hover:border-line-strong hover:bg-surface-2",
+              active ? "border-primary bg-primary/10 text-primary" : "border-line bg-surface text-ink hover:border-line-strong hover:bg-surface-2",
             ].join(" ")}
           >
             <span className="truncate">{p.label}</span>

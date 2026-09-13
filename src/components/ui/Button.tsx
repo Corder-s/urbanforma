@@ -17,26 +17,26 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "text-white bg-primary hover:bg-primary-dark shadow-glow disabled:bg-primary/60",
+    "text-on-brand bg-primary hover:bg-primary-dark shadow-glow disabled:bg-primary/60",
   secondary:
-    "text-primary bg-white border border-line hover:border-primary hover:bg-surface-2 shadow-soft",
+    "text-primary bg-surface border border-line hover:border-primary hover:bg-surface-2 shadow-soft",
   ghost: "text-muted hover:text-primary hover:bg-surface-2",
   // For placement on the brand gradient (CTA band). These exist as real
-  // variants rather than className overrides because a `bg-white` passed via
+  // variants rather than className overrides because a `bg-surface` passed via
   // className cannot reliably beat the variant's `bg-primary`: both are
   // single-class utilities, so the winner is decided by compiled CSS order,
   // not attribute order — which left "Get Started" rendering blue-on-blue.
   onBrand:
-    "text-primary-dark bg-white hover:bg-white/90 shadow-float focus-visible:ring-white/50",
+    "text-primary-dark bg-on-brand hover:bg-on-brand/90 shadow-float focus-visible:ring-on-brand/50",
   onBrandGhost:
-    "text-white border border-white/40 bg-white/10 hover:bg-white/20 hover:text-white focus-visible:ring-white/40",
+    "text-on-brand border border-on-brand/40 bg-on-brand/10 hover:bg-on-brand/20 hover:text-on-brand focus-visible:ring-on-brand/40",
   // Destructive-action outline button. Exists as a variant for the same reason
   // onBrand does: `border-danger/40` passed via className loses to the
   // secondary variant's `border-line`, because `line` is declared after
   // `danger` in the theme and same-specificity utilities resolve by compiled
   // CSS order. The border is what makes a destructive action read as one.
   secondaryDanger:
-    "text-danger bg-white border border-danger/40 hover:border-danger hover:bg-danger/5 shadow-soft",
+    "text-danger bg-surface border border-danger/40 hover:border-danger hover:bg-danger/5 shadow-soft",
 };
 
 const sizeClasses: Record<Size, string> = {

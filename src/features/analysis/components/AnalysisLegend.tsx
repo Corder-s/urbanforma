@@ -21,7 +21,7 @@ export function AnalysisLegend({ overlay, compact = false, showFocus = false, cl
   const labelled = legend.stops.filter((s) => s.label);
   const symbols: NonNullable<OverlayLegend["symbols"]> = [...(legend.symbols ?? []), ...(showFocus && overlay.zones.length > 0 ? [{ swatch: "dashed" as const, label: "Suggested zone to inspect", color: "#0F172A" }] : [])];
   return (
-    <div className={`rounded-xl border border-line bg-white/95 shadow-soft ${compact ? "px-3 py-2" : "p-3"} ${className}`} role="group" aria-label={`Legend: ${legend.title}`}>
+    <div className={`rounded-xl border border-line bg-surface/95 shadow-soft ${compact ? "px-3 py-2" : "p-3"} ${className}`} role="group" aria-label={`Legend: ${legend.title}`}>
       <p className={`font-bold text-ink ${compact ? "text-[11.5px]" : "text-xs"}`}>{legend.title}</p>
       {legend.kind === "ramp" ? (
         <div className="mt-1.5">
@@ -82,7 +82,7 @@ function Swatch({ kind, color }: { kind: "arrow" | "outline" | "dot" | "hatch" |
         <path d="M1 5 H13 M9 1.5 L13 5 L9 8.5" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     );
-  if (kind === "dot") return <span className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white" style={{ background: color }} aria-hidden="true" />;
+  if (kind === "dot") return <span className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-surface" style={{ background: color }} aria-hidden="true" />;
   if (kind === "hatch")
     return (
       <svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true" className="shrink-0">

@@ -255,7 +255,7 @@ export function InspectorPanel({ state, onClose }: InspectorPanelProps) {
   useEffect(() => setEditing(false), [selection]);
 
   return (
-    <aside aria-labelledby="inspector-title" className="flex h-full min-h-0 flex-col bg-white">
+    <aside aria-labelledby="inspector-title" className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-line px-4">
         <h2 id="inspector-title" className="text-[11px] font-bold uppercase tracking-widest text-faint">
           Properties

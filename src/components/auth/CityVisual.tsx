@@ -227,9 +227,9 @@ export function CityVisual() {
 
       {/* drifting clouds */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute left-[8%] top-[10%] h-10 w-32 rounded-full bg-white/70 blur-md animate-drift-slow" />
-        <div className="absolute right-[14%] top-[20%] h-8 w-24 rounded-full bg-white/60 blur-md animate-drift" />
-        <div className="absolute left-[24%] top-[38%] h-6 w-20 rounded-full bg-white/50 blur-md animate-drift" />
+        <div className="absolute left-[8%] top-[10%] h-10 w-32 rounded-full bg-surface/70 blur-md animate-drift-slow" />
+        <div className="absolute right-[14%] top-[20%] h-8 w-24 rounded-full bg-on-brand/60 blur-md animate-drift" />
+        <div className="absolute left-[24%] top-[38%] h-6 w-20 rounded-full bg-on-brand/50 blur-md animate-drift" />
       </div>
 
       <div

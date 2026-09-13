@@ -20,6 +20,13 @@ export interface User {
   /** Optional avatar URL; null until real profiles exist (UI shows initials). */
   avatar: string | null;
   role: UserRole;
+  /**
+   * Optional profile fields editable in Settings → Profile. Stored with the
+   * session (frontend-only); a backend will own profiles later.
+   */
+  organization?: string;
+  location?: string;
+  timezone?: string;
 }
 
 export interface LoginCredentials {

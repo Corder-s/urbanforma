@@ -30,7 +30,7 @@ export function TradeoffPanel({ tradeoffs, current, metrics, title = "Trade-offs
           const tone = t.improved === true ? "text-success bg-success/10 ring-success/20" : t.improved === false ? "text-warning bg-warning/10 ring-warning/20" : "text-muted bg-surface-2 ring-line";
           const verdict = t.improved === true ? "Improved" : t.improved === false ? "Reduced" : "Unchanged";
           return (
-            <li key={t.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 rounded-lg border border-line bg-white px-2.5 py-2">
+            <li key={t.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 rounded-lg border border-line bg-surface px-2.5 py-2">
               <div className="min-w-0">
                 <p className="truncate text-[12.5px] font-bold text-ink">{t.label}</p>
                 <p className="truncate text-[11px] tabular-nums text-muted">

@@ -76,7 +76,7 @@ export function CoordinationPanel({ coordination, projectId, onSelectElement, on
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-canvas">
-      <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-white px-3 py-2.5">
+      <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2.5">
         <ShieldCheck size={16} className="shrink-0 text-primary" aria-hidden="true" />
         <h2 className="min-w-0 flex-1 truncate text-[13.5px] font-extrabold text-ink">Coordination</h2>
         <span className="shrink-0 text-[11.5px] text-muted" role="status" aria-live="polite">
@@ -93,7 +93,7 @@ export function CoordinationPanel({ coordination, projectId, onSelectElement, on
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3">
-        <section aria-labelledby="bim-checks" className="rounded-2xl border border-line bg-white p-3 shadow-soft">
+        <section aria-labelledby="bim-checks" className="rounded-2xl border border-line bg-surface p-3 shadow-soft">
           <h3 id="bim-checks" className="flex items-center gap-1.5 text-[12.5px] font-extrabold text-ink">
             <ClipboardCheck size={14} className="text-primary" aria-hidden="true" /> Model checks
           </h3>
@@ -141,7 +141,7 @@ export function CoordinationPanel({ coordination, projectId, onSelectElement, on
           )}
         </section>
 
-        <section aria-labelledby="bim-links" className="mt-3 rounded-2xl border border-line bg-white p-3 shadow-soft">
+        <section aria-labelledby="bim-links" className="mt-3 rounded-2xl border border-line bg-surface p-3 shadow-soft">
           <div className="flex flex-wrap items-baseline gap-2">
             <h3 id="bim-links" className="flex items-center gap-1.5 text-[12.5px] font-extrabold text-ink">
               <ExternalLink size={14} className="text-primary" aria-hidden="true" /> BIM ↔ planning quantities
@@ -176,7 +176,7 @@ export function CoordinationPanel({ coordination, projectId, onSelectElement, on
               <Link
                 key={l.to}
                 to={l.to}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-2.5 py-1.5 text-[12px] font-bold text-muted shadow-soft transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-[12px] font-bold text-muted shadow-soft transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
               >
                 {l.label}
                 <ExternalLink size={12} aria-hidden="true" />

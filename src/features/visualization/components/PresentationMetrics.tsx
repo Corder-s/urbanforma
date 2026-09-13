@@ -67,10 +67,10 @@ export function PresentationMetrics({ selected, onToggle, option }: Presentation
                 title={disabled ? `Up to ${MAX_SELECTED_METRICS} metrics` : m.hint}
                 className={[
                   "flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-1.5 text-left transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50",
-                  on ? "border-primary bg-primary/5" : "border-line bg-white hover:border-line-strong",
+                  on ? "border-primary bg-primary/5" : "border-line bg-surface hover:border-line-strong",
                 ].join(" ")}
               >
-                <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border ${on ? "border-primary bg-primary text-white" : "border-line-strong bg-white text-transparent"}`} aria-hidden="true">
+                <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border ${on ? "border-primary bg-primary text-on-brand" : "border-line-strong bg-surface text-transparent"}`} aria-hidden="true">
                   <Check size={12} strokeWidth={3} />
                 </span>
                 <Icon size={14} className="shrink-0 text-muted" aria-hidden="true" />

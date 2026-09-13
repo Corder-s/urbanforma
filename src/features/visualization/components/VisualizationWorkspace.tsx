@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Bookmark, Check, Columns2, Compass, Download, Info, Layers, Link2, Presentation, SlidersHorizontal, X } from "lucide-react";
@@ -38,6 +39,9 @@ import { PanelHeader } from "./controls";
  * those breakpoints everything becomes a drawer / bottom sheet.
  */
 export function VisualizationWorkspace() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const [params, setParams] = useSearchParams();
   const projectId = params.get("projectId");
 
@@ -273,7 +277,7 @@ export function VisualizationWorkspace() {
 
       <div className={["relative grid min-h-0 flex-1 grid-cols-1", gridCols].join(" ")}>
         {/* left: layers (Explore, docked lg+) */}
-        {docked && !present && !show.active && <div className="hidden min-h-0 border-r border-line bg-white lg:block">{ready ? <LayerPanel state={state} idPrefix="layers-dock" /> : <PanelSkeleton title="Layers" />}</div>}
+        {docked && !present && !show.active && <div className="hidden min-h-0 border-r border-line bg-surface lg:block">{ready ? <LayerPanel state={state} idPrefix="layers-dock" /> : <PanelSkeleton title="Layers" />}</div>}
 
         {/* centre: viewport column */}
         <div className="flex min-h-0 min-w-0 flex-col">
@@ -300,7 +304,7 @@ export function VisualizationWorkspace() {
                 <button
                   type="button"
                   onClick={() => togglePanel("inspector")}
-                  className="flex max-w-[min(420px,calc(100vw_-_9rem))] items-center gap-2 rounded-full border border-line bg-white/95 py-1.5 pl-3.5 pr-2 text-left shadow-float focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+                  className="flex max-w-[min(420px,calc(100vw_-_9rem))] items-center gap-2 rounded-full border border-line bg-surface/95 py-1.5 pl-3.5 pr-2 text-left shadow-float focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
                   aria-label={`Inspect ${selected.type === "building" ? `Building ${selected.name}` : selected.name}`}
                 >
                   <span className="h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -313,7 +317,7 @@ export function VisualizationWorkspace() {
             {/* notice toast (outside mode-only blocks) */}
             {notice && (
               <div key={notice.token} className="pointer-events-none absolute inset-x-0 top-3 flex justify-center px-3">
-                <div role="status" className="pointer-events-auto flex max-w-full items-center gap-2 rounded-full border border-line bg-white/95 px-3.5 py-1.5 text-[12.5px] font-bold text-ink shadow-float animate-rise-in motion-reduce:animate-none">
+                <div role="status" className="pointer-events-auto flex max-w-full items-center gap-2 rounded-full border border-line bg-surface/95 px-3.5 py-1.5 text-[12.5px] font-bold text-ink shadow-float animate-rise-in motion-reduce:animate-none">
                   <Check size={14} className="shrink-0 text-success" aria-hidden="true" />
                   <span className="truncate">{notice.text}</span>
                 </div>
@@ -330,7 +334,7 @@ export function VisualizationWorkspace() {
             {/* capture preview */}
             {capture && (
               <div className="absolute inset-0 z-30 grid place-items-center bg-ink/30 p-3" role="presentation" onClick={() => setCapture(null)}>
-                <div ref={captureDialogRef} role="dialog" aria-modal="true" data-inner="" aria-label="Captured view" className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-white shadow-float" onClick={(e) => e.stopPropagation()}>
+                <div ref={captureDialogRef} role="dialog" aria-modal="true" data-inner="" aria-label="Captured view" className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-surface shadow-float" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-2.5">
                     <p className="text-[13.5px] font-bold text-ink">View captured</p>
                     <button type="button" onClick={() => setCapture(null)} aria-label="Close capture preview" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
@@ -338,13 +342,13 @@ export function VisualizationWorkspace() {
                     </button>
                   </div>
                   <div className="bg-surface-2 p-3">
-                    <img src={capture.url} alt={`Snapshot of the ${state.viewMode === "3d" ? "3D city" : "2D plan"} view`} className="mx-auto max-h-[min(50vh,360px)] w-auto max-w-full rounded-lg border border-line bg-white" />
+                    <img src={capture.url} alt={`Snapshot of the ${state.viewMode === "3d" ? "3D city" : "2D plan"} view`} className="mx-auto max-h-[min(50vh,360px)] w-auto max-w-full rounded-lg border border-line bg-surface" />
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
                     <p className="text-[11.5px] text-muted">
                       {capture.kind.toUpperCase()} · {capture.width} × {capture.height} · local snapshot, nothing uploaded
                     </p>
-                    <a href={capture.url} download={capture.fileName} className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-[12.5px] font-bold text-white hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/30">
+                    <a href={capture.url} download={capture.fileName} className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-[12.5px] font-bold text-on-brand hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/30">
                       <Download size={14} aria-hidden="true" /> Download
                     </a>
                   </div>
@@ -355,7 +359,7 @@ export function VisualizationWorkspace() {
             {/* share preview (demo) */}
             {share && (
               <div className="absolute inset-0 z-30 grid place-items-center bg-ink/30 p-3" role="presentation" onClick={() => setShare(null)}>
-                <div ref={shareDialogRef} role="dialog" aria-modal="true" data-inner="" aria-labelledby="share-title" className="w-full max-w-md rounded-2xl border border-line bg-white p-4 shadow-float" onClick={(e) => e.stopPropagation()}>
+                <div ref={shareDialogRef} role="dialog" aria-modal="true" data-inner="" aria-labelledby="share-title" className="w-full max-w-md rounded-2xl border border-line bg-surface p-4 shadow-float" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p id="share-title" className="text-[14px] font-bold text-ink">
@@ -418,11 +422,11 @@ export function VisualizationWorkspace() {
 
           {/* phone / tablet-portrait bottom controls */}
           {ready && !show.active && (
-            <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-white px-2 py-1.5 md:hidden" aria-label="Visualization controls">
+            <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-surface px-2 py-1.5 md:hidden" aria-label="Visualization controls">
               <div className="flex min-w-0 items-center gap-0.5">
                 <div role="tablist" aria-label="Workspace mode" className="mr-1 flex shrink-0 items-center gap-0.5 rounded-lg border border-line bg-surface-2 p-0.5 sm:hidden">
                   {(["explore", "present"] as const).map((m) => (
-                    <button key={m} type="button" role="tab" aria-selected={state.mode === m} onClick={() => state.setMode(m)} className={`h-7 rounded-md px-2 text-[11.5px] font-bold capitalize focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${state.mode === m ? "bg-white text-primary shadow-soft" : "text-muted"}`}>
+                    <button key={m} type="button" role="tab" aria-selected={state.mode === m} onClick={() => state.setMode(m)} className={`h-7 rounded-md px-2 text-[11.5px] font-bold capitalize focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${state.mode === m ? "bg-surface text-primary shadow-soft" : "text-muted"}`}>
                       {m}
                     </button>
                   ))}
@@ -449,7 +453,7 @@ export function VisualizationWorkspace() {
         </div>
 
         {/* right: Explore side panel (docked xl+) / Present storyboard (docked lg+) */}
-        {docked && !show.active && (present ? <div className="hidden min-h-0 border-l border-line bg-white lg:block">{ready ? sidePanel("side-dock") : <PanelSkeleton title="Presentation" />}</div> : <div className="hidden min-h-0 border-l border-line bg-white xl:block">{ready ? sidePanel("side-dock") : <PanelSkeleton title="Scene" />}</div>)}
+        {docked && !show.active && (present ? <div className="hidden min-h-0 border-l border-line bg-surface lg:block">{ready ? sidePanel("side-dock") : <PanelSkeleton title="Presentation" />}</div> : <div className="hidden min-h-0 border-l border-line bg-surface xl:block">{ready ? sidePanel("side-dock") : <PanelSkeleton title="Scene" />}</div>)}
       </div>
 
       {!show.active && <SpatialStatusBar state={state} map={map} />}

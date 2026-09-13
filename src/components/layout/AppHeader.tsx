@@ -4,19 +4,29 @@ import { Menu, Search, Bell, X, ChevronRight, Info, CheckCircle2, AlertTriangle 
 import { ShellContext } from "../../layouts/shellContext";
 import { ROUTE_TITLES } from "../navigation/navConfig";
 import { UserMenu } from "../user/UserMenu";
+import { useSettings } from "../../features/settings/hooks/useSettings";
+import { useUnitPreferences } from "../../features/settings/hooks/useUnitPreferences";
+import type { NotificationCategory, UnitSystem } from "../../features/settings/types/settings.types";
 
-type Unit = "metric" | "imperial";
-
-const NOTIFICATIONS = [
-  { icon: CheckCircle2, color: "#16A34A", title: "Analysis complete", text: "Sunlight study for Riverside District is ready.", time: "2h ago" },
-  { icon: Info, color: "#2563EB", title: "New layer available", text: "Flood-risk data added to the GIS catalog.", time: "5h ago" },
-  { icon: AlertTriangle, color: "#D97706", title: "Scenario review", text: "Option B exceeds the shading threshold.", time: "1d ago" },
+/**
+ * Preview notifications. Each carries the category that Settings →
+ * Notifications switches on and off, so the preference has a real effect even
+ * before a notification service exists.
+ */
+const NOTIFICATIONS: { icon: typeof Info; color: string; title: string; text: string; time: string; category: NotificationCategory }[] = [
+  { icon: CheckCircle2, color: "#16A34A", title: "Analysis complete", text: "Sunlight study for Riverside District is ready.", time: "2h ago", category: "analysisCompleted" },
+  { icon: Info, color: "#2563EB", title: "New layer available", text: "Flood-risk data added to the GIS catalog.", time: "5h ago", category: "system" },
+  { icon: AlertTriangle, color: "#D97706", title: "Scenario review", text: "Option B exceeds the shading threshold.", time: "1d ago", category: "optimizationCompleted" },
 ];
 
 export function AppHeader() {
   const { openMobile } = useContext(ShellContext);
   const location = useLocation();
-  const [unit, setUnit] = useState<Unit>("metric");
+  // The header's metric/imperial switch *is* the workspace unit preference —
+  // one central setting (Settings → Units), not per-page state.
+  const { system: unit, setSystem: setUnit } = useUnitPreferences();
+  const { settings } = useSettings();
+  const notifications = NOTIFICATIONS.filter((n) => settings.notifications[n.category]);
   const [notifOpen, setNotifOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -52,7 +62,7 @@ export function AppHeader() {
     // `relative z-40` lifts the whole header (and its dropdowns) above page
     // content. Without it, transformed/animated cards in <main> paint over
     // the notification and user menus.
-    <header className="relative z-40 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-white/90 px-4 backdrop-blur sm:px-6 print:hidden">
+    <header className="relative z-40 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-surface/90 px-4 backdrop-blur sm:px-6 print:hidden">
       {/* mobile menu trigger */}
       <button
         type="button"
@@ -79,7 +89,7 @@ export function AppHeader() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search projects, sites and tools..."
           aria-label="Search projects, sites and tools"
-          className="h-10 w-56 rounded-xl border border-line bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-faint transition-[width,border-color,background-color,box-shadow] focus:w-72 focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15 lg:w-64"
+          className="h-10 w-56 rounded-xl border border-line bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-faint transition-[width,border-color,background-color,box-shadow] focus:w-72 focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/15 lg:w-64"
         />
       </div>
       <button
@@ -95,13 +105,13 @@ export function AppHeader() {
         {searchOpen ? <X size={20} /> : <Search size={20} />}
       </button>
 
-      {/* unit selector — UI state only */}
+      {/* unit selector — writes the central unit preference */}
       <div
         role="group"
         aria-label="Units"
         className="hidden shrink-0 items-center rounded-xl border border-line bg-canvas p-0.5 sm:flex"
       >
-        {(["metric", "imperial"] as Unit[]).map((u) => (
+        {(["metric", "imperial"] as UnitSystem[]).map((u) => (
           <button
             key={u}
             type="button"
@@ -109,7 +119,7 @@ export function AppHeader() {
             onClick={() => setUnit(u)}
             className={[
               "rounded-lg px-3 py-1.5 text-xs font-bold capitalize transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-              unit === u ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+              unit === u ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
             ].join(" ")}
           >
             {u === "metric" ? "Metric" : "Imperial"}
@@ -131,14 +141,14 @@ export function AppHeader() {
           aria-haspopup="menu"
           aria-expanded={notifOpen}
           aria-controls={notifId}
-          aria-label={`Notifications${notifOpen ? "" : `, ${NOTIFICATIONS.length} unread`}`}
+          aria-label={`Notifications${notifOpen ? "" : `, ${notifications.length} unread`}`}
           className={[
             "relative grid h-10 w-10 place-items-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
             notifOpen ? "bg-surface-2 text-primary" : "text-muted hover:bg-surface-2 hover:text-primary",
           ].join(" ")}
         >
           <Bell size={20} />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger ring-2 ring-white" aria-hidden="true" />
+          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger ring-2 ring-surface" aria-hidden="true" />
         </button>
 
         {notifOpen && (
@@ -146,16 +156,16 @@ export function AppHeader() {
             id={notifId}
             role="menu"
             aria-label="Notifications"
-            className="absolute right-3 top-full z-50 mt-2 w-[min(20rem,calc(100vw-1.5rem))] origin-top-right animate-pop rounded-2xl border border-line bg-white p-1.5 shadow-float sm:right-0 sm:top-auto"
+            className="absolute right-3 top-full z-50 mt-2 w-[min(20rem,calc(100vw-1.5rem))] origin-top-right animate-pop rounded-2xl border border-line bg-surface p-1.5 shadow-float sm:right-0 sm:top-auto"
           >
             <div className="flex items-center justify-between gap-3 px-3 py-2">
               <p className="text-sm font-extrabold text-ink">Notifications</p>
               <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-bold text-primary">
-                {NOTIFICATIONS.length} new
+                {notifications.length} new
               </span>
             </div>
             <ul className="space-y-0.5">
-              {NOTIFICATIONS.map((n) => (
+              {notifications.map((n) => (
                 <li key={n.title}>
                   <button
                     type="button"
@@ -178,8 +188,13 @@ export function AppHeader() {
                 </li>
               ))}
             </ul>
+            {notifications.length === 0 && (
+              <p className="px-3 py-4 text-center text-[12px] text-muted">
+                Nothing to show — every category is switched off in Settings → Notifications.
+              </p>
+            )}
             <p className="border-t border-line px-3 py-2 text-[11px] font-medium text-faint">
-              Preview notifications — not connected to a service.
+              Preview notifications — not connected to a service. Categories follow Settings → Notifications.
             </p>
           </div>
         )}
@@ -191,7 +206,7 @@ export function AppHeader() {
 
       {/* mobile search field (drops down below the header) */}
       {searchOpen && (
-        <div className="absolute inset-x-0 top-full z-30 border-b border-line bg-white px-4 py-3 shadow-soft md:hidden">
+        <div className="absolute inset-x-0 top-full z-30 border-b border-line bg-surface px-4 py-3 shadow-soft md:hidden">
           <div className="relative">
             <Search size={17} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint" />
             <input
@@ -201,7 +216,7 @@ export function AppHeader() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search projects, sites and tools..."
               aria-label="Search projects, sites and tools"
-              className="h-11 w-full rounded-xl border border-line bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-faint focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15"
+              className="h-11 w-full rounded-xl border border-line bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-faint focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/15"
             />
           </div>
         </div>

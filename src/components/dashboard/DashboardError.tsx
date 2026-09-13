@@ -5,7 +5,7 @@ import { Button } from "../ui/Button";
 export function DashboardError({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="grid place-items-center px-6 py-16 sm:py-24">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-10 text-center shadow-card">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-10 text-center shadow-card">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-danger/10 text-danger">
           <CloudOff size={26} />
         </span>

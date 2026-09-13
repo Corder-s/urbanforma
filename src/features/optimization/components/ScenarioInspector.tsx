@@ -134,7 +134,7 @@ export function ScenarioInspector({ state, onClose, onRequestSelect, onRequestAp
 
       {/* actions */}
       {s && (
-        <div className="shrink-0 border-t border-line bg-white p-3">
+        <div className="shrink-0 border-t border-line bg-surface p-3">
           <div className="grid grid-cols-2 gap-2">
             <Button size="sm" variant={s.status === "Selected" ? "secondary" : "primary"} onClick={() => onRequestSelect(s)} disabled={s.status === "Selected" || s.status === "Archived"} className="px-2">
               <BookmarkCheck size={15} aria-hidden="true" /> {s.status === "Selected" ? "Preferred" : "Select Scenario"}

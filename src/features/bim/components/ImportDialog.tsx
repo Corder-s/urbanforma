@@ -63,7 +63,7 @@ export function ImportDialog({ open, progress, result, onCancel, onUpload }: Imp
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${id}-title`}
-        className="flex max-h-full w-full max-w-xl flex-col rounded-2xl border border-line bg-white shadow-float animate-pop motion-reduce:animate-none"
+        className="flex max-h-full w-full max-w-xl flex-col rounded-2xl border border-line bg-surface shadow-float animate-pop motion-reduce:animate-none"
       >
         <div className="flex shrink-0 items-center gap-2 border-b border-line px-4 py-3">
           <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
@@ -100,14 +100,14 @@ export function ImportDialog({ open, progress, result, onCancel, onUpload }: Imp
               dragging ? "border-primary bg-primary/5" : "border-line bg-surface-2",
             ].join(" ")}
           >
-            <span className="mx-auto grid h-11 w-11 place-items-center rounded-2xl bg-white text-primary shadow-soft" aria-hidden="true">
+            <span className="mx-auto grid h-11 w-11 place-items-center rounded-2xl bg-surface text-primary shadow-soft" aria-hidden="true">
               <FileBox size={20} />
             </span>
             <p className="mt-2.5 text-[13px] font-bold text-ink">Drop a model file, or choose one</p>
             <p className="mt-0.5 text-[11.5px] text-muted">
               Accepted: {FORMATS.map((f) => f.extension).join(", ")} · the file never leaves this browser
             </p>
-            <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-white px-3 py-2 text-[12.5px] font-bold text-primary shadow-soft transition-colors hover:border-primary focus-within:ring-4 focus-within:ring-primary/20">
+            <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-surface px-3 py-2 text-[12.5px] font-bold text-primary shadow-soft transition-colors hover:border-primary focus-within:ring-4 focus-within:ring-primary/20">
               <input
                 ref={fileRef}
                 id={`${id}-file`}
@@ -207,7 +207,7 @@ export function ImportDialog({ open, progress, result, onCancel, onUpload }: Imp
 
 function Cell({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="bg-white px-2.5 py-1.5">
+    <div className="bg-surface px-2.5 py-1.5">
       <dt className="text-[10.5px] font-bold uppercase tracking-wide text-muted">{label}</dt>
       <dd className={`mt-0.5 truncate text-[12px] font-bold text-ink ${mono ? "font-mono text-[11px]" : ""}`} title={value}>
         {value}
@@ -237,7 +237,7 @@ function Stage({
           : "border-line bg-surface-2 text-faint";
   const tag = state === "done" ? "done here" : state === "active" ? "running" : state === "failed" ? "failed" : state === "missing" ? "not connected" : "pending";
   return (
-    <li className="flex items-start gap-2.5 rounded-xl border border-line bg-white px-2.5 py-2">
+    <li className="flex items-start gap-2.5 rounded-xl border border-line bg-surface px-2.5 py-2">
       <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg border ${tone}`} aria-hidden="true">
         <Icon size={15} />
       </span>

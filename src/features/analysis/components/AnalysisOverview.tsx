@@ -41,7 +41,7 @@ export function AnalysisOverview({ state }: AnalysisOverviewProps) {
     <div className="h-full min-h-0 overflow-y-auto bg-canvas">
       <div className="mx-auto grid w-full max-w-6xl gap-4 p-4 sm:p-5">
         {/* --- score + breakdown ------------------------------------------------------------- */}
-        <section className="grid gap-4 rounded-2xl border border-line bg-white p-4 shadow-soft sm:p-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-8" aria-labelledby="analysis-score-title">
+        <section className="grid gap-4 rounded-2xl border border-line bg-surface p-4 shadow-soft sm:p-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-8" aria-labelledby="analysis-score-title">
           <div className="flex items-center gap-5 sm:gap-6">
             <ScoreRing score={result.overallScore} />
             <div className="min-w-0">
@@ -83,14 +83,14 @@ export function AnalysisOverview({ state }: AnalysisOverviewProps) {
 
         {/* --- charts ------------------------------------------------------------------------ */}
         <section className="grid gap-4 lg:grid-cols-2" aria-label="Analysis charts">
-          <div className="rounded-2xl border border-line bg-white p-4 shadow-soft">
+          <div className="rounded-2xl border border-line bg-surface p-4 shadow-soft">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h3 className="text-[13px] font-extrabold text-ink">Environmental trend</h3>
               <span className="text-[11px] font-semibold text-faint">Plan revisions</span>
             </div>
             <TrendChart points={result.trend} />
           </div>
-          <div className="rounded-2xl border border-line bg-white p-4 shadow-soft">
+          <div className="rounded-2xl border border-line bg-surface p-4 shadow-soft">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h3 className="text-[13px] font-extrabold text-ink">Land-use distribution</h3>
               <button type="button" onClick={() => setCategory("landuse")} className="text-[11.5px] font-bold text-primary hover:text-primary-dark focus-visible:outline-none focus-visible:rounded focus-visible:ring-4 focus-visible:ring-primary/20">

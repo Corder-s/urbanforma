@@ -17,7 +17,7 @@ export function ComingSoonPage() {
     <PageContainer className="flex h-full flex-col">
       <PageHeader title={title} description={`The ${title} module is part of the UrbanForma roadmap.`} />
 
-      <div className="grid flex-1 place-items-center rounded-3xl border border-dashed border-line-strong bg-white/60 px-6 py-20 text-center">
+      <div className="grid flex-1 place-items-center rounded-3xl border border-dashed border-line-strong bg-surface/60 px-6 py-20 text-center">
         <div className="max-w-md">
           <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
             <Hammer size={26} />

@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../settings/hooks/useUnitPreferences";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Box, Focus, Home, LayoutGrid, Minus, Plus, SlidersHorizontal, Square } from "lucide-react";
@@ -37,6 +38,9 @@ type PanelId = "nav" | "inspector";
  * bottom bar with the panel triggers and the map controls.
  */
 export function AnalysisWorkspace() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const [params, setParams] = useSearchParams();
   const projectId = params.get("projectId");
   const urlCategory = params.get("category");
@@ -211,7 +215,7 @@ export function AnalysisWorkspace() {
 
       <div className="relative grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_320px]">
         {/* left: categories (docked lg+) */}
-        <div className="hidden min-h-0 border-r border-line bg-white lg:block">{ready ? <AnalysisNavigation state={state} idPrefix="nav-dock" /> : <PanelSkeleton title="Analysis" />}</div>
+        <div className="hidden min-h-0 border-r border-line bg-surface lg:block">{ready ? <AnalysisNavigation state={state} idPrefix="nav-dock" /> : <PanelSkeleton title="Analysis" />}</div>
 
         {/* centre */}
         <div className="flex min-h-0 min-w-0 flex-col">
@@ -235,7 +239,7 @@ export function AnalysisWorkspace() {
 
                 {/* category headline card (top-left, under the north arrow) */}
                 <div className="pointer-events-none absolute left-3 top-16 hidden w-[260px] md:block">
-                  <div className="pointer-events-auto rounded-2xl border border-line bg-white/95 p-3 shadow-soft">
+                  <div className="pointer-events-auto rounded-2xl border border-line bg-surface/95 p-3 shadow-soft">
                     <div className="flex items-center gap-2">
                       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
                         <category.icon size={15} />
@@ -274,7 +278,7 @@ export function AnalysisWorkspace() {
 
             {/* compare */}
             {ready && state.compareOpen && (
-              <div className="absolute inset-0 z-10 grid place-items-center overflow-y-auto bg-ink/20 p-3 sm:p-6" onClick={(e) => e.target === e.currentTarget && state.setCompareOpen(false)}>
+              <div className="absolute inset-0 z-10 grid place-items-center overflow-y-auto bg-scrim/20 p-3 sm:p-6" onClick={(e) => e.target === e.currentTarget && state.setCompareOpen(false)}>
                 <AnalysisCompare rows={state.comparison} projectName={projectName} onClose={() => state.setCompareOpen(false)} />
               </div>
             )}
@@ -290,7 +294,7 @@ export function AnalysisWorkspace() {
 
           {/* mobile: compact legend + metric strip for the analysis map */}
           {ready && !isOverview && (
-            <div className="shrink-0 border-t border-line bg-white md:hidden">
+            <div className="shrink-0 border-t border-line bg-surface md:hidden">
               <div className="flex gap-2 overflow-x-auto px-3 py-2" aria-label={`${category.label} metrics`}>
                 {state.categoryMetrics.slice(0, 4).map((m) => (
                   <div key={m.id} className="w-[200px] shrink-0">
@@ -316,7 +320,7 @@ export function AnalysisWorkspace() {
 
           {/* phone bottom bar */}
           {ready && (
-            <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-white px-2 py-1.5 lg:hidden" aria-label="Analysis controls">
+            <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-surface px-2 py-1.5 lg:hidden" aria-label="Analysis controls">
               <div className="flex items-center gap-0.5">
                 <IconButton icon={LayoutGrid} label="Analysis categories" size="sm" onClick={() => togglePanel("nav")} active={openPanel === "nav"} aria-expanded={openPanel === "nav"} />
                 <IconButton icon={SlidersHorizontal} label="Details" size="sm" onClick={() => togglePanel("inspector")} active={openPanel === "inspector"} aria-expanded={openPanel === "inspector"} className="xl:hidden" />
@@ -327,7 +331,7 @@ export function AnalysisWorkspace() {
         </div>
 
         {/* right: details (docked xl+) */}
-        <div className="hidden min-h-0 border-l border-line bg-white xl:block">{ready ? <AnalysisInspector state={state} idPrefix="inspector-dock" /> : <PanelSkeleton title="Details" />}</div>
+        <div className="hidden min-h-0 border-l border-line bg-surface xl:block">{ready ? <AnalysisInspector state={state} idPrefix="inspector-dock" /> : <PanelSkeleton title="Details" />}</div>
       </div>
 
       <AnalysisStatusBar state={state} map={map} />
@@ -340,7 +344,7 @@ export function AnalysisWorkspace() {
 const btn = "grid h-9 w-9 place-items-center text-muted transition-colors hover:bg-surface-2 hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-primary/20";
 
 function ViewControls({ state3d, onZoomIn, onZoomOut, onPreset, compact = false }: { state3d: boolean; onZoomIn: () => void; onZoomOut: () => void; onPreset: (p: "fit" | "reset" | "top" | "perspective") => void; compact?: boolean }) {
-  const groupCls = compact ? "flex items-center divide-x divide-line overflow-hidden rounded-xl border border-line bg-white shadow-soft" : "flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-white shadow-soft";
+  const groupCls = compact ? "flex items-center divide-x divide-line overflow-hidden rounded-xl border border-line bg-surface shadow-soft" : "flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface shadow-soft";
   return (
     <div className={compact ? "flex items-center gap-2" : "flex flex-col gap-2"} role="group" aria-label="View controls">
       {!state3d && (
@@ -378,7 +382,7 @@ function ViewControls({ state3d, onZoomIn, onZoomOut, onPreset, compact = false 
 /** Horizontal category chips for < lg screens (the docked nav is hidden there). */
 function MobileCategoryStrip({ active, onSelect }: { active: AnalysisCategoryId; onSelect: (c: AnalysisCategoryId) => void }) {
   return (
-    <div className="shrink-0 border-b border-line bg-white lg:hidden">
+    <div className="shrink-0 border-b border-line bg-surface lg:hidden">
       <div role="tablist" aria-label="Analysis categories" className="flex gap-1.5 overflow-x-auto px-3 py-2">
         {CATEGORIES.map((c) => {
           const Icon = c.icon;
@@ -392,7 +396,7 @@ function MobileCategoryStrip({ active, onSelect }: { active: AnalysisCategoryId;
               onClick={() => onSelect(c.id)}
               className={[
                 "inline-flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                isActive ? "border-primary bg-primary/10 text-primary" : "border-line bg-white text-muted hover:text-ink",
+                isActive ? "border-primary bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:text-ink",
               ].join(" ")}
             >
               <Icon size={14} aria-hidden="true" />

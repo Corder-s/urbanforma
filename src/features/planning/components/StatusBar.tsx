@@ -23,7 +23,7 @@ export function StatusBar({ state, scaleLabel }: StatusBarProps) {
   const status = saveState === "saving" ? "Saving…" : saveState === "dirty" ? "Unsaved" : saveState === "error" ? "Save failed" : "Saved";
 
   return (
-    <div className="flex h-8 shrink-0 items-center gap-4 overflow-hidden border-t border-line bg-white px-3 text-xs sm:gap-5" aria-label="Studio status">
+    <div className="flex h-8 shrink-0 items-center gap-4 overflow-hidden border-t border-line bg-surface px-3 text-xs sm:gap-5" aria-label="Studio status">
       <Item label="Selected" value={selectedLabel} className="min-w-0 max-w-[40%] shrink" />
       <Item label="Objects" value={objects.length.toLocaleString("en-US")} />
       <Item label="Scale" value={scaleLabel} className="hidden sm:inline-flex" />

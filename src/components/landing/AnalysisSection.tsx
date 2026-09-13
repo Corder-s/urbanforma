@@ -22,7 +22,7 @@ const METRICS: Metric[] = [
 
 export function AnalysisSection() {
   return (
-    <section id="analysis" className="border-y border-line bg-white py-20 sm:py-28">
+    <section id="analysis" className="border-y border-line bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-primary">Environmental Analysis</p>

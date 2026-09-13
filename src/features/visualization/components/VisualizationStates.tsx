@@ -16,7 +16,7 @@ export function SpatialLoading({ label = "Loading spatial data…" }: { label?: 
         aria-hidden="true"
       />
       <div className="relative flex flex-col items-center gap-4 text-center">
-        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white shadow-soft ring-1 ring-line">
+        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-surface shadow-soft ring-1 ring-line">
           <svg className="h-6 w-6 animate-spin text-primary motion-reduce:animate-none" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z" />
@@ -40,7 +40,7 @@ interface NoProjectProps {
 export function NoProjectSelected({ projects, onOpen }: NoProjectProps) {
   return (
     <div className="grid h-full min-h-[360px] place-items-center overflow-y-auto bg-canvas p-6">
-      <div className="w-full max-w-lg rounded-3xl border border-line bg-white p-6 text-center shadow-card sm:p-8">
+      <div className="w-full max-w-lg rounded-3xl border border-line bg-surface p-6 text-center shadow-card sm:p-8">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
           <Globe size={26} />
         </span>
@@ -76,7 +76,7 @@ export function NoProjectSelected({ projects, onOpen }: NoProjectProps) {
 export function ProjectNotFound({ projectId }: { projectId: string }) {
   return (
     <div className="grid h-full min-h-[360px] place-items-center bg-canvas p-6">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-6 text-center shadow-card sm:p-8">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-6 text-center shadow-card sm:p-8">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-warning/10 text-warning ring-1 ring-warning/20">
           <SearchX size={26} />
         </span>
@@ -104,7 +104,7 @@ export function ProjectNotFound({ projectId }: { projectId: string }) {
 export function SpatialError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div role="alert" className="grid h-full min-h-[360px] place-items-center bg-canvas p-6">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-6 text-center shadow-card sm:p-8">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-6 text-center shadow-card sm:p-8">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-danger/10 text-danger ring-1 ring-danger/20">
           <TriangleAlert size={26} />
         </span>
@@ -122,7 +122,7 @@ export function SpatialError({ message, onRetry }: { message: string; onRetry: (
 export function NoSpatialObjects({ projectId }: { projectId: string }) {
   return (
     <div className="pointer-events-none absolute inset-0 grid place-items-center p-6">
-      <div className="pointer-events-auto max-w-sm rounded-2xl border border-line bg-white/95 p-5 text-center shadow-soft">
+      <div className="pointer-events-auto max-w-sm rounded-2xl border border-line bg-surface/95 p-5 text-center shadow-soft">
         <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
           <Shapes size={20} />
         </span>

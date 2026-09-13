@@ -25,7 +25,7 @@ export function OptimizationStatusBar({ state }: OptimizationStatusBarProps) {
   const gen = generationStatus === "generating" ? "Generating scenarios…" : generationStatus === "error" ? "Generation failed" : scenarios.length > 0 ? `${scenarios.length} scenarios · generated ${lastGeneratedAt ? relativeDay(lastGeneratedAt) : "—"}` : "No scenarios generated";
 
   return (
-    <div className="flex h-8 shrink-0 items-center gap-3 overflow-hidden border-t border-line bg-white px-3 text-[11px] text-muted" role="status" aria-live="polite" aria-label="Optimization status">
+    <div className="flex h-8 shrink-0 items-center gap-3 overflow-hidden border-t border-line bg-surface px-3 text-[11px] text-muted" role="status" aria-live="polite" aria-label="Optimization status">
       <span className={`inline-flex shrink-0 items-center gap-1 font-bold ${save.tone}`}>
         <SaveIcon size={12} className={save.spin ? "animate-spin motion-reduce:animate-none" : ""} aria-hidden="true" />
         {save.text}

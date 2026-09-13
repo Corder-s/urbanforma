@@ -11,14 +11,14 @@ export function ReportsSkeleton() {
     <div role="status" aria-label="Loading reports" className="grid gap-6 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
       <div className="space-y-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-2xl border border-line bg-white p-4 shadow-soft">
+          <div key={i} className="rounded-2xl border border-line bg-surface p-4 shadow-soft">
             <div className={`${bar} h-4 w-2/3`} />
             <div className={`${bar} mt-2 h-3 w-1/3`} />
             <div className={`${bar} mt-4 h-2 w-full rounded-full`} />
           </div>
         ))}
       </div>
-      <div className="rounded-3xl border border-line bg-white p-8 shadow-card">
+      <div className="rounded-3xl border border-line bg-surface p-8 shadow-card">
         <div className={`${bar} h-6 w-1/2`} />
         <div className={`${bar} mt-3 h-3 w-1/4`} />
         <div className="mt-8 space-y-3">
@@ -35,7 +35,7 @@ export function ReportsSkeleton() {
 /** Skeleton of the document body while the five sources are read. */
 export function DocumentLoading({ generating = false }: { generating?: boolean }) {
   return (
-    <div role="status" aria-live="polite" className="grid min-h-[420px] place-items-center rounded-3xl border border-line bg-white p-8 text-center shadow-card">
+    <div role="status" aria-live="polite" className="grid min-h-[420px] place-items-center rounded-3xl border border-line bg-surface p-8 text-center shadow-card">
       <div className="max-w-sm">
         <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
           <svg className="h-6 w-6 animate-spin motion-reduce:animate-none" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -55,7 +55,7 @@ export function DocumentLoading({ generating = false }: { generating?: boolean }
 
 export function DocumentError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="grid min-h-[420px] place-items-center rounded-3xl border border-line bg-white p-8 text-center shadow-card">
+    <div className="grid min-h-[420px] place-items-center rounded-3xl border border-line bg-surface p-8 text-center shadow-card">
       <div className="max-w-md">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-danger/10 text-danger">
           <FileWarning size={26} />
@@ -73,7 +73,7 @@ export function DocumentError({ message, onRetry }: { message: string; onRetry: 
 /** No report selected (or all deleted) — offer every report type. */
 export function ReportsEmpty({ onCreate, full }: { onCreate: (type: ReportType) => void; full: boolean }) {
   return (
-    <div className="rounded-3xl border border-dashed border-line bg-white/70 p-8 text-center shadow-soft">
+    <div className="rounded-3xl border border-dashed border-line bg-surface/70 p-8 text-center shadow-soft">
       <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
         <Inbox size={26} />
       </span>
@@ -91,7 +91,7 @@ export function ReportsEmpty({ onCreate, full }: { onCreate: (type: ReportType) 
               <button
                 type="button"
                 onClick={() => onCreate(t.id)}
-                className="flex w-full items-start gap-3 rounded-2xl border border-line bg-white px-4 py-3 text-left transition-colors hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+                className="flex w-full items-start gap-3 rounded-2xl border border-line bg-surface px-4 py-3 text-left transition-colors hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
               >
                 <FilePlus2 size={18} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
                 <span className="min-w-0">
@@ -110,7 +110,7 @@ export function ReportsEmpty({ onCreate, full }: { onCreate: (type: ReportType) 
 /** No project could be resolved (e.g. an id in the URL that no longer exists). */
 export function NoProjectAvailable({ projects, onOpen }: { projects: { id: string; name: string; location: string }[]; onOpen: (id: string) => void }) {
   return (
-    <div className="grid place-items-center rounded-3xl border border-line bg-white p-8 text-center shadow-card">
+    <div className="grid place-items-center rounded-3xl border border-line bg-surface p-8 text-center shadow-card">
       <div className="w-full max-w-lg">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
           <FolderOpen size={26} />
@@ -148,7 +148,7 @@ export function NoProjectAvailable({ projects, onOpen }: { projects: { id: strin
 
 export function ProjectsError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="grid place-items-center rounded-3xl border border-line bg-white p-10 text-center shadow-card">
+    <div className="grid place-items-center rounded-3xl border border-line bg-surface p-10 text-center shadow-card">
       <div className="max-w-md">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-danger/10 text-danger">
           <TriangleAlert size={26} />

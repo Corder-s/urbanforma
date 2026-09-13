@@ -97,6 +97,55 @@ function writeSession(session: AuthSession, remember?: boolean): void {
   }
 }
 
+/**
+ * Re-save a session in whichever storage it already lives in, so a profile edit
+ * never duplicates the session across localStorage and sessionStorage.
+ */
+function persistSessionInPlace(session: AuthSession): void {
+  const payload = JSON.stringify(session);
+  if (window.localStorage.getItem(SESSION_STORAGE_KEY) !== null) {
+    window.localStorage.setItem(SESSION_STORAGE_KEY, payload);
+  } else {
+    window.sessionStorage.setItem(SESSION_STORAGE_KEY, payload);
+    window.localStorage.removeItem(SESSION_STORAGE_KEY);
+  }
+}
+
+/** Trim an optional profile field; empty strings become undefined. */
+function cleanProfileField(value: string | undefined, maxLength: number): string | undefined {
+  if (value === undefined) return undefined;
+  const trimmed = value.trim().slice(0, maxLength);
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+/**
+ * Update the signed-in user's profile (Settings → Profile).
+ * Frontend-only: the change is written into the current session. When the Java
+ * Spring Boot backend lands this becomes a PATCH /api/users/me call — the
+ * signature already accepts exactly the editable fields.
+ */
+export function updateProfile(
+  patch: Partial<Pick<User, "name" | "organization" | "location" | "timezone">>,
+): AuthSession | null {
+  const session = readSession();
+  if (!session) return null;
+
+  const name = cleanProfileField(patch.name, 120);
+  const user: User = {
+    ...session.user,
+    ...(name ? { name } : {}),
+    ...(patch.organization !== undefined
+      ? { organization: cleanProfileField(patch.organization, 160) }
+      : {}),
+    ...(patch.location !== undefined ? { location: cleanProfileField(patch.location, 160) } : {}),
+    ...(patch.timezone !== undefined ? { timezone: cleanProfileField(patch.timezone, 120) } : {}),
+  };
+
+  const next: AuthSession = { ...session, user };
+  persistSessionInPlace(next);
+  return next;
+}
+
 /** Shape guard — ensures a persisted blob is a usable session. */
 function isSessionShape(value: unknown): value is AuthSession {
   if (!value || typeof value !== "object") return false;

@@ -32,7 +32,7 @@ export function ProjectMetrics({ metrics }: { metrics: Metrics }) {
         {cards.map((c) => (
           <div
             key={c.label}
-            className="flex min-w-0 flex-col gap-3 rounded-2xl border border-line bg-white p-4 shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-primary/30 hover:shadow-card"
+            className="flex min-w-0 flex-col gap-3 rounded-2xl border border-line bg-surface p-4 shadow-soft transition-[border-color,box-shadow] duration-300 hover:border-primary/30 hover:shadow-card"
           >
             <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">
               <c.icon size={17} />

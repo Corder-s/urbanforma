@@ -59,9 +59,9 @@ export function ScenarioComparison({ current, scenarios, activeId, onView, all, 
                   onClick={() => onToggleCompare(s.id)}
                   aria-pressed={on}
                   disabled={!on && compareIds.length >= 4}
-                  className={["inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-40", on ? "border-primary bg-primary/10 text-primary" : "border-line bg-white text-muted hover:text-ink"].join(" ")}
+                  className={["inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-40", on ? "border-primary bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:text-ink"].join(" ")}
                 >
-                  <span className="grid h-4 w-4 place-items-center rounded-full bg-white text-[9px] font-extrabold text-primary ring-1 ring-primary/20" aria-hidden="true">
+                  <span className="grid h-4 w-4 place-items-center rounded-full bg-surface text-[9px] font-extrabold text-primary ring-1 ring-primary/20" aria-hidden="true">
                     {s.letter}
                   </span>
                   {s.name}
@@ -77,7 +77,7 @@ export function ScenarioComparison({ current, scenarios, activeId, onView, all, 
           Add at least two scenarios to the comparison.
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-line bg-white">
+        <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
           <table className="w-full min-w-[640px] border-collapse text-left text-[12.5px]">
             <caption className="sr-only">Metric comparison between the current plan and the selected scenarios</caption>
             <thead>
@@ -105,7 +105,7 @@ export function ScenarioComparison({ current, scenarios, activeId, onView, all, 
             </thead>
             <tbody>
               <tr className="border-b border-line">
-                <th scope="row" className="sticky left-0 z-[1] bg-white px-3 py-2.5 font-bold text-ink">
+                <th scope="row" className="sticky left-0 z-[1] bg-surface px-3 py-2.5 font-bold text-ink">
                   Overall Score
                 </th>
                 <td className={`px-3 py-2.5 text-[15px] font-extrabold tabular-nums ${SCORE_TONE[scoreStatus(current.score)]}`}>{current.score}</td>
@@ -120,7 +120,7 @@ export function ScenarioComparison({ current, scenarios, activeId, onView, all, 
               </tr>
               {COMPARE_METRICS.map((id) => (
                 <tr key={id} className="border-b border-line last:border-b-0 odd:bg-surface-2/30">
-                  <th scope="row" className="sticky left-0 z-[1] bg-white px-3 py-2 font-semibold text-ink odd:bg-surface-2/30">
+                  <th scope="row" className="sticky left-0 z-[1] bg-surface px-3 py-2 font-semibold text-ink odd:bg-surface-2/30">
                     {METRICS[id].label}
                     {!METRICS[id].higherIsBetter && <span className="ml-1 text-[10px] font-bold uppercase tracking-wider text-faint">lower is better</span>}
                   </th>

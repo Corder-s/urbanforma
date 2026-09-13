@@ -25,7 +25,7 @@ const SEVERITIES: BimIssueSeverity[] = ["critical", "high", "medium", "low"];
 export function IssueInspector({ issue, index, onStatusChange, onSeverityChange, onEdit, onDelete, onShowInModel, onClose }: IssueInspectorProps) {
   if (!issue) {
     return (
-      <div className="flex h-full min-h-0 flex-col bg-white">
+      <div className="flex h-full min-h-0 flex-col bg-surface">
         <Header onClose={onClose} />
         <div className="grid flex-1 place-items-center p-6 text-center">
           <div>
@@ -45,7 +45,7 @@ export function IssueInspector({ issue, index, onStatusChange, onSeverityChange,
   const elements = issue.elementIds.map((id) => index?.byId.get(id) ?? null).filter((e): e is NonNullable<typeof e> => e !== null);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <Header onClose={onClose} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <div className="border-b border-line px-3 py-3">

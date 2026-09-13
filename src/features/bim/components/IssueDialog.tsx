@@ -64,7 +64,7 @@ export function IssueDialog({ open, issue, element, onCancel, onSubmit }: IssueD
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${id}-title`}
-        className="flex max-h-full w-full max-w-lg flex-col rounded-2xl border border-line bg-white shadow-float animate-pop motion-reduce:animate-none"
+        className="flex max-h-full w-full max-w-lg flex-col rounded-2xl border border-line bg-surface shadow-float animate-pop motion-reduce:animate-none"
       >
         <div className="flex shrink-0 items-center gap-2 border-b border-line px-4 py-3">
           <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
@@ -134,7 +134,7 @@ export function IssueDialog({ open, issue, element, onCancel, onSubmit }: IssueD
                   <button
                     type="button"
                     onClick={() => setLinked(null)}
-                    className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-line bg-white px-2 py-1 text-[11px] font-bold text-muted transition-colors hover:border-danger/40 hover:text-danger focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-line bg-surface px-2 py-1 text-[11px] font-bold text-muted transition-colors hover:border-danger/40 hover:text-danger focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
                   >
                     <Link2Off size={12} aria-hidden="true" /> Unlink
                   </button>

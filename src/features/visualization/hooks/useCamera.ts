@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import type { CameraPose, CameraPreset } from "../types/visualization.types";
+import { getDefaultCameraPreset } from "../../settings/services/settings.service";
 
 /** A 3-D pose the city renderer reports back (position + orbit target). */
 export type Pose3d = { position: [number, number, number]; target: [number, number, number] };
@@ -40,7 +41,8 @@ export interface CameraApi {
  * cameras; poses are exact restores used by saved views and storyboard slides.
  */
 export function useCamera(resetKey: string | null): CameraApi {
-  const [camera, setCamera] = useState<{ preset: CameraPreset; token: number }>({ preset: "fit", token: 0 });
+  // The opening camera comes from Settings → Map (default "fit", as before).
+  const [camera, setCamera] = useState<{ preset: CameraPreset; token: number }>(() => ({ preset: getDefaultCameraPreset(), token: 0 }));
   const [request, setRequest] = useState<CameraRequest | null>(null);
   const [lastPreset, setLastPreset] = useState<CameraPreset>("overview");
   const pose3dRef = useRef<Pose3d | null>(null);

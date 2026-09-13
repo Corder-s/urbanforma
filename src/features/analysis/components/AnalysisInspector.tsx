@@ -113,7 +113,7 @@ export function AnalysisInspector({ state, onClose, idPrefix = "inspector" }: An
               <button
                 type="button"
                 onClick={() => selectArea(focusZone)}
-                className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-lg border border-line bg-white px-2.5 text-[12px] font-bold text-primary transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+                className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 text-[12px] font-bold text-primary transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
               >
                 Inspect suggested zone ({focusZone.replace("zone-", "")})
               </button>

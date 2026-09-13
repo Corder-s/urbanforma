@@ -22,7 +22,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={fieldId}
           rows={rows}
           className={[
-            "w-full resize-y rounded-xl border bg-white px-3.5 py-3 text-[15px] leading-relaxed text-ink placeholder:text-faint transition duration-200 focus:outline-none",
+            "w-full resize-y rounded-xl border bg-surface px-3.5 py-3 text-[15px] leading-relaxed text-ink placeholder:text-faint transition duration-200 focus:outline-none",
             error
               ? "border-danger ring-4 ring-danger/10"
               : "border-line hover:border-line-strong focus:border-primary focus:ring-4 focus:ring-primary/15",

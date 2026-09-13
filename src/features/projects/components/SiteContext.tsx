@@ -26,7 +26,7 @@ export function SiteContext({ project }: { project: ProjectDetail }) {
   return (
     <section aria-labelledby="site-title">
       <SectionHeading id="site-title" title="Location & Site Context" hint="Site boundary, surroundings and access" />
-      <div className="rounded-3xl border border-line bg-white p-4 shadow-soft sm:p-5">
+      <div className="rounded-3xl border border-line bg-surface p-4 shadow-soft sm:p-5">
         <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
           <SiteMapPlaceholder site={s} variant={project.thumbVariant} className="aspect-[4/3] min-h-[240px] lg:aspect-auto lg:min-h-[340px]" />
 

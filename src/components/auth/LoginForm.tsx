@@ -207,7 +207,7 @@ function SocialButton({
       onClick={onClick}
       aria-label={`Continue with ${label} (coming soon)`}
       title={`${label} sign-in coming soon`}
-      className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-ink transition hover:border-primary hover:shadow-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+      className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-surface text-sm font-semibold text-ink transition hover:border-primary hover:shadow-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
     >
       {children}
       <span className="hidden sm:inline">{label}</span>

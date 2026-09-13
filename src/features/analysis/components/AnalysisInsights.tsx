@@ -24,7 +24,7 @@ export function AnalysisInsights({ findings, onOpenCategory, bare = false }: Ana
         const { icon: Icon, cls } = ICON[f.status];
         const cat = getCategory(f.category);
         return (
-          <li key={f.id} className="flex items-start gap-2.5 rounded-xl border border-line bg-white px-3 py-2.5">
+          <li key={f.id} className="flex items-start gap-2.5 rounded-xl border border-line bg-surface px-3 py-2.5">
             <span className="mt-px w-4 shrink-0 text-[11px] font-extrabold tabular-nums text-faint" aria-hidden="true">
               {i + 1}.
             </span>

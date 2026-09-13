@@ -1,3 +1,4 @@
+import { isPersonalizationEnabled } from "../../settings/services/settings.service";
 import { REPORT_TYPE_META, SECTION_CATALOG } from "../data/report.catalog";
 import type {
   ReportConfig,
@@ -119,6 +120,8 @@ export function saveReports(projectId: string, reports: ReportConfig[]): void {
 }
 
 export function rememberLastReportProject(projectId: string): void {
+  // Privacy → Personalization off: skip writing convenience history.
+  if (!isPersonalizationEnabled()) return;
   try {
     window.localStorage.setItem(LAST_PROJECT_KEY, projectId);
   } catch {

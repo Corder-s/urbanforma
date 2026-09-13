@@ -3,30 +3,41 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      // Colours are RGB triplets from tokens.css so opacity modifiers keep
+      // working (`bg-primary/10`) while themes re-declare the same tokens.
+      // Light values are identical to the hex palette this app has always
+      // shipped; `onBrand` is deliberately never themed (foreground on brand
+      // fills must stay white in every theme).
       colors: {
-        canvas: "#F5F9FF",
+        canvas: "rgb(var(--color-canvas-rgb) / <alpha-value>)",
         surface: {
-          DEFAULT: "#FFFFFF",
-          2: "#EEF4FF",
+          DEFAULT: "rgb(var(--color-surface-rgb) / <alpha-value>)",
+          2: "rgb(var(--color-surface-2-rgb) / <alpha-value>)",
         },
+        // Key is dashed because 40+ existing class names are `text-on-brand` /
+        // `bg-on-brand`. Tailwind does not kebab-case theme keys, so a camelCase
+        // `onBrand` key silently generated nothing and every one of those
+        // utilities was dead (primary buttons inherited their label colour).
+        "on-brand": "rgb(var(--color-on-brand-rgb) / <alpha-value>)",
+        scrim: "rgb(var(--color-scrim-rgb) / <alpha-value>)",
         primary: {
-          DEFAULT: "#2563EB",
-          dark: "#1D4ED8",
-          light: "#3B82F6",
+          DEFAULT: "rgb(var(--color-primary-rgb) / <alpha-value>)",
+          dark: "rgb(var(--color-primary-dark-rgb) / <alpha-value>)",
+          light: "rgb(var(--color-primary-light-rgb) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "#06B6D4",
-          light: "#67E8F9",
+          DEFAULT: "rgb(var(--color-accent-rgb) / <alpha-value>)",
+          light: "rgb(var(--color-accent-light-rgb) / <alpha-value>)",
         },
-        ink: "#0F172A",
-        muted: "#64748B",
-        faint: "#94A3B8",
-        success: "#16A34A",
-        danger: "#DC2626",
-        warning: "#D97706",
+        ink: "rgb(var(--color-ink-rgb) / <alpha-value>)",
+        muted: "rgb(var(--color-muted-rgb) / <alpha-value>)",
+        faint: "rgb(var(--color-faint-rgb) / <alpha-value>)",
+        success: "rgb(var(--color-success-rgb) / <alpha-value>)",
+        danger: "rgb(var(--color-danger-rgb) / <alpha-value>)",
+        warning: "rgb(var(--color-warning-rgb) / <alpha-value>)",
         line: {
-          DEFAULT: "#DCE6F2",
-          strong: "#C4D4EA",
+          DEFAULT: "rgb(var(--color-border-rgb) / <alpha-value>)",
+          strong: "rgb(var(--color-border-strong-rgb) / <alpha-value>)",
         },
       },
       fontFamily: {
@@ -46,11 +57,12 @@ export default {
         "2xl": "20px",
         "3xl": "28px",
       },
+      // Shadows reference the tokens so a theme can re-declare depth.
       boxShadow: {
-        card: "0 24px 60px -28px rgba(37, 99, 235, 0.35)",
-        soft: "0 12px 32px -18px rgba(15, 76, 149, 0.30)",
-        glow: "0 10px 30px -12px rgba(37, 99, 235, 0.55)",
-        float: "0 18px 40px -18px rgba(15, 76, 149, 0.45)",
+        card: "var(--shadow-card)",
+        soft: "var(--shadow-soft)",
+        glow: "var(--shadow-glow)",
+        float: "var(--shadow-float)",
       },
       keyframes: {
         "fade-in": {

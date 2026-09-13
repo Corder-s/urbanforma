@@ -29,7 +29,7 @@ export function BuildingStyleControl({ state }: BuildingStyleControlProps) {
           {style === "land-use" && (["Residential", "Commercial", "Mixed Use", "Civic"] as const).map((k) => <span key={k} className="h-3 w-3 rounded-sm border" style={{ backgroundColor: LAND_USE_STYLE[k].fill, borderColor: LAND_USE_STYLE[k].stroke }} />)}
           {style === "height" && [2, 6, 12, 20, 30].map((f) => <span key={f} className="h-3 w-3 rounded-sm border border-line-strong" style={{ backgroundColor: heightRamp(f) }} />)}
           {style === "simple" && <span className="h-3 w-6 rounded-sm border border-line-strong bg-[#E9EEF5]" />}
-          {style === "architectural" && <span className="grid h-3 w-6 grid-rows-3 gap-px rounded-sm border border-line-strong bg-[#DCE6F2] p-px"><span className="bg-white/70" /><span className="bg-white/70" /><span className="bg-white/70" /></span>}
+          {style === "architectural" && <span className="grid h-3 w-6 grid-rows-3 gap-px rounded-sm border border-line-strong bg-[#DCE6F2] p-px"><span className="bg-surface/70" /><span className="bg-surface/70" /><span className="bg-surface/70" /></span>}
         </span>
         <span>{BUILDING_STYLES.find((s) => s.id === style)?.hint}</span>
       </div>

@@ -55,7 +55,7 @@ export function SustainabilitySection() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {STATS.map((s, i) => (
             <Reveal key={s.label} delay={(i % 3) * 110}>
-              <div className="flex h-full items-center gap-5 rounded-3xl border border-line bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card">
+              <div className="flex h-full items-center gap-5 rounded-3xl border border-line bg-surface p-6 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card">
                 <div className="relative grid shrink-0 place-items-center">
                   <Ring value={s.value} color={s.color} />
                   <span className="absolute text-[15px] font-extrabold text-ink">

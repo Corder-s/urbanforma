@@ -51,7 +51,7 @@ export function ScenarioHistory({ history, currentGenerationId, onLoad, onReset,
         </ul>
       )}
       <div className="px-4 pb-4">
-        <button type="button" onClick={onReset} disabled={disabled} className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-line bg-white text-[12px] font-bold text-muted hover:border-danger/40 hover:text-danger focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50">
+        <button type="button" onClick={onReset} disabled={disabled} className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-line bg-surface text-[12px] font-bold text-muted hover:border-danger/40 hover:text-danger focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50">
           <RotateCcw size={13} aria-hidden="true" /> Reset Optimization
         </button>
         <p className="mt-1.5 text-[10.5px] leading-snug text-faint">Returns goals, priorities and constraints to the baseline. Project data and versions are kept.</p>

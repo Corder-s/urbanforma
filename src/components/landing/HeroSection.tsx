@@ -20,7 +20,7 @@ export function HeroSection() {
 
       <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-14 sm:px-8 sm:pt-20">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary backdrop-blur animate-fade-in">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-surface/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary backdrop-blur animate-fade-in">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
             Smart City Planning Platform
           </span>

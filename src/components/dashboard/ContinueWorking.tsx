@@ -27,7 +27,7 @@ function Meta({ label, value }: { label: string; value: string }) {
 export function ContinueWorking({ project, stages }: ContinueWorkingProps) {
   return (
     <Reveal>
-      <div className="overflow-hidden rounded-3xl border border-line bg-white shadow-card">
+      <div className="overflow-hidden rounded-3xl border border-line bg-surface shadow-card">
         <div className="grid lg:grid-cols-[1.5fr_1fr]">
           {/* visual-dominant project preview */}
           <div className="group relative min-h-[240px] bg-surface-2">
@@ -37,12 +37,12 @@ export function ContinueWorking({ project, stages }: ContinueWorkingProps) {
               className="h-full w-full"
             />
             <div className="absolute left-4 top-4 flex items-center gap-2">
-              <Badge tone="blue" className="bg-white/90 backdrop-blur">
+              <Badge tone="blue" className="bg-surface/90 backdrop-blur">
                 Continue Working
               </Badge>
               <ProjectStatusBadge status={project.status} />
             </div>
-            <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2 rounded-2xl bg-white/85 px-3 py-2 backdrop-blur">
+            <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2 rounded-2xl bg-surface/85 px-3 py-2 backdrop-blur">
               <MapPin size={16} className="shrink-0 text-primary" />
               <p className="truncate text-sm font-bold text-ink">{project.location}</p>
             </div>

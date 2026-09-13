@@ -167,7 +167,7 @@ export function StackedBar({ items, label }: { items: { label: string; share: nu
     <div>
       <div className="flex h-3.5 w-full overflow-hidden rounded-full bg-surface-2" role="img" aria-label={`${label}: ${items.map((i) => `${i.label} ${i.share}%`).join(", ")}`}>
         {items.map((i) => (
-          <div key={i.label} className="h-full border-r-2 border-white last:border-r-0" style={{ width: `${i.share}%`, background: i.color }} />
+          <div key={i.label} className="h-full border-r-2 border-on-brand last:border-r-0" style={{ width: `${i.share}%`, background: i.color }} />
         ))}
       </div>
       <ul className="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-3" aria-hidden="true">

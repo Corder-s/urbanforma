@@ -89,7 +89,7 @@ export function EnvironmentalSnapshot({ env, projectId }: { env: EnvironmentalSu
   return (
     <section aria-labelledby="env-title" className="flex h-full flex-col">
       <SectionHeading id="env-title" title="Environmental Snapshot" hint="Summary only — full analysis comes later" />
-      <div className="flex flex-1 flex-col rounded-3xl border border-line bg-white p-5 shadow-soft">
+      <div className="flex flex-1 flex-col rounded-3xl border border-line bg-surface p-5 shadow-soft">
         <div className="flex items-center gap-4">
           <ScoreRing score={env.score} />
           <div className="min-w-0">

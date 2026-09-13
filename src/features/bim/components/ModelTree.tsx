@@ -201,7 +201,7 @@ export function ModelTree({
   const total = filtering ? results.length : (index?.elements.length ?? 0);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex shrink-0 items-center gap-1 border-b border-line px-2.5 py-2">
         <Layers3 size={15} className="shrink-0 text-primary" aria-hidden="true" />
         <h2 className="min-w-0 flex-1 truncate text-[12.5px] font-extrabold uppercase tracking-wide text-ink">Model tree</h2>
@@ -228,7 +228,7 @@ export function ModelTree({
             placeholder="Search elements, ids, levels…"
             autoComplete="off"
             aria-describedby={`${searchId}-hint`}
-            className="h-9 w-full rounded-lg border border-line bg-white pl-8 pr-8 text-[12.5px] text-ink placeholder:text-faint focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+            className="h-9 w-full rounded-lg border border-line bg-surface pl-8 pr-8 text-[12.5px] text-ink placeholder:text-faint focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
           />
           {queryInput && (
             <button

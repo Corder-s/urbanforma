@@ -65,7 +65,7 @@ export function PanelDrawer({ open, onClose, label, side, children, hideAt }: Pa
     <div className={`absolute inset-0 z-20 ${hidden} ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
       <div
         onClick={onClose}
-        className={`absolute inset-0 bg-ink/30 transition-opacity duration-200 motion-reduce:transition-none ${open ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-scrim/30 transition-opacity duration-200 motion-reduce:transition-none ${open ? "opacity-100" : "opacity-0"}`}
       />
       <div
         ref={panelRef}
@@ -73,7 +73,7 @@ export function PanelDrawer({ open, onClose, label, side, children, hideAt }: Pa
         aria-modal="true"
         data-inner=""
         aria-label={label}
-        className={`absolute ${position} flex flex-col overflow-hidden bg-white shadow-float transition-transform duration-200 ease-out motion-reduce:transition-none ${open ? "translate-x-0 translate-y-0" : offscreen}`}
+        className={`absolute ${position} flex flex-col overflow-hidden bg-surface shadow-float transition-transform duration-200 ease-out motion-reduce:transition-none ${open ? "translate-x-0 translate-y-0" : offscreen}`}
       >
         {mounted && children}
       </div>

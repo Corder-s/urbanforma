@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ChevronRight, FileText, Printer, RefreshCw } from "lucide-react";
@@ -60,6 +61,9 @@ const STATUS_LABEL: Record<ReportConfig["status"], string> = {
 };
 
 export function ReportsWorkspace() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const [searchParams, setSearchParams] = useSearchParams();
   const paramProjectId = searchParams.get("projectId");
   const paramReportId = searchParams.get("reportId");
@@ -248,7 +252,7 @@ export function ReportsWorkspace() {
         {/* Mobile: the document and its controls are two screens, so switch between
             them instead of forcing a long scroll. Both are always in the DOM on
             large screens, and only the document prints. */}
-        <div className="mb-4 grid grid-cols-2 gap-1 rounded-xl border border-line bg-white p-1 lg:hidden" role="group" aria-label="Reports view">
+        <div className="mb-4 grid grid-cols-2 gap-1 rounded-xl border border-line bg-surface p-1 lg:hidden" role="group" aria-label="Reports view">
           {(["preview", "configure"] as const).map((tab) => (
             <button
               key={tab}
@@ -257,7 +261,7 @@ export function ReportsWorkspace() {
               onClick={() => setMobileTab(tab)}
               className={[
                 "h-9 rounded-lg text-[13px] font-bold capitalize transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                mobileTab === tab ? "bg-primary text-white" : "text-muted hover:bg-surface-2 hover:text-primary",
+                mobileTab === tab ? "bg-primary text-on-brand" : "text-muted hover:bg-surface-2 hover:text-primary",
               ].join(" ")}
             >
               {tab === "preview" ? "Document" : "Configure"}
@@ -317,7 +321,7 @@ export function ReportsWorkspace() {
             />
           ) : (
             <>
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-white px-4 py-3 shadow-soft print:hidden">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface px-4 py-3 shadow-soft print:hidden">
                 <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
                   <Badge tone={STATUS_TONE[selected.status]} dot>
                     {generating ? "Generating" : STATUS_LABEL[selected.status]}

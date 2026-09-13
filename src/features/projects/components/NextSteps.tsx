@@ -22,15 +22,15 @@ export function NextSteps({ steps, projectId }: { steps: NextStep[]; projectId?:
             key={s.id}
             className={[
               "flex flex-col gap-3 rounded-2xl border p-5 shadow-soft",
-              s.primary ? "border-primary/30 bg-primary/5 ring-1 ring-primary/10" : "border-line bg-white",
+              s.primary ? "border-primary/30 bg-primary/5 ring-1 ring-primary/10" : "border-line bg-surface",
             ].join(" ")}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-white text-[12px] font-extrabold text-primary ring-1 ring-primary/20">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface text-[12px] font-extrabold text-primary ring-1 ring-primary/20">
                 {i + 1}
               </span>
               {s.primary && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[11px] font-bold text-white">
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[11px] font-bold text-on-brand">
                   <Sparkles size={12} aria-hidden="true" /> Recommended
                 </span>
               )}

@@ -55,7 +55,7 @@ export function ConstraintStatus({ checks, title = "Constraint Status", dense = 
           const def = getConstraintDef(c.constraintId);
           const meta = VERDICT_META[c.verdict];
           return (
-            <li key={c.constraintId} className={`grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 rounded-lg border border-line bg-white px-2.5 ${dense ? "py-1.5" : "py-2"}`}>
+            <li key={c.constraintId} className={`grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 rounded-lg border border-line bg-surface px-2.5 ${dense ? "py-1.5" : "py-2"}`}>
               <VerdictIcon verdict={c.verdict} size={13} className="mt-0.5" />
               <div className="min-w-0">
                 <div className="flex items-baseline justify-between gap-2">

@@ -29,7 +29,7 @@ export function DraftBanner({ draft, onRestore, onDiscard }: DraftBannerProps) {
       className="flex flex-col gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between"
     >
       <div className="flex items-start gap-3">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white text-primary ring-1 ring-primary/20">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface text-primary ring-1 ring-primary/20">
           <FileClock size={18} />
         </span>
         <div>

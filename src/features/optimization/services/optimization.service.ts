@@ -1,3 +1,4 @@
+import { isPersonalizationEnabled } from "../../settings/services/settings.service";
 import { getAnalysis, getAnalysisProjects, getAnalysisSpatialData, ProjectNotFoundError, type AnalysisProjectSummary } from "../../analysis/services/analysis.service";
 import { getDemoScenario } from "../../projects/project.service";
 import type { SpatialDataset } from "../../visualization/types/visualization.types";
@@ -208,7 +209,9 @@ export async function saveOptimizationState(projectId: string, state: Optimizati
   const payload: OptimizationState = { ...state, projectId, version: 1, savedAt };
   try {
     window.localStorage.setItem(storageKey(projectId), JSON.stringify(payload));
-    window.localStorage.setItem(OPTIMIZATION_LAST_PROJECT_KEY, projectId);
+    // Privacy → Personalization off: skip the convenience pointer only; the run
+    // itself is still saved.
+    if (isPersonalizationEnabled()) window.localStorage.setItem(OPTIMIZATION_LAST_PROJECT_KEY, projectId);
   } catch {
     throw new Error("Unable to save locally — storage is unavailable.");
   }

@@ -49,7 +49,7 @@ export function VersionsPanel({
 }: VersionsPanelProps) {
   return (
     <div className="flex h-full min-h-0 flex-col bg-canvas">
-      <div className="flex shrink-0 items-center gap-2 border-b border-line bg-white px-3 py-2.5">
+      <div className="flex shrink-0 items-center gap-2 border-b border-line bg-surface px-3 py-2.5">
         <History size={16} className="shrink-0 text-primary" aria-hidden="true" />
         <h2 className="min-w-0 flex-1 truncate text-[13.5px] font-extrabold text-ink">Models & versions</h2>
         <Button size="sm" variant="secondary" onClick={onImport} className="shrink-0 px-2.5">
@@ -60,7 +60,7 @@ export function VersionsPanel({
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3">
         {/* model records */}
-        <section aria-labelledby="bim-models" className="rounded-2xl border border-line bg-white p-3 shadow-soft">
+        <section aria-labelledby="bim-models" className="rounded-2xl border border-line bg-surface p-3 shadow-soft">
           <h3 id="bim-models" className="text-[12.5px] font-extrabold text-ink">
             Model records <span className="font-semibold text-muted">({models.length})</span>
           </h3>
@@ -125,7 +125,7 @@ export function VersionsPanel({
 
         {/* active model metadata */}
         {activeModel && (
-          <section aria-labelledby="bim-model-meta" className="mt-3 rounded-2xl border border-line bg-white p-3 shadow-soft">
+          <section aria-labelledby="bim-model-meta" className="mt-3 rounded-2xl border border-line bg-surface p-3 shadow-soft">
             <h3 id="bim-model-meta" className="text-[12.5px] font-extrabold text-ink">
               {activeModel.name}
             </h3>
@@ -157,7 +157,7 @@ export function VersionsPanel({
         )}
 
         {/* versions */}
-        <section aria-labelledby="bim-versions" className="mt-3 rounded-2xl border border-line bg-white p-3 shadow-soft">
+        <section aria-labelledby="bim-versions" className="mt-3 rounded-2xl border border-line bg-surface p-3 shadow-soft">
           <h3 id="bim-versions" className="text-[12.5px] font-extrabold text-ink">
             Revisions <span className="font-semibold text-muted">({versions.length})</span>
           </h3>
@@ -171,7 +171,7 @@ export function VersionsPanel({
                   <div
                     className={[
                       "rounded-xl border px-2.5 py-2",
-                      isViewing ? "border-primary/50 bg-primary/5" : isCurrent ? "border-line bg-surface-2" : "border-line bg-white",
+                      isViewing ? "border-primary/50 bg-primary/5" : isCurrent ? "border-line bg-surface-2" : "border-line bg-surface",
                     ].join(" ")}
                   >
                     <div className="flex items-center gap-2">
@@ -220,7 +220,7 @@ export function VersionsPanel({
 
 function Meta({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="bg-white px-2.5 py-1.5">
+    <div className="bg-surface px-2.5 py-1.5">
       <dt className="text-[10.5px] font-bold uppercase tracking-wide text-muted">{label}</dt>
       <dd className={`mt-0.5 truncate text-[12px] font-bold text-ink ${mono ? "font-mono text-[11px]" : ""}`} title={value}>
         {value}

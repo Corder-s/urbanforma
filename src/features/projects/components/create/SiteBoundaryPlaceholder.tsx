@@ -86,23 +86,23 @@ export function SiteBoundaryPlaceholder() {
           {/* centred prompt */}
           {!defined && (
             <div className="absolute inset-0 grid place-items-center p-4">
-              <div className="rounded-2xl border border-line bg-white/95 px-5 py-4 text-center shadow-soft">
+              <div className="rounded-2xl border border-line bg-surface/95 px-5 py-4 text-center shadow-soft">
                 <p className="text-sm font-extrabold text-ink">Define Site Boundary</p>
                 <p className="mt-0.5 text-[12.5px] text-muted">Draw on the map or upload a boundary file.</p>
               </div>
             </div>
           )}
           {defined && (
-            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg border border-line bg-white/95 px-2.5 py-1 text-[11.5px] font-bold text-success">
+            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface/95 px-2.5 py-1 text-[11.5px] font-bold text-success">
               <Check size={13} aria-hidden="true" /> Sample boundary {mode === "drawn" ? "drawn" : "uploaded"}
             </span>
           )}
-          <span className="absolute bottom-3 right-3 rounded-lg border border-line bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-muted">
+          <span className="absolute bottom-3 right-3 rounded-lg border border-line bg-surface/95 px-2.5 py-1 text-[11px] font-semibold text-muted">
             Demo — GIS editor connects later
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 border-t border-line bg-white p-3">
+        <div className="flex flex-wrap items-center gap-2 border-t border-line bg-surface p-3">
           <Button type="button" size="sm" variant="secondary" onClick={() => setMode("drawn")} aria-pressed={mode === "drawn"}>
             <PenTool size={15} /> Draw Boundary
           </Button>

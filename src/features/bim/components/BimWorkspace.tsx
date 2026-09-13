@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Check, Filter, Flag, Info, Layers, Layers3, SlidersHorizontal, X } from "lucide-react";
 import { IconButton } from "../../../components/ui/IconButton";
@@ -47,6 +48,9 @@ type PendingDelete = { kind: "model"; id: string; name: string } | { kind: "issu
  * reports services. This file owns no data of its own.
  */
 export function BimWorkspace() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const w = useBimWorkspace();
   const { prefs, models, filters, issues, coordination, selection, viz, sceneState, map } = w;
 
@@ -204,7 +208,7 @@ export function BimWorkspace() {
   );
 
   const modeStrip = (
-    <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-line bg-white px-2 py-1.5 xl:hidden" role="tablist" aria-label="BIM mode">
+    <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-line bg-surface px-2 py-1.5 xl:hidden" role="tablist" aria-label="BIM mode">
       {MODES.map((m) => {
         const active = mode === m.id;
         return (
@@ -267,7 +271,7 @@ export function BimWorkspace() {
   );
 
   const sidePanel = (onClose?: () => void) => (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex shrink-0 items-center gap-0.5 border-b border-line bg-surface-2 p-1" role="tablist" aria-label="Inspector panels">
         {(
           [
@@ -286,7 +290,7 @@ export function BimWorkspace() {
               onClick={() => setSideTab(t.id)}
               className={[
                 "inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
               ].join(" ")}
             >
               <t.icon size={14} aria-hidden="true" />
@@ -404,7 +408,7 @@ export function BimWorkspace() {
           <div className="pointer-events-none absolute inset-x-0 top-2 z-30 flex justify-center px-3">
             <p
               role="status"
-              className="pointer-events-auto inline-flex max-w-full items-center gap-2 rounded-xl border border-line bg-white/95 px-3 py-2 text-[12.5px] font-semibold text-ink shadow-float animate-pop motion-reduce:animate-none"
+              className="pointer-events-auto inline-flex max-w-full items-center gap-2 rounded-xl border border-line bg-surface/95 px-3 py-2 text-[12.5px] font-semibold text-ink shadow-float animate-pop motion-reduce:animate-none"
             >
               {notice.tone === "success" ? (
                 <Check size={14} className="shrink-0 text-success" aria-hidden="true" />
@@ -546,7 +550,7 @@ export function BimWorkspace() {
         ) : (
           /* --- model mode ---------------------------------------------------- */
           <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
-            <div className="hidden min-h-0 border-r border-line bg-white lg:block">{treePanel()}</div>
+            <div className="hidden min-h-0 border-r border-line bg-surface lg:block">{treePanel()}</div>
 
             <div className="relative flex min-h-0 min-w-0 flex-col">
               <div className="relative min-h-[260px] flex-1 lg:min-h-[320px]">
@@ -579,7 +583,7 @@ export function BimWorkspace() {
               </div>
 
               {/* phone / tablet bar */}
-              <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-white px-2 py-1.5 xl:hidden" aria-label="BIM view controls">
+              <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-surface px-2 py-1.5 xl:hidden" aria-label="BIM view controls">
                 <div className="flex items-center gap-0.5">
                   <IconButton icon={Layers3} label="Model tree" size="sm" onClick={() => togglePanel("tree")} active={openPanel === "tree"} aria-expanded={openPanel === "tree"} className="lg:hidden" />
                   <IconButton icon={SlidersHorizontal} label="Properties, filters and layers" size="sm" onClick={() => togglePanel("side")} active={openPanel === "side"} aria-expanded={openPanel === "side"} />
@@ -601,7 +605,7 @@ export function BimWorkspace() {
                         onClick={() => viz.setViewMode(v.id)}
                         className={[
                           "inline-flex h-8 items-center rounded-[9px] px-2.5 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                          viz.viewMode === v.id ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                          viz.viewMode === v.id ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
                         ].join(" ")}
                       >
                         {v.label}
@@ -613,7 +617,7 @@ export function BimWorkspace() {
               </div>
             </div>
 
-            <div className="hidden min-h-0 border-l border-line bg-white xl:block">{sidePanel()}</div>
+            <div className="hidden min-h-0 border-l border-line bg-surface xl:block">{sidePanel()}</div>
 
             <PanelDrawer open={openPanel === "tree"} onClose={closePanel} label="Model tree" side="left" hideAt="lg">
               {treePanel(closePanel)}
@@ -626,7 +630,7 @@ export function BimWorkspace() {
 
         {/* coordination mode: quick access to versions on small screens */}
         {mode === "coordination" && (
-          <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-white px-2 py-1.5 xl:hidden">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-surface px-2 py-1.5 xl:hidden">
             <Button size="sm" variant="secondary" onClick={() => togglePanel("versions")} aria-expanded={openPanel === "versions"} className="px-2.5">
               <Layers size={14} aria-hidden="true" /> Models & versions
             </Button>
@@ -636,7 +640,7 @@ export function BimWorkspace() {
           </div>
         )}
         {mode === "issues" && (
-          <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-white px-2 py-1.5 lg:hidden">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-surface px-2 py-1.5 lg:hidden">
             <Button size="sm" variant="secondary" onClick={() => togglePanel("issues")} aria-expanded={openPanel === "issues"} className="px-2.5">
               <Flag size={14} aria-hidden="true" /> Issue details
             </Button>

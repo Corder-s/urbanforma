@@ -17,7 +17,7 @@ interface FiltersPanelProps {
 const chip =
   "inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
 const chipOn = "border-primary/40 bg-primary/10 text-primary";
-const chipOff = "border-line bg-white text-muted hover:border-line-strong hover:text-ink";
+const chipOff = "border-line bg-surface text-muted hover:border-line-strong hover:text-ink";
 
 /**
  * Typed element filters: presets plus the facets that actually exist in the
@@ -34,7 +34,7 @@ export function FiltersPanel({ filters, resultCount, totalCount, idPrefix, onClo
   const shownBuildings = showAllBuildings ? (facets?.buildings ?? []) : (facets?.buildings ?? []).slice(0, 16);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex shrink-0 items-center gap-1.5 border-b border-line px-2.5 py-2">
         <Filter size={15} className="shrink-0 text-primary" aria-hidden="true" />
         <h2 className="min-w-0 flex-1 truncate text-[12.5px] font-extrabold uppercase tracking-wide text-ink">Filters</h2>

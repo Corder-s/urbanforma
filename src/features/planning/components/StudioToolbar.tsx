@@ -61,7 +61,7 @@ export function StudioToolbar({
   const backTo = projectId ? `/app/projects/${projectId}` : "/app/projects";
 
   return (
-    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-white px-2 sm:px-3">
+    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-surface px-2 sm:px-3">
       {/* left */}
       <div className="flex min-w-0 flex-1 items-center gap-1 sm:gap-2">
         <Link
@@ -90,7 +90,7 @@ export function StudioToolbar({
               title={m.placeholder ? `${m.label} — placeholder mode` : m.label}
               className={[
                 "inline-flex h-8 items-center gap-1.5 rounded-[9px] px-3 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
               ].join(" ")}
             >
               <Icon size={15} aria-hidden="true" />
@@ -115,7 +115,7 @@ export function StudioToolbar({
           title="Save plan (Ctrl+S)"
           className={[
             "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-[13px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60",
-            state.saveState === "dirty" ? "bg-primary text-white shadow-glow hover:bg-primary-dark" : "text-muted hover:bg-surface-2 hover:text-primary",
+            state.saveState === "dirty" ? "bg-primary text-on-brand shadow-glow hover:bg-primary-dark" : "text-muted hover:bg-surface-2 hover:text-primary",
           ].join(" ")}
         >
           <Save size={17} aria-hidden="true" />

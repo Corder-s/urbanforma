@@ -38,7 +38,7 @@ export function ReportPreview({ report, model }: ReportPreviewProps) {
     <article
       id="report-document"
       aria-label={`${report.title} — document preview`}
-      className="report-document mx-auto w-full max-w-[840px] overflow-hidden rounded-3xl border border-line bg-white text-ink shadow-card"
+      className="report-document mx-auto w-full max-w-[840px] overflow-hidden rounded-3xl border border-line bg-surface text-ink shadow-card"
     >
       {/* ---------- cover ---------- */}
       <header className="report-cover border-b border-line px-7 py-7 sm:px-10 sm:py-8">

@@ -22,7 +22,7 @@ interface PresentationStoryboardProps {
   embedded?: boolean;
 }
 
-const inputCls = "h-9 w-full rounded-lg border border-line bg-white px-2.5 text-[12.5px] font-semibold text-ink placeholder:text-faint focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15";
+const inputCls = "h-9 w-full rounded-lg border border-line bg-surface px-2.5 text-[12.5px] font-semibold text-ink placeholder:text-faint focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15";
 
 /**
  * Storyboard panel: the ordered slides of the presentation. Opening a slide
@@ -143,7 +143,7 @@ export function PresentationStoryboard({ state, camera2d, onClose, onPlay, onNot
   );
 
   const footer = (
-    <div className={`flex shrink-0 items-center gap-2 border-t border-line bg-white px-3 py-2 ${horizontal ? "" : ""}`}>
+    <div className={`flex shrink-0 items-center gap-2 border-t border-line bg-surface px-3 py-2 ${horizontal ? "" : ""}`}>
       <Button size="sm" variant="secondary" onClick={add} disabled={full} className="flex-1 justify-center" title={full ? `Up to ${MAX_SLIDES} slides` : "Add the current view as a slide"}>
         <Plus size={14} aria-hidden="true" /> Add slide
       </Button>
@@ -154,7 +154,7 @@ export function PresentationStoryboard({ state, camera2d, onClose, onPlay, onNot
   );
 
   return (
-    <div className="relative flex h-full min-h-0 flex-col bg-white">
+    <div className="relative flex h-full min-h-0 flex-col bg-surface">
       {header}
       {p && (
         <div className="shrink-0 border-b border-line px-3 py-2">
@@ -192,7 +192,7 @@ export function PresentationStoryboard({ state, camera2d, onClose, onPlay, onNot
             aria-modal="true"
             data-inner=""
             aria-labelledby={`${idPrefix}-edit-title-${uid}`}
-            className="w-full rounded-2xl border border-line bg-white p-4 shadow-float"
+            className="w-full rounded-2xl border border-line bg-surface p-4 shadow-float"
             onSubmit={(e) => {
               e.preventDefault();
               presentation.updateSlide(editing.id, draft);
@@ -210,7 +210,7 @@ export function PresentationStoryboard({ state, camera2d, onClose, onPlay, onNot
             <label htmlFor={`${idPrefix}-edit-d-${uid}`} className="mt-3 block text-[11.5px] font-bold text-muted">
               Description
             </label>
-            <textarea id={`${idPrefix}-edit-d-${uid}`} value={draft.description} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value.slice(0, 280) }))} rows={3} className="mt-1 w-full resize-none rounded-lg border border-line bg-white px-2.5 py-2 text-[12.5px] font-medium text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15" />
+            <textarea id={`${idPrefix}-edit-d-${uid}`} value={draft.description} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value.slice(0, 280) }))} rows={3} className="mt-1 w-full resize-none rounded-lg border border-line bg-surface px-2.5 py-2 text-[12.5px] font-medium text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15" />
             <div className="mt-4 flex justify-end gap-2">
               <Button type="button" size="sm" variant="ghost" onClick={() => setEditing(null)}>
                 Cancel

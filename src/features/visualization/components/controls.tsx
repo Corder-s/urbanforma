@@ -26,7 +26,7 @@ export function Switch({ id, checked, onChange, label, hint, disabled }: { id: s
           checked ? "border-primary bg-primary" : "border-line-strong bg-surface-2",
         ].join(" ")}
       >
-        <span className={`inline-block rounded-full bg-white shadow-soft transition-transform motion-reduce:transition-none ${checked ? "translate-x-[22px]" : "translate-x-[3px]"}`} style={{ width: 18, height: 18 }} aria-hidden="true" />
+        <span className={`inline-block rounded-full bg-surface shadow-soft transition-transform motion-reduce:transition-none ${checked ? "translate-x-[22px]" : "translate-x-[3px]"}`} style={{ width: 18, height: 18 }} aria-hidden="true" />
         <span className="sr-only">{checked ? "On" : "Off"}</span>
       </button>
     </div>
@@ -67,7 +67,7 @@ export function Segmented<T extends string>({ label, value, onChange, options, c
             className={[
               "inline-flex min-w-0 items-center justify-center gap-1.5 rounded-lg border font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
               size === "sm" ? "h-8 px-2 text-[11.5px]" : "h-9 px-2.5 text-[12.5px]",
-              active ? "border-primary bg-primary/10 text-primary" : "border-line bg-white text-muted hover:border-line-strong hover:text-ink",
+              active ? "border-primary bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:border-line-strong hover:text-ink",
             ].join(" ")}
           >
             {o.icon}

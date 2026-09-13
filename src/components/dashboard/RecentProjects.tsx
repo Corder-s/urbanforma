@@ -13,7 +13,7 @@ function ProjectCard({ project }: { project: Project }) {
     <Link
       to="/app/projects"
       aria-label={`Open ${project.name}`}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-soft transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
     >
       <div className="relative aspect-[240/150] overflow-hidden bg-surface-2">
         <ProjectThumb

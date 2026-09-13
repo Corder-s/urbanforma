@@ -13,7 +13,7 @@ interface AnnotationEditorProps {
   onActive: (id: string | null) => void;
 }
 
-const inputCls = "h-9 w-full rounded-lg border border-line bg-white px-2.5 text-[12.5px] font-semibold text-ink placeholder:text-faint focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15";
+const inputCls = "h-9 w-full rounded-lg border border-line bg-surface px-2.5 text-[12.5px] font-semibold text-ink placeholder:text-faint focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15";
 
 /**
  * Simple annotation editor (demo state): add a Title / Label / Callout /
@@ -82,7 +82,7 @@ export function AnnotationEditor({ state, activeId, onActive }: AnnotationEditor
           {ANNOTATION_KINDS.map((k) => {
             const on = kind === k.id;
             return (
-              <button key={k.id} type="button" role="radio" aria-checked={on} title={k.hint} onClick={() => setKind(k.id)} className={`h-8 rounded-lg border text-[11.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${on ? "border-primary bg-primary/10 text-primary" : "border-line bg-white text-muted hover:border-line-strong hover:text-ink"}`}>
+              <button key={k.id} type="button" role="radio" aria-checked={on} title={k.hint} onClick={() => setKind(k.id)} className={`h-8 rounded-lg border text-[11.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${on ? "border-primary bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:border-line-strong hover:text-ink"}`}>
                 {k.label}
               </button>
             );
@@ -111,7 +111,7 @@ export function AnnotationEditor({ state, activeId, onActive }: AnnotationEditor
         {annotations.map((a) => {
           const on = a.id === activeId;
           return (
-            <li key={a.id} className={`rounded-lg border ${on ? "border-primary bg-primary/5" : "border-line bg-white"}`}>
+            <li key={a.id} className={`rounded-lg border ${on ? "border-primary bg-primary/5" : "border-line bg-surface"}`}>
               <div className="flex items-center gap-2 px-2.5 py-1.5">
                 <button type="button" onClick={() => onActive(on ? null : a.id)} aria-expanded={on} aria-controls={`${id}-edit-${a.id}`} className="flex min-w-0 flex-1 items-center gap-2 rounded-md text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
                   <span className="shrink-0 rounded-md bg-surface-2 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted">{a.kind}</span>
@@ -149,7 +149,7 @@ export function AnnotationEditor({ state, activeId, onActive }: AnnotationEditor
                           ["→", 20, 0, "right"],
                         ] as const
                       ).map(([glyph, dx, dy, name]) => (
-                        <button key={name} type="button" onClick={() => nudge(active, dx, dy)} aria-label={`Move ${name} 20 metres`} className="grid h-7 w-7 place-items-center rounded-md border border-line bg-white text-[12px] font-bold text-ink hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
+                        <button key={name} type="button" onClick={() => nudge(active, dx, dy)} aria-label={`Move ${name} 20 metres`} className="grid h-7 w-7 place-items-center rounded-md border border-line bg-surface text-[12px] font-bold text-ink hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
                           {glyph}
                         </button>
                       ))}

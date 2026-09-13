@@ -115,12 +115,10 @@ export function pathFrom(points: Point[], close = false): string {
   return close ? `${d} Z` : d;
 }
 
-export function formatMetres(m: number): string {
-  if (m >= 1000) return `${(m / 1000).toLocaleString("en-US", { maximumFractionDigits: 2 })} km`;
-  return `${Math.round(m).toLocaleString("en-US")} m`;
-}
-
-export function formatArea(m2: number): string {
-  if (m2 >= 10_000) return `${(m2 / 10_000).toLocaleString("en-US", { maximumFractionDigits: 2 })} ha`;
-  return `${Math.round(m2).toLocaleString("en-US")} m²`;
-}
+/**
+ * Distance and area formatting delegate to the central units library
+ * (Settings → Units), so one preference changes Planning, BIM, Projects and the
+ * report document together. Metric output is exactly what these functions have
+ * always produced; the imperial branch is the only difference.
+ */
+export { formatArea, formatLength as formatMetres } from "../../settings/lib/units";

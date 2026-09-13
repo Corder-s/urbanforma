@@ -19,7 +19,7 @@ const SERIES_COLORS = ["#2563EB", "#059669", "#D97706", "#7C3AED"];
  */
 export function GoalPerformance({ rows, goals, scenarios, activeId }: GoalPerformanceProps) {
   return (
-    <section aria-labelledby="goal-performance-title" className="rounded-2xl border border-line bg-white p-4">
+    <section aria-labelledby="goal-performance-title" className="rounded-2xl border border-line bg-surface p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h3 id="goal-performance-title" className="text-[15px] font-extrabold text-ink">

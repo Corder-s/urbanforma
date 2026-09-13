@@ -20,7 +20,7 @@ export function ScenarioGenerator({ progress, onDismiss, onRetry }: ScenarioGene
   const title = failed ? "Generation failed" : progress.done ? "Scenarios ready" : "Generating planning scenarios…";
   return (
     <div className="pointer-events-none absolute inset-0 grid place-items-center p-4">
-      <div role={failed ? "alert" : "status"} aria-live="polite" aria-atomic="true" className="pointer-events-auto w-full max-w-sm rounded-2xl border border-line bg-white/95 p-5 shadow-float animate-pop motion-reduce:animate-none">
+      <div role={failed ? "alert" : "status"} aria-live="polite" aria-atomic="true" className="pointer-events-auto w-full max-w-sm rounded-2xl border border-line bg-surface/95 p-5 shadow-float animate-pop motion-reduce:animate-none">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${failed ? "bg-danger/10 text-danger" : progress.done ? "bg-success/10 text-success" : "bg-primary/10 text-primary"}`} aria-hidden="true">
@@ -57,7 +57,7 @@ export function ScenarioGenerator({ progress, onDismiss, onRetry }: ScenarioGene
                 const state = progress.done || i < progress.step ? "done" : i === progress.step ? "active" : "todo";
                 return (
                   <li key={s.id} className="flex items-center gap-2 text-[12px]">
-                    <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-full text-[9px] font-extrabold ${state === "done" ? "bg-success text-white" : state === "active" ? "bg-primary text-white" : "bg-surface-2 text-faint"}`} aria-hidden="true">
+                    <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-full text-[9px] font-extrabold ${state === "done" ? "bg-success text-on-brand" : state === "active" ? "bg-primary text-on-brand" : "bg-surface-2 text-faint"}`} aria-hidden="true">
                       {state === "done" ? <Check size={10} strokeWidth={3} /> : i + 1}
                     </span>
                     <span className={state === "todo" ? "text-faint" : state === "active" ? "font-bold text-ink" : "text-muted"}>{s.label}</span>

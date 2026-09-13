@@ -24,7 +24,7 @@ export function AnalysisRunProgress({ run, onDismiss, onRetry }: AnalysisRunProg
         role={failed ? "alert" : "status"}
         aria-live="polite"
         aria-atomic="true"
-        className="pointer-events-auto w-full max-w-sm rounded-2xl border border-line bg-white/95 p-5 shadow-float animate-pop motion-reduce:animate-none"
+        className="pointer-events-auto w-full max-w-sm rounded-2xl border border-line bg-surface/95 p-5 shadow-float animate-pop motion-reduce:animate-none"
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -63,9 +63,9 @@ export function AnalysisRunProgress({ run, onDismiss, onRetry }: AnalysisRunProg
             const state = failed ? (i < run.step ? "done" : i === run.step ? "failed" : "todo") : run.done || i < run.step ? "done" : i === run.step ? "active" : "todo";
             return (
               <li key={step.id} className={`flex items-center gap-2 text-[12.5px] ${state === "todo" ? "text-faint" : state === "failed" ? "font-semibold text-danger" : state === "active" ? "font-bold text-ink" : "text-muted"}`}>
-                <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-full ${state === "done" ? "bg-success text-white" : state === "active" ? "bg-primary text-white" : state === "failed" ? "bg-danger text-white" : "bg-surface-2"}`} aria-hidden="true">
+                <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-full ${state === "done" ? "bg-success text-on-brand" : state === "active" ? "bg-primary text-on-brand" : state === "failed" ? "bg-danger text-on-brand" : "bg-surface-2"}`} aria-hidden="true">
                   {state === "done" && <Check size={10} strokeWidth={3} />}
-                  {state === "active" && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                  {state === "active" && <span className="h-1.5 w-1.5 rounded-full bg-surface" />}
                   {state === "failed" && <X size={10} strokeWidth={3} />}
                 </span>
                 {step.label}

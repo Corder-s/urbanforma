@@ -1,29 +1,76 @@
 /* ============================================================
    UrbanForma — design tokens (shared by Tailwind + custom CSS)
+
+   Every colour is declared as an RGB triplet so Tailwind can apply
+   opacity modifiers (`bg-primary/10`, `border-line/60`) through
+   `rgb(var(--token-rgb) / <alpha-value>)`. The hex-ish `--color-*`
+   aliases stay for hand-written CSS (body, shadows, gradients).
+
+   Light is the default and is byte-for-byte the palette the app has
+   always shipped; the `[data-theme]`, `[data-accent]` and
+   `[data-contrast]` blocks only re-declare the same triplets, so a
+   theme is a token swap rather than a second design system.
    ============================================================ */
 :root {
-  --color-canvas: #f5f9ff;
-  --color-surface: #ffffff;
-  --color-surface-2: #eef4ff;
+  /* --- surfaces --- */
+  --color-canvas-rgb: 245 249 255;
+  --color-surface-rgb: 255 255 255;
+  --color-surface-2-rgb: 238 244 255;
 
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #3b82f6;
-  --color-accent: #06b6d4;
-  --color-accent-light: #67e8f9;
+  /* --- brand --- */
+  --color-primary-rgb: 37 99 235;
+  --color-primary-dark-rgb: 29 78 216;
+  --color-primary-light-rgb: 59 130 246;
+  --color-accent-rgb: 6 182 212;
+  --color-accent-light-rgb: 103 232 249;
 
-  --color-ink: #0f172a;
-  --color-muted: #64748b;
-  --color-faint: #94a3b8;
+  /* --- text --- */
+  --color-ink-rgb: 15 23 42;
+  --color-muted-rgb: 100 116 139;
+  --color-faint-rgb: 148 163 184;
 
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
-  --color-warning: #d97706;
+  /* --- status --- */
+  --color-success-rgb: 22 163 74;
+  --color-danger-rgb: 220 38 38;
+  --color-warning-rgb: 217 119 6;
 
-  --color-border: #dce6f2;
-  --color-border-strong: #c4d4ea;
+  /* --- lines --- */
+  --color-border-rgb: 220 230 242;
+  --color-border-strong-rgb: 196 212 234;
 
-  --grad-brand: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  /* --- never themed ---
+     `on-brand` is the foreground on brand fills (always white); `scrim` is the
+     backdrop behind modals and drawers and the fill of inverse chips (always
+     dark). Both stay constant so white-on-dark pairings keep their contrast in
+     every theme. */
+  --color-on-brand-rgb: 255 255 255;
+  --color-scrim-rgb: 15 23 42;
+
+  /* --- aliases for hand-written CSS --- */
+  --color-canvas: rgb(var(--color-canvas-rgb));
+  --color-surface: rgb(var(--color-surface-rgb));
+  --color-surface-2: rgb(var(--color-surface-2-rgb));
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-primary-dark: rgb(var(--color-primary-dark-rgb));
+  --color-primary-light: rgb(var(--color-primary-light-rgb));
+  --color-accent: rgb(var(--color-accent-rgb));
+  --color-accent-light: rgb(var(--color-accent-light-rgb));
+  --color-ink: rgb(var(--color-ink-rgb));
+  --color-muted: rgb(var(--color-muted-rgb));
+  --color-faint: rgb(var(--color-faint-rgb));
+  --color-success: rgb(var(--color-success-rgb));
+  --color-danger: rgb(var(--color-danger-rgb));
+  --color-warning: rgb(var(--color-warning-rgb));
+  --color-border: rgb(var(--color-border-rgb));
+  --color-border-strong: rgb(var(--color-border-strong-rgb));
+  --color-on-brand: rgb(var(--color-on-brand-rgb));
+  --color-scrim: rgb(var(--color-scrim-rgb));
+
+  --grad-brand: linear-gradient(
+    135deg,
+    rgb(var(--color-primary-rgb)) 0%,
+    rgb(var(--color-accent-rgb)) 100%
+  );
 
   --shadow-soft: 0 12px 32px -18px rgba(15, 76, 149, 0.3);
   --shadow-card: 0 24px 60px -28px rgba(37, 99, 235, 0.35);
@@ -33,4 +80,184 @@
 
   font-family: "Inter", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ============================================================
+   Dark theme — the same tokens, re-declared. GIS/3D canvases keep
+   their own printed-map palette (see MapView / CityScene), so the
+   drawing stays light inside a dark shell.
+   ============================================================ */
+[data-theme="dark"] {
+  --color-scrim-rgb: 0 0 0;
+  --color-canvas-rgb: 10 17 32;
+  --color-surface-rgb: 17 26 44;
+  --color-surface-2-rgb: 26 36 56;
+
+  --color-primary-rgb: 59 130 246;
+  --color-primary-dark-rgb: 37 99 235;
+  --color-primary-light-rgb: 96 165 250;
+  --color-accent-rgb: 34 211 238;
+  --color-accent-light-rgb: 103 232 249;
+
+  --color-ink-rgb: 232 238 249;
+  --color-muted-rgb: 159 176 200;
+  --color-faint-rgb: 122 140 166;
+
+  --color-success-rgb: 34 197 94;
+  --color-danger-rgb: 239 68 68;
+  --color-warning-rgb: 245 158 11;
+
+  --color-border-rgb: 36 48 74;
+  --color-border-strong-rgb: 51 65 94;
+
+  /* Shadows read as depth on dark surfaces only when they are near-black. */
+  --shadow-soft: 0 12px 32px -18px rgba(0, 0, 0, 0.65);
+  --shadow-card: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 10px 30px -12px rgba(59, 130, 246, 0.45);
+  --shadow-float: 0 18px 40px -18px rgba(0, 0, 0, 0.75);
+  --shadow-focus: 0 0 0 4px rgba(96, 165, 250, 0.35);
+
+  color-scheme: dark;
+}
+
+/* System preference — applied when the user picks "System" and the OS is dark.
+   The provider sets `data-theme="system"`; this block resolves it. */
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --color-scrim-rgb: 0 0 0;
+    --color-canvas-rgb: 10 17 32;
+    --color-surface-rgb: 17 26 44;
+    --color-surface-2-rgb: 26 36 56;
+
+    --color-primary-rgb: 59 130 246;
+    --color-primary-dark-rgb: 37 99 235;
+    --color-primary-light-rgb: 96 165 250;
+    --color-accent-rgb: 34 211 238;
+    --color-accent-light-rgb: 103 232 249;
+
+    --color-ink-rgb: 232 238 249;
+    --color-muted-rgb: 159 176 200;
+    --color-faint-rgb: 122 140 166;
+
+    --color-success-rgb: 34 197 94;
+    --color-danger-rgb: 239 68 68;
+    --color-warning-rgb: 245 158 11;
+
+    --color-border-rgb: 36 48 74;
+    --color-border-strong-rgb: 51 65 94;
+
+    --shadow-soft: 0 12px 32px -18px rgba(0, 0, 0, 0.65);
+    --shadow-card: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 10px 30px -12px rgba(59, 130, 246, 0.45);
+    --shadow-float: 0 18px 40px -18px rgba(0, 0, 0, 0.75);
+    --shadow-focus: 0 0 0 4px rgba(96, 165, 250, 0.35);
+
+    color-scheme: dark;
+  }
+}
+
+/* ============================================================
+   High contrast — stronger text/border tokens, no layout change.
+   ============================================================ */
+[data-contrast="high"] {
+  --color-canvas-rgb: 255 255 255;
+  --color-surface-rgb: 255 255 255;
+  --color-surface-2-rgb: 232 238 247;
+
+  --color-ink-rgb: 2 6 23;
+  --color-muted-rgb: 51 65 85;
+  --color-faint-rgb: 71 85 105;
+
+  --color-border-rgb: 100 116 139;
+  --color-border-strong-rgb: 51 65 85;
+
+  --color-primary-rgb: 29 78 216;
+  --color-primary-dark-rgb: 30 58 138;
+  --color-success-rgb: 21 128 61;
+  --color-danger-rgb: 185 28 28;
+  --color-warning-rgb: 180 83 9;
+}
+
+[data-theme="dark"][data-contrast="high"] {
+  --color-canvas-rgb: 2 6 23;
+  --color-surface-rgb: 15 23 42;
+  --color-surface-2-rgb: 30 41 59;
+
+  --color-ink-rgb: 255 255 255;
+  --color-muted-rgb: 203 213 225;
+  --color-faint-rgb: 148 163 184;
+
+  --color-border-rgb: 148 163 184;
+  --color-border-strong-rgb: 203 213 225;
+
+  --color-primary-rgb: 96 165 250;
+  --color-primary-dark-rgb: 59 130 246;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"][data-contrast="high"] {
+    --color-canvas-rgb: 2 6 23;
+    --color-surface-rgb: 15 23 42;
+    --color-surface-2-rgb: 30 41 59;
+
+    --color-ink-rgb: 255 255 255;
+    --color-muted-rgb: 203 213 225;
+    --color-faint-rgb: 148 163 184;
+
+    --color-border-rgb: 148 163 184;
+    --color-border-strong-rgb: 203 213 225;
+
+    --color-primary-rgb: 96 165 250;
+    --color-primary-dark-rgb: 59 130 246;
+  }
+}
+
+/* ============================================================
+   Accent — only hues the design system already carries (brand
+   blue, accent cyan, architectural slate). Every value keeps
+   white foreground text at or above 4.5:1.
+   ============================================================ */
+[data-accent="cyan"] {
+  --color-primary-rgb: 14 116 144;
+  --color-primary-dark-rgb: 21 94 117;
+  --color-primary-light-rgb: 6 182 212;
+  --shadow-card: 0 24px 60px -28px rgba(14, 116, 144, 0.35);
+  --shadow-glow: 0 10px 30px -12px rgba(6, 182, 212, 0.55);
+  --shadow-focus: 0 0 0 4px rgba(6, 182, 212, 0.2);
+}
+
+[data-accent="slate"] {
+  --color-primary-rgb: 51 65 85;
+  --color-primary-dark-rgb: 30 41 59;
+  --color-primary-light-rgb: 71 85 105;
+  --shadow-card: 0 24px 60px -28px rgba(51, 65, 85, 0.35);
+  --shadow-glow: 0 10px 30px -12px rgba(51, 65, 85, 0.5);
+  --shadow-focus: 0 0 0 4px rgba(51, 65, 85, 0.18);
+}
+
+/* Dark + accent: keep the hue, lift it enough to read on a dark canvas. */
+[data-theme="dark"][data-accent="cyan"] {
+  --color-primary-rgb: 34 211 238;
+  --color-primary-dark-rgb: 6 182 212;
+  --color-primary-light-rgb: 103 232 249;
+}
+
+[data-theme="dark"][data-accent="slate"] {
+  --color-primary-rgb: 203 213 225;
+  --color-primary-dark-rgb: 148 163 184;
+  --color-primary-light-rgb: 226 232 240;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"][data-accent="cyan"] {
+    --color-primary-rgb: 34 211 238;
+    --color-primary-dark-rgb: 6 182 212;
+    --color-primary-light-rgb: 103 232 249;
+  }
+
+  [data-theme="system"][data-accent="slate"] {
+    --color-primary-rgb: 203 213 225;
+    --color-primary-dark-rgb: 148 163 184;
+    --color-primary-light-rgb: 226 232 240;
+  }
 }

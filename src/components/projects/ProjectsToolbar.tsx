@@ -23,7 +23,7 @@ interface ToolbarProps {
 
 export function ProjectsToolbar({ filters, on, resultCount, hasActiveFilters, onClear }: ToolbarProps) {
   return (
-    <div className="rounded-3xl border border-line bg-white p-4 shadow-soft sm:p-5">
+    <div className="rounded-3xl border border-line bg-surface p-4 shadow-soft sm:p-5">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         {/* prominent search */}
         <div className="relative flex-1">
@@ -40,7 +40,7 @@ export function ProjectsToolbar({ filters, on, resultCount, hasActiveFilters, on
             value={filters.q}
             onChange={(e) => on.setQ(e.target.value)}
             placeholder="Search projects..."
-            className="h-11 w-full rounded-xl border border-line bg-canvas pl-10 pr-9 text-sm text-ink placeholder:text-faint transition focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15"
+            className="h-11 w-full rounded-xl border border-line bg-canvas pl-10 pr-9 text-sm text-ink placeholder:text-faint transition focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/15"
           />
           {filters.q && (
             <button
@@ -66,7 +66,7 @@ export function ProjectsToolbar({ filters, on, resultCount, hasActiveFilters, on
           <div
             role="group"
             aria-label="View mode"
-            className="flex shrink-0 items-center rounded-xl border border-line bg-white p-0.5 shadow-soft"
+            className="flex shrink-0 items-center rounded-xl border border-line bg-surface p-0.5 shadow-soft"
           >
             <ViewBtn
               label="Grid view"
@@ -168,7 +168,7 @@ function ViewBtn({
       onClick={onClick}
       className={[
         "grid h-9 w-10 place-items-center rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-        active ? "bg-primary text-white shadow-glow" : "text-muted hover:bg-surface-2 hover:text-primary",
+        active ? "bg-primary text-on-brand shadow-glow" : "text-muted hover:bg-surface-2 hover:text-primary",
       ].join(" ")}
     >
       {children}

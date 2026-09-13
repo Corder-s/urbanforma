@@ -90,7 +90,7 @@ export function PropertiesInspector({ element, index, model, projectId, issues, 
 
   if (!element) {
     return (
-      <div className="flex h-full min-h-0 flex-col bg-white">
+      <div className="flex h-full min-h-0 flex-col bg-surface">
         <InspectorHeader title="Properties" onClose={onClose} />
         <div className="grid flex-1 place-items-center p-6 text-center">
           <div>
@@ -111,7 +111,7 @@ export function PropertiesInspector({ element, index, model, projectId, issues, 
   const quantities = quantitiesOf(element);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <InspectorHeader title="Properties" onClose={onClose} />
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
@@ -196,7 +196,7 @@ export function PropertiesInspector({ element, index, model, projectId, issues, 
           <Section key={group} title={group} icon={Boxes} id={`${idPrefix}-${group.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
             <dl className="grid gap-px overflow-hidden rounded-lg border border-line bg-line">
               {props.map((p) => (
-                <div key={p.id} className="flex items-baseline gap-2 bg-white px-2.5 py-1.5">
+                <div key={p.id} className="flex items-baseline gap-2 bg-surface px-2.5 py-1.5">
                   <dt className="w-[42%] shrink-0 text-[11.5px] font-semibold text-muted">{p.label}</dt>
                   <dd className="min-w-0 flex-1 text-right text-[12px] font-bold text-ink">
                     {p.value}
@@ -322,7 +322,7 @@ function Section({ title, icon: Icon, id, children }: { title: string; icon: typ
 
 function Row({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-baseline gap-2 bg-white px-2.5 py-1.5">
+    <div className="flex items-baseline gap-2 bg-surface px-2.5 py-1.5">
       <dt className="w-[38%] shrink-0 text-[11.5px] font-semibold text-muted">{label}</dt>
       <dd className={`min-w-0 flex-1 truncate text-right text-[12px] font-bold text-ink ${mono ? "font-mono text-[11px]" : ""}`} title={value}>
         {value}

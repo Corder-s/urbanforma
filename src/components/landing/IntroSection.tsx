@@ -8,7 +8,7 @@ const CONCEPTS = [
 
 export function IntroSection() {
   return (
-    <section className="border-y border-line bg-white py-20 sm:py-28">
+    <section className="border-y border-line bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-primary">

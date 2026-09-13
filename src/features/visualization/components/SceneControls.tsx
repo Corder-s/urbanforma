@@ -38,7 +38,7 @@ export function SceneControls({ state, onClose, idPrefix = "scene", initialOpen 
   const [open, setOpen] = useState<Record<SectionId, boolean>>({ scenario: true, camera: true, time: false, style: false, settings: false, [initialOpen]: true });
   const toggle = (id: SectionId) => setOpen((o) => ({ ...o, [id]: !o[id] }));
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       {embedded ? (
         <h2 id={`${idPrefix}-title-${uid}`} className="sr-only">
           Scene controls

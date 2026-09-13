@@ -155,11 +155,11 @@ export function PlanningCanvas({ state, camera }: PlanningCanvasProps) {
       <CanvasControls camera={camera} />
 
       <div className="pointer-events-none absolute left-3 top-3 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-2">
-        <span className="rounded-lg border border-line bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted shadow-soft">
+        <span className="rounded-lg border border-line bg-surface/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted shadow-soft">
           Demo canvas · not a GIS engine
         </span>
         {draftKind && draft.length > 0 && (
-          <span className="rounded-lg border border-primary/30 bg-white/95 px-2.5 py-1 text-[12px] font-semibold text-primary shadow-soft" role="status">
+          <span className="rounded-lg border border-primary/30 bg-surface/95 px-2.5 py-1 text-[12px] font-semibold text-primary shadow-soft" role="status">
             {draft.length} point{draft.length === 1 ? "" : "s"} · double-click or Enter to finish · Esc to cancel
           </span>
         )}

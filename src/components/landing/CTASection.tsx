@@ -20,10 +20,10 @@ export function CTASection() {
             }}
           />
           <div className="relative">
-            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h2 className="text-3xl font-extrabold tracking-tight text-on-brand sm:text-5xl">
               Ready to Design the Next City?
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-white/85">
+            <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-on-brand/85">
               Start exploring a smarter way to plan, visualize and improve urban
               environments.
             </p>

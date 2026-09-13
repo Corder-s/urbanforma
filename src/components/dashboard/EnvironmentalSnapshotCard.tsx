@@ -66,7 +66,7 @@ export function EnvironmentalSnapshotCard({
     <section aria-labelledby="env-title">
       <SectionHeading id="env-title" title="Environmental Snapshot" hint={projectName} />
       <Reveal className="h-full">
-        <div className="flex h-full flex-col gap-5 rounded-3xl border border-line bg-white p-5 shadow-soft">
+        <div className="flex h-full flex-col gap-5 rounded-3xl border border-line bg-surface p-5 shadow-soft">
           <div className="flex items-center gap-4">
             <ScoreRing score={env.score} />
             <div>

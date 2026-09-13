@@ -18,7 +18,7 @@ export function ScenarioChanges({ changes, title = "Scenario Changes" }: Scenari
         {changes.map((c) => {
           const meta = CHANGE_TYPE_META[c.type];
           return (
-            <li key={c.id} className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2.5 rounded-lg border border-line bg-white px-2.5 py-2">
+            <li key={c.id} className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
               <span className={`mt-0.5 inline-flex min-w-[76px] items-center justify-center rounded-md px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ring-1 ${meta.tone}`}>{c.type}</span>
               <div className="min-w-0">
                 <p className="text-[12.5px] font-bold text-ink">{c.text}</p>

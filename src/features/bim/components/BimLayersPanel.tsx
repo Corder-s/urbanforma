@@ -25,7 +25,7 @@ interface BimLayersPanelProps {
  */
 export function BimLayersPanel({ layers, counts, onToggle, onReset, sceneMode, onSceneMode, shownCount, totalCount, idPrefix, onClose }: BimLayersPanelProps) {
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
       <div className="flex shrink-0 items-center gap-1.5 border-b border-line px-2.5 py-2">
         <Layers size={15} className="shrink-0 text-primary" aria-hidden="true" />
         <h2 className="min-w-0 flex-1 truncate text-[12.5px] font-extrabold uppercase tracking-wide text-ink">Layers & scene</h2>
@@ -44,7 +44,7 @@ export function BimLayersPanel({ layers, counts, onToggle, onReset, sceneMode, o
                   key={m.id}
                   className={[
                     "flex cursor-pointer items-start gap-2.5 rounded-xl border px-2.5 py-2 transition-colors focus-within:ring-4 focus-within:ring-primary/20",
-                    on ? "border-primary/40 bg-primary/5" : "border-line bg-white hover:border-line-strong",
+                    on ? "border-primary/40 bg-primary/5" : "border-line bg-surface hover:border-line-strong",
                   ].join(" ")}
                 >
                   <input

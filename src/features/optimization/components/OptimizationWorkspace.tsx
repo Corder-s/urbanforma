@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Box, Check, Focus, FolderTree, GitBranch, Home, Info, Minus, Plus, SlidersHorizontal, Square, Target, X } from "lucide-react";
@@ -39,6 +40,9 @@ type DialogState = { kind: "select"; scenario: ScoredScenario } | { kind: "apply
  * Goals dock at lg, details at xl; below those breakpoints both are drawers.
  */
 export function OptimizationWorkspace() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const [params, setParams] = useSearchParams();
   const projectId = params.get("projectId");
 
@@ -249,7 +253,7 @@ export function OptimizationWorkspace() {
 
       <div className="relative grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_320px]">
         {/* left: goals & constraints (docked lg+) */}
-        <div className="hidden min-h-0 border-r border-line bg-white lg:block">{ready ? <GoalsSidebar state={state} idPrefix="goals-dock" onReset={() => setDialog({ kind: "reset" })} /> : <PanelSkeleton title="Goals & Constraints" />}</div>
+        <div className="hidden min-h-0 border-r border-line bg-surface lg:block">{ready ? <GoalsSidebar state={state} idPrefix="goals-dock" onReset={() => setDialog({ kind: "reset" })} /> : <PanelSkeleton title="Goals & Constraints" />}</div>
 
         {/* centre */}
         <div className="relative flex min-h-0 min-w-0 flex-col">
@@ -258,7 +262,7 @@ export function OptimizationWorkspace() {
           {/* transient notice (all modes) */}
           {state.notice && (
             <div className="pointer-events-none absolute inset-x-0 top-16 z-10 flex justify-center px-3 xl:top-3">
-              <p role="status" className="pointer-events-auto inline-flex max-w-full items-center gap-2 rounded-xl border border-line bg-white/95 px-3 py-2 text-[12.5px] font-semibold text-ink shadow-float animate-pop motion-reduce:animate-none">
+              <p role="status" className="pointer-events-auto inline-flex max-w-full items-center gap-2 rounded-xl border border-line bg-surface/95 px-3 py-2 text-[12.5px] font-semibold text-ink shadow-float animate-pop motion-reduce:animate-none">
                 <Check size={14} className="shrink-0 text-success" aria-hidden="true" />
                 <span className="min-w-0 truncate">{state.notice}</span>
                 <button type="button" onClick={() => state.setNotice(null)} aria-label="Dismiss" className="grid h-5 w-5 shrink-0 place-items-center rounded-md text-muted hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
@@ -316,7 +320,7 @@ export function OptimizationWorkspace() {
               </div>
 
               {/* mobile: scenario summary + legend */}
-              <div className="shrink-0 border-t border-line bg-white md:hidden">
+              <div className="shrink-0 border-t border-line bg-surface md:hidden">
                 <div className="px-3 py-2">
                   <ScenarioHeadline state={state} onSelect={requestSelect} compact />
                 </div>
@@ -331,7 +335,7 @@ export function OptimizationWorkspace() {
               </div>
 
               {/* scenario cards */}
-              <div className="shrink-0 border-t border-line bg-white">
+              <div className="shrink-0 border-t border-line bg-surface">
                 <ScenarioList scenarios={state.scenarios} activeId={state.activeScenarioId} compareIds={state.compareIds} generating={generating} onView={viewScenario} onToggleCompare={state.toggleCompare} onSelect={requestSelectById} onGenerate={generate} />
               </div>
             </>
@@ -339,7 +343,7 @@ export function OptimizationWorkspace() {
 
           {/* phone / tablet bottom bar */}
           {ready && (
-            <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-white px-2 py-1.5 xl:hidden" aria-label="Optimization controls">
+            <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line bg-surface px-2 py-1.5 xl:hidden" aria-label="Optimization controls">
               <div className="flex items-center gap-0.5">
                 <IconButton icon={Target} label="Goals & constraints" size="sm" onClick={() => togglePanel("goals")} active={openPanel === "goals"} aria-expanded={openPanel === "goals"} className="lg:hidden" />
                 <IconButton icon={SlidersHorizontal} label="Scenario details" size="sm" onClick={() => togglePanel("inspector")} active={openPanel === "inspector"} aria-expanded={openPanel === "inspector"} />
@@ -353,7 +357,7 @@ export function OptimizationWorkspace() {
                         { id: "3d", label: "3D" },
                       ] as const
                     ).map((v) => (
-                      <button key={v.id} type="button" role="tab" aria-selected={state.viewMode === v.id} onClick={() => state.setViewMode(v.id)} className={["inline-flex h-8 items-center rounded-[9px] px-2.5 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20", state.viewMode === v.id ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink"].join(" ")}>
+                      <button key={v.id} type="button" role="tab" aria-selected={state.viewMode === v.id} onClick={() => state.setViewMode(v.id)} className={["inline-flex h-8 items-center rounded-[9px] px-2.5 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20", state.viewMode === v.id ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink"].join(" ")}>
                         {v.label}
                       </button>
                     ))}
@@ -366,7 +370,7 @@ export function OptimizationWorkspace() {
         </div>
 
         {/* right: scenario details (docked xl+) */}
-        <div className="hidden min-h-0 border-l border-line bg-white xl:block">{ready ? <ScenarioInspector state={state} onRequestSelect={requestSelect} onRequestApply={requestApply} idPrefix="inspector-dock" /> : <PanelSkeleton title="Scenario Details" />}</div>
+        <div className="hidden min-h-0 border-l border-line bg-surface xl:block">{ready ? <ScenarioInspector state={state} onRequestSelect={requestSelect} onRequestApply={requestApply} idPrefix="inspector-dock" /> : <PanelSkeleton title="Scenario Details" />}</div>
 
         {/* drawers */}
         <PanelDrawer open={openPanel === "goals"} onClose={closePanel} label="Goals & constraints" side="left" hideAt="lg">
@@ -460,7 +464,7 @@ function ScenarioHeadline({ state, onSelect, compact = false }: { state: Optimiz
     { label: "Environment", current: `${Math.round(cur.environment)}`, scenario: s ? `${Math.round(s.metrics.environment)}` : null, improved: s ? (s.metrics.environment > cur.environment ? true : s.metrics.environment < cur.environment ? false : null) : null },
   ];
   return (
-    <div className={`rounded-2xl border border-line bg-white/95 shadow-soft ${compact ? "p-2.5" : "p-3"}`}>
+    <div className={`rounded-2xl border border-line bg-surface/95 shadow-soft ${compact ? "p-2.5" : "p-3"}`}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-[10.5px] font-bold uppercase tracking-wider text-faint">{s ? `Scenario ${s.letter} · vs current plan` : "Current plan"}</p>
@@ -508,7 +512,7 @@ function ScenarioHeadline({ state, onSelect, compact = false }: { state: Optimiz
         </tbody>
       </table>
       {s && !compact && s.status !== "Selected" && s.status !== "Archived" && (
-        <button type="button" onClick={() => onSelect(s)} className="mt-2 inline-flex h-8 w-full items-center justify-center rounded-lg border border-line bg-white text-[12px] font-bold text-primary hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
+        <button type="button" onClick={() => onSelect(s)} className="mt-2 inline-flex h-8 w-full items-center justify-center rounded-lg border border-line bg-surface text-[12px] font-bold text-primary hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
           Select as preferred
         </button>
       )}
@@ -547,7 +551,7 @@ function ConstraintMatrix({ scenarios }: { scenarios: ScoredScenario[] }) {
   if (scenarios.length === 0) return null;
   const constraints = scenarios[0].checks.map((c) => c.constraintId);
   return (
-    <section aria-labelledby="constraint-matrix-title" className="rounded-2xl border border-line bg-white p-4">
+    <section aria-labelledby="constraint-matrix-title" className="rounded-2xl border border-line bg-surface p-4">
       <h3 id="constraint-matrix-title" className="text-[15px] font-extrabold text-ink">
         Constraint Check
       </h3>
@@ -618,7 +622,7 @@ function ReviewView({ state, onView, onRequestSelect, onRequestApply }: { state:
     <div className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto grid w-full max-w-[1400px] gap-4 p-3 sm:p-4 lg:p-6">
         <section aria-labelledby="review-title" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="rounded-2xl border border-line bg-white p-4 sm:p-5">
+          <div className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
             <p className="text-[10.5px] font-bold uppercase tracking-wider text-faint">Review</p>
             <h3 id="review-title" className="mt-0.5 text-[17px] font-extrabold text-ink">
               {preferred ? `Preferred direction: ${preferred.name}` : "No preferred scenario yet"}
@@ -641,10 +645,10 @@ function ReviewView({ state, onView, onRequestSelect, onRequestApply }: { state:
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 sm:col-span-2">
-                  <button type="button" onClick={() => onView(preferred.id)} className="inline-flex h-9 items-center rounded-lg border border-line bg-white px-3 text-[12.5px] font-bold text-primary hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
+                  <button type="button" onClick={() => onView(preferred.id)} className="inline-flex h-9 items-center rounded-lg border border-line bg-surface px-3 text-[12.5px] font-bold text-primary hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
                     View on map
                   </button>
-                  <button type="button" onClick={() => onRequestApply(preferred)} className="inline-flex h-9 items-center rounded-lg bg-primary px-3 text-[12.5px] font-bold text-white shadow-glow hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
+                  <button type="button" onClick={() => onRequestApply(preferred)} className="inline-flex h-9 items-center rounded-lg bg-primary px-3 text-[12.5px] font-bold text-on-brand shadow-glow hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
                     Apply to Project
                   </button>
                 </div>
@@ -673,7 +677,7 @@ function ReviewView({ state, onView, onRequestSelect, onRequestApply }: { state:
 
 function VersionTree({ projectName, versions }: { projectName: string; versions: PlanningVersion[] }) {
   return (
-    <section aria-labelledby="versions-title" className="rounded-2xl border border-line bg-white p-4">
+    <section aria-labelledby="versions-title" className="rounded-2xl border border-line bg-surface p-4">
       <div className="flex items-center justify-between gap-2">
         <h3 id="versions-title" className="text-[15px] font-extrabold text-ink">
           Project Versions
@@ -715,7 +719,7 @@ function VersionTree({ projectName, versions }: { projectName: string; versions:
 const btn = "grid h-9 w-9 place-items-center text-muted transition-colors hover:bg-surface-2 hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-primary/20";
 
 function ViewControls({ state3d, onZoomIn, onZoomOut, onPreset, compact = false }: { state3d: boolean; onZoomIn: () => void; onZoomOut: () => void; onPreset: (p: "fit" | "reset" | "top" | "perspective") => void; compact?: boolean }) {
-  const groupCls = compact ? "flex items-center divide-x divide-line overflow-hidden rounded-xl border border-line bg-white shadow-soft" : "flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-white shadow-soft";
+  const groupCls = compact ? "flex items-center divide-x divide-line overflow-hidden rounded-xl border border-line bg-surface shadow-soft" : "flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface shadow-soft";
   return (
     <div className={compact ? "flex items-center gap-2" : "flex flex-col gap-2"} role="group" aria-label="View controls">
       {!state3d && (
@@ -753,13 +757,13 @@ function ViewControls({ state3d, onZoomIn, onZoomOut, onPreset, compact = false 
 /** Mode chips for < xl screens (the toolbar shows the mode tabs from xl). */
 function MobileModeStrip({ mode, onSelect, hasScenarios }: { mode: OptimizationMode; onSelect: (m: OptimizationMode) => void; hasScenarios: boolean }) {
   return (
-    <div className="shrink-0 border-b border-line bg-white xl:hidden">
+    <div className="shrink-0 border-b border-line bg-surface xl:hidden">
       <div role="tablist" aria-label="Optimization mode" className="flex gap-1.5 overflow-x-auto px-3 py-2">
         {MODES.map((m) => {
           const isActive = m.id === mode;
           const disabled = m.id !== "optimize" && !hasScenarios;
           return (
-            <button key={m.id} type="button" role="tab" aria-selected={isActive} disabled={disabled} onClick={() => onSelect(m.id)} className={["inline-flex h-8 shrink-0 items-center whitespace-nowrap rounded-full border px-3 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50", isActive ? "border-primary bg-primary/10 text-primary" : "border-line bg-white text-muted hover:text-ink"].join(" ")}>
+            <button key={m.id} type="button" role="tab" aria-selected={isActive} disabled={disabled} onClick={() => onSelect(m.id)} className={["inline-flex h-8 shrink-0 items-center whitespace-nowrap rounded-full border px-3 text-[12px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50", isActive ? "border-primary bg-primary/10 text-primary" : "border-line bg-surface text-muted hover:text-ink"].join(" ")}>
               {m.label}
             </button>
           );

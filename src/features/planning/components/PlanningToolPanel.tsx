@@ -21,14 +21,14 @@ function ToolButton({ tool, active, onSelect, layout }: { tool: ToolDefinition; 
         "group flex items-center gap-2.5 rounded-xl text-left text-[13px] font-semibold transition-colors duration-150 motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
         layout === "grid" ? "flex-col justify-center gap-1.5 px-1 py-2.5 text-center text-[11.5px]" : "h-9 px-2.5",
-        active ? "bg-primary text-white shadow-glow" : "text-ink hover:bg-surface-2 hover:text-primary",
+        active ? "bg-primary text-on-brand shadow-glow" : "text-ink hover:bg-surface-2 hover:text-primary",
       ].join(" ")}
     >
       <span
         className={[
           "grid shrink-0 place-items-center rounded-lg transition-colors",
           layout === "grid" ? "h-9 w-9" : "h-7 w-7",
-          active ? "bg-white/15 text-white" : "bg-surface-2 text-muted group-hover:text-primary",
+          active ? "bg-on-brand/15 text-on-brand" : "bg-surface-2 text-muted group-hover:text-primary",
         ].join(" ")}
         aria-hidden="true"
       >
@@ -36,7 +36,7 @@ function ToolButton({ tool, active, onSelect, layout }: { tool: ToolDefinition; 
       </span>
       <span className="min-w-0 flex-1 truncate">{tool.label}</span>
       {layout === "list" && tool.key && (
-        <kbd className={["hidden shrink-0 rounded-md px-1.5 py-0.5 font-sans text-[10.5px] font-bold xl:inline", active ? "bg-white/15 text-white" : "bg-surface-2 text-faint"].join(" ")}>
+        <kbd className={["hidden shrink-0 rounded-md px-1.5 py-0.5 font-sans text-[10.5px] font-bold xl:inline", active ? "bg-on-brand/15 text-on-brand" : "bg-surface-2 text-faint"].join(" ")}>
           {tool.key}
         </kbd>
       )}

@@ -19,8 +19,8 @@ export function WorkflowStages({ stages }: { stages: ProjectStage[] }) {
               className={[
                 "grid h-6 w-6 place-items-center rounded-full ring-1",
                 s.state === "done" && "bg-success/10 text-success ring-success/30",
-                s.state === "current" && "bg-primary text-white ring-primary",
-                s.state === "upcoming" && "bg-white text-faint ring-line-strong",
+                s.state === "current" && "bg-primary text-on-brand ring-primary",
+                s.state === "upcoming" && "bg-surface text-faint ring-line-strong",
               ]
                 .filter(Boolean)
                 .join(" ")}

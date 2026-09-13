@@ -66,7 +66,7 @@ export function AnalysisNavigation({ state, onClose, idPrefix = "nav" }: Analysi
                           active ? "bg-primary/10 text-primary" : "text-ink hover:bg-surface-2",
                         ].join(" ")}
                       >
-                        <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ${active ? "bg-primary text-white" : "bg-surface-2 text-muted"}`} aria-hidden="true">
+                        <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ${active ? "bg-primary text-on-brand" : "bg-surface-2 text-muted"}`} aria-hidden="true">
                           <Icon size={15} />
                         </span>
                         <span className="min-w-0 flex-1 truncate">{c.label}</span>

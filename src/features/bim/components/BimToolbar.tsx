@@ -73,7 +73,7 @@ export function BimToolbar({
 }: BimToolbarProps) {
   const backTo = projectId ? `/app/projects/${projectId}` : "/app/projects";
   return (
-    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-white px-2 sm:px-3">
+    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-surface px-2 sm:px-3">
       <div className="flex min-w-0 items-center gap-1 sm:gap-2">
         <Link
           to={backTo}
@@ -100,7 +100,7 @@ export function BimToolbar({
               onClick={() => onMode(m.id)}
               className={[
                 "relative inline-flex h-8 items-center rounded-[9px] px-3 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
-                active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
               ].join(" ")}
             >
               {m.label}
@@ -138,7 +138,7 @@ export function BimToolbar({
                 title={v.label}
                 className={[
                   "inline-flex h-8 items-center gap-1.5 rounded-[9px] px-2 text-[12.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50 sm:px-2.5",
-                  active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
+                  active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink",
                 ].join(" ")}
               >
                 <Icon size={15} aria-hidden="true" />
@@ -224,7 +224,7 @@ function SceneModeMenu({ mode, onSelect, disabled }: { mode: BimSceneMode; onSel
           id={id}
           role="menu"
           aria-label="Scene mode"
-          className="absolute right-0 top-full z-30 mt-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          className="absolute right-0 top-full z-30 mt-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-surface p-1.5 shadow-float animate-pop motion-reduce:animate-none"
           onKeyDown={(e) => {
             const items = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
             const i = items.indexOf(document.activeElement as HTMLButtonElement);
@@ -260,7 +260,7 @@ function SceneModeMenu({ mode, onSelect, disabled }: { mode: BimSceneMode; onSel
                     active ? "bg-primary/10 text-primary" : "text-ink hover:bg-surface-2",
                   ].join(" ")}
                 >
-                  <span className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-white text-primary shadow-soft" : "bg-surface-2 text-muted"}`} aria-hidden="true">
+                  <span className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-surface text-primary shadow-soft" : "bg-surface-2 text-muted"}`} aria-hidden="true">
                     <ItemIcon size={16} />
                   </span>
                   <span className="min-w-0 flex-1">
@@ -344,7 +344,7 @@ function ModelMenu({
         <Boxes size={16} className="shrink-0 text-muted" aria-hidden="true" />
         <span className="max-w-[160px] truncate">{activeModel?.name ?? "No model"}</span>
         {activeModel && (
-          <span className="hidden shrink-0 rounded-md bg-white px-1.5 text-[10.5px] font-extrabold text-muted 2xl:inline">
+          <span className="hidden shrink-0 rounded-md bg-surface px-1.5 text-[10.5px] font-extrabold text-muted 2xl:inline">
             v{activeModel.version}
           </span>
         )}
@@ -356,7 +356,7 @@ function ModelMenu({
           id={id}
           role="menu"
           aria-label="BIM model records"
-          className="absolute left-0 top-full z-30 mt-1 w-80 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          className="absolute left-0 top-full z-30 mt-1 w-80 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-surface p-1.5 shadow-float animate-pop motion-reduce:animate-none"
           onKeyDown={(e) => {
             const items = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
             const i = items.indexOf(document.activeElement as HTMLButtonElement);
@@ -392,7 +392,7 @@ function ModelMenu({
                     active ? "bg-primary/10 text-primary" : "text-ink hover:bg-surface-2",
                   ].join(" ")}
                 >
-                  <span className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-white text-primary shadow-soft" : "bg-surface-2 text-muted"}`} aria-hidden="true">
+                  <span className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg ${active ? "bg-surface text-primary shadow-soft" : "bg-surface-2 text-muted"}`} aria-hidden="true">
                     <Boxes size={16} />
                   </span>
                   <span className="min-w-0 flex-1">

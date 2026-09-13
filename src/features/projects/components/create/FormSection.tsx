@@ -17,7 +17,7 @@ export function FormSection({ id, step, icon: Icon, title, description, children
     <section
       id={id}
       aria-labelledby={headingId}
-      className="scroll-mt-24 rounded-3xl border border-line bg-white p-5 shadow-soft sm:p-6"
+      className="scroll-mt-24 rounded-3xl border border-line bg-surface p-5 shadow-soft sm:p-6"
     >
       <header className="mb-5 flex items-start gap-3.5 border-b border-line pb-4">
         <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15">

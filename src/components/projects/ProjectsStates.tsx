@@ -15,7 +15,7 @@ export function ProjectsSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
-          className={`flex flex-col gap-3 rounded-3xl border border-line bg-white p-3 shadow-soft`}
+          className={`flex flex-col gap-3 rounded-3xl border border-line bg-surface p-3 shadow-soft`}
         >
           <div className={`h-36 rounded-2xl ${block}`} />
           <div className="h-4 w-2/3 rounded-lg bg-surface-2" />
@@ -33,7 +33,7 @@ export function ProjectsSkeleton() {
 export function ProjectsError({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="grid place-items-center px-6 py-16">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-10 text-center shadow-card">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-10 text-center shadow-card">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-danger/10 text-danger">
           <FolderSearch size={26} />
         </span>
@@ -77,7 +77,7 @@ export function ProjectsEmpty() {
 export function ProjectsNoResults({ onClear }: { onClear: () => void }) {
   return (
     <div className="grid place-items-center px-6 py-16">
-      <div className="w-full max-w-md rounded-3xl border border-line bg-white p-10 text-center shadow-soft">
+      <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-10 text-center shadow-soft">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 text-primary">
           <FolderPlus size={26} />
         </span>

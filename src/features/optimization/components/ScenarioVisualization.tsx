@@ -51,7 +51,7 @@ export function ChangeLegend({ derived, compact = false, className = "" }: { der
     counts.unchanged = derived.dataset.objects.filter((o) => o.type !== "tree" && o.type !== "terrain" && o.type !== "context-building" && !derived.changeOf.has(o.id) && !o.id.startsWith("ctx-")).length;
   }
   return (
-    <div className={`rounded-2xl border border-line bg-white/95 shadow-soft ${compact ? "px-3 py-2" : "p-3"} ${className}`} role="group" aria-label="Scenario change legend">
+    <div className={`rounded-2xl border border-line bg-surface/95 shadow-soft ${compact ? "px-3 py-2" : "p-3"} ${className}`} role="group" aria-label="Scenario change legend">
       {!compact && <h4 className="text-[11px] font-bold uppercase tracking-widest text-faint">{derived ? "Changes vs current plan" : "Legend"}</h4>}
       <ul className={`${compact ? "flex flex-wrap gap-x-3 gap-y-1" : "mt-2 grid gap-1.5"}`}>
         {CHANGE_LEGEND.map((l) => (
@@ -80,7 +80,7 @@ export function SelectedObjectChip({ object, kind, note, onClear }: { object: Sp
           ? `${object.properties.category} · ${(object.properties.areaM2 / 10000).toFixed(2)} ha`
           : TYPE_LABEL[object.type];
   return (
-    <div className="flex items-start gap-2 rounded-2xl border border-line bg-white/95 p-3 shadow-soft" role="status">
+    <div className="flex items-start gap-2 rounded-2xl border border-line bg-surface/95 p-3 shadow-soft" role="status">
       <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-[6px] border-2 text-[10px] font-extrabold" style={{ borderColor: legend?.stroke, backgroundColor: `${legend?.fill}55`, color: legend?.stroke }} aria-hidden="true">
         {kind === "added" ? "+" : kind === "modified" ? "~" : kind === "removed" ? "×" : "="}
       </span>

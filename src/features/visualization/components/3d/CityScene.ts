@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { getBasemap } from "../../data/visualization.data";
+import { getRenderQualityCap } from "../../../settings/services/settings.service";
 import { sunModel } from "../../lib/lighting";
 import { geometryBounds } from "../../lib/spatial";
 import type {
@@ -100,7 +101,10 @@ export class CityScene {
     this.dom = dom;
     this.opts = opts;
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance", preserveDrawingBuffer: true });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    // Cap from Settings → Visualization → Visual quality ("high" = the 2× this
+    // scene has always used). Applied on construction, so a change takes effect
+    // the next time the 3-D view is opened.
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, getRenderQualityCap()));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.domElement.style.display = "block";

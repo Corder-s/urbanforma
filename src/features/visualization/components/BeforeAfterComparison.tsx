@@ -27,7 +27,7 @@ export function BeforeAfterComparison({ state, presentation = false }: BeforeAft
   if (!after) return <p className="p-4 text-[12.5px] text-muted">No planning scenarios yet. Generate scenarios in Optimization to compare them here.</p>;
   const rows = compareOptions(before, after);
   const paneCls = "relative overflow-hidden rounded-xl border border-line bg-surface-2";
-  const captionCls = "pointer-events-none absolute left-2 top-2 rounded-md border border-line bg-white/95 px-2 py-0.5 text-[11px] font-bold text-ink shadow-soft";
+  const captionCls = "pointer-events-none absolute left-2 top-2 rounded-md border border-line bg-surface/95 px-2 py-0.5 text-[11px] font-bold text-ink shadow-soft";
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -49,7 +49,7 @@ export function BeforeAfterComparison({ state, presentation = false }: BeforeAft
             const Icon = o.icon;
             const active = layout === o.id;
             return (
-              <button key={o.id} type="button" role="radio" aria-checked={active} onClick={() => setLayout(o.id)} className={`inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${active ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink"}`}>
+              <button key={o.id} type="button" role="radio" aria-checked={active} onClick={() => setLayout(o.id)} className={`inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${active ? "bg-surface text-primary shadow-soft" : "text-muted hover:text-ink"}`}>
                 <Icon size={13} aria-hidden="true" />
                 <span className={active ? "" : "hidden sm:inline"}>{o.label}</span>
               </button>
@@ -63,7 +63,7 @@ export function BeforeAfterComparison({ state, presentation = false }: BeforeAft
           <label htmlFor={`${id}-after`} className="sr-only">
             Scenario to compare
           </label>
-          <select id={`${id}-after`} value={after.id ?? ""} onChange={(e) => setScenario(e.target.value || null)} className="h-9 w-full rounded-lg border border-line bg-white px-2.5 text-[12.5px] font-semibold text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15">
+          <select id={`${id}-after`} value={after.id ?? ""} onChange={(e) => setScenario(e.target.value || null)} className="h-9 w-full rounded-lg border border-line bg-surface px-2.5 text-[12.5px] font-semibold text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15">
             {scenarioOptions
               .filter((o) => o.id !== null)
               .map((o) => (
@@ -100,7 +100,7 @@ export function BeforeAfterComparison({ state, presentation = false }: BeforeAft
               </div>
               <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-primary" style={{ left: `calc(${split}% - 1px)` }} aria-hidden="true" />
               <figcaption className={captionCls}>Before · {before.name}</figcaption>
-              <figcaption className="pointer-events-none absolute right-2 top-2 rounded-md border border-line bg-white/95 px-2 py-0.5 text-[11px] font-bold text-ink shadow-soft">After · {after.name}</figcaption>
+              <figcaption className="pointer-events-none absolute right-2 top-2 rounded-md border border-line bg-surface/95 px-2 py-0.5 text-[11px] font-bold text-ink shadow-soft">After · {after.name}</figcaption>
             </figure>
             <label htmlFor={`${id}-split`} className="mt-2 flex items-center gap-2 text-[11.5px] font-semibold text-muted">
               <span className="shrink-0">Before</span>

@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../features/settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageContainer } from "../../components/layout/PageContainer";
@@ -28,6 +29,9 @@ import {
  * component under src/features/projects/components/.
  */
 export function ProjectDetailPage() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const { projectId = "" } = useParams();
   const [state, setState] = useState<ProjectDetailState>({ status: "loading" });
 

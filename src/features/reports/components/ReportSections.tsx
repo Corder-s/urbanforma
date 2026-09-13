@@ -69,7 +69,7 @@ function MetricTiles({ items }: { items: ReportMetric[] }) {
           <p className="mt-1 text-[17px] font-extrabold leading-none tabular-nums text-ink">{m.value}</p>
           {m.note && <p className="mt-1 text-[11px] leading-snug text-muted">{m.note}</p>}
           {m.score !== undefined && (
-            <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white" role="presentation">
+            <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-surface" role="presentation">
               <div
                 className={`h-full rounded-full ${m.status === "good" ? "bg-success" : m.status === "watch" ? "bg-warning" : m.status === "poor" ? "bg-danger" : "bg-primary"}`}
                 style={{ width: `${Math.max(0, Math.min(100, m.score))}%` }}

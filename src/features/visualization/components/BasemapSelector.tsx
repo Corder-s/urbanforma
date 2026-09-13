@@ -94,7 +94,7 @@ function BasemapMenu({ value, onChange, disabled }: Omit<BasemapSelectorProps, "
           id={id}
           role="menu"
           aria-label="Basemap"
-          className="absolute right-0 top-full z-30 mt-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-white p-1.5 shadow-float animate-pop motion-reduce:animate-none"
+          className="absolute right-0 top-full z-30 mt-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl border border-line bg-surface p-1.5 shadow-float animate-pop motion-reduce:animate-none"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault();

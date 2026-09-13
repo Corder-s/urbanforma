@@ -17,7 +17,7 @@ export function CreateProjectActions({ form }: { form: CreateProjectForm }) {
   const notice = draft.notice;
 
   return (
-    <div className="rounded-3xl border border-line bg-white p-4 shadow-soft sm:p-5">
+    <div className="rounded-3xl border border-line bg-surface p-4 shadow-soft sm:p-5">
       {submitState === "error" && (
         <p role="alert" className="mb-3 flex items-start gap-2 rounded-xl bg-danger/5 px-3.5 py-2.5 text-[13.5px] font-medium text-danger">
           <AlertCircle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />

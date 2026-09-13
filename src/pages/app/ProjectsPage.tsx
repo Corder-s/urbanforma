@@ -1,3 +1,4 @@
+import { useUnitPreferences } from "../../features/settings/hooks/useUnitPreferences";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, FolderKanban } from "lucide-react";
@@ -22,6 +23,9 @@ import {
 import type { Project } from "../../features/projects/project.types";
 
 export function ProjectsPage() {
+  // Subscribe to the workspace unit preference so every formatted measurement
+  // in this module re-renders when the user switches systems (Settings → Units).
+  useUnitPreferences();
   const { filters, setters, hasActiveFilters } = useProjectsFilters();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

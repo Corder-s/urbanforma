@@ -12,6 +12,8 @@ import {
   UPLOAD_STEP_MS,
 } from "../data/bim.data";
 import { analysisInputs, deriveElements, estimateModelBytes, versionCounts, type BimIndex } from "../lib/bimModel";
+import { getBimDefaults, getBimLayerPreset, isPersonalizationEnabled } from "../../settings/services/settings.service";
+import type { BimSettings as BimDefaults } from "../../settings/types/settings.types";
 import type { SpatialDataset } from "../../visualization/types/visualization.types";
 import type {
   BimAnalysisInput,
@@ -101,6 +103,8 @@ function oneOf<T extends string>(value: unknown, allowed: readonly T[], fallback
 // ---------------------------------------------------------------------------
 
 export function rememberLastBimProject(projectId: string): void {
+  // Privacy → Personalization off means no convenience history is written.
+  if (!isPersonalizationEnabled()) return;
   writeJson(BIM_LAST_PROJECT_KEY, projectId);
 }
 
@@ -138,18 +142,21 @@ function sanitizeLayers(raw: unknown): BimLayerVisibility {
   return layers;
 }
 
-export function sanitizePrefs(raw: unknown): BimPrefs {
+export function sanitizePrefs(raw: unknown, defaults?: BimDefaults): BimPrefs {
+  // Defaults come from Settings → BIM when this project has never been
+  // configured; a project's own saved prefs still win below.
+  const app = defaults ?? getBimDefaults();
   const prefs: BimPrefs = {
-    sceneMode: "combined",
-    layers: { ...DEFAULT_LAYERS },
+    sceneMode: app.defaultSceneMode,
+    layers: { ...getBimLayerPreset(app.layerPreset) },
     filters: { ...EMPTY_FILTERS },
     activeModelId: null,
     activeVersionId: null,
-    mode: "overview",
+    mode: app.defaultMode,
   };
   if (!isRecord(raw)) return prefs;
-  prefs.sceneMode = oneOf(raw.sceneMode, SCENE_MODES, "combined");
-  prefs.mode = oneOf(raw.mode, MODE_IDS, "overview");
+  prefs.sceneMode = oneOf(raw.sceneMode, SCENE_MODES, app.defaultSceneMode);
+  prefs.mode = oneOf(raw.mode, MODE_IDS, app.defaultMode);
   prefs.layers = sanitizeLayers(raw.layers);
   prefs.filters = sanitizeFilters(raw.filters);
   if (isStr(raw.activeModelId)) prefs.activeModelId = raw.activeModelId;

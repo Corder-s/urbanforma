@@ -42,7 +42,7 @@ export function GoalsPanel({ goals, onChange, disabled = false, idPrefix }: Goal
                   <span className="block truncate text-[11px] text-muted">{def.hint}</span>
                 </div>
               </div>
-              <div role="radiogroup" aria-labelledby={labelId} className="flex shrink-0 items-center gap-0.5 rounded-lg border border-line bg-white p-0.5">
+              <div role="radiogroup" aria-labelledby={labelId} className="flex shrink-0 items-center gap-0.5 rounded-lg border border-line bg-surface p-0.5">
                 {PRIORITIES.map((p) => {
                   const active = value === p.id;
                   return (
@@ -66,7 +66,7 @@ export function GoalsPanel({ goals, onChange, disabled = false, idPrefix }: Goal
                       title={`${p.label} priority`}
                       className={[
                         "h-6 min-w-[28px] rounded-[6px] px-1.5 text-[10.5px] font-bold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:opacity-50",
-                        active ? (p.id === "high" ? "bg-primary text-white" : p.id === "medium" ? "bg-primary/15 text-primary" : "bg-surface-2 text-ink") : "text-muted hover:text-ink",
+                        active ? (p.id === "high" ? "bg-primary text-on-brand" : p.id === "medium" ? "bg-primary/15 text-primary" : "bg-surface-2 text-ink") : "text-muted hover:text-ink",
                       ].join(" ")}
                     >
                       <span aria-hidden="true">{p.label[0]}</span>
