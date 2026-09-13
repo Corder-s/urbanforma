@@ -15,6 +15,18 @@ html {
   html { scroll-behavior: auto; }
 }
 
+/* Auth pages only — the class is added/removed by AuthLayout.
+
+   Reserving the gutter keeps the viewport width constant whether or not a
+   vertical scrollbar is present, so `mx-auto` content never jumps sideways.
+   Not applied globally: AppShell locks the document (`h-dvh overflow-hidden`)
+   and scrolls inside <main>, so a permanent gutter there would inset the whole
+   workspace. No-op under overlay scrollbars (macOS/mobile), which never affect
+   layout width and therefore never caused the shift. */
+html.reserve-scrollbar-gutter {
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   background-color: var(--color-canvas);
