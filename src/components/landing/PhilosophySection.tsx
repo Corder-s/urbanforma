@@ -24,7 +24,7 @@ export function PhilosophySection() {
           <div className="mt-14 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
             {FLOW.map((step, i) => (
               <div key={step.label} className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-                <div className="flex w-44 flex-col items-center gap-3 rounded-3xl border border-line bg-white px-5 py-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
+                <div className="flex w-44 flex-col items-center gap-3 rounded-3xl border border-line bg-white px-5 py-6 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
                   <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary">
                     <step.icon size={24} />
                   </span>

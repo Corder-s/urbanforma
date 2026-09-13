@@ -8,7 +8,7 @@ import { ProjectStatusBadge } from "../dashboard/ProjectStatusBadge";
 import { ProjectCardMenu } from "./ProjectCardMenu";
 
 const openLinkClass =
-  "inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-primary shadow-soft transition-all hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
+  "inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-primary shadow-soft transition hover:border-primary hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20";
 
 /** Compact horizontal list row for the list view. */
 export function ProjectRow({

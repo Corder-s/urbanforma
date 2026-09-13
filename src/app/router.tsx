@@ -2,24 +2,62 @@ import { lazy, Suspense, type ReactNode } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "../components/auth/ProtectedRoute";
 import { GuestRoute } from "../components/auth/GuestRoute";
-import { AppShell } from "../layouts/AppShell";
 import { Loader } from "../components/ui/Loader";
+import {
+  loadAnalysisPage,
+  loadAppShell,
+  loadComingSoonPage,
+  loadCreateProjectPage,
+  loadDashboardPage,
+  loadForgotPasswordPage,
+  loadLandingPage,
+  loadLoginPage,
+  loadLogoutPage,
+  loadOptimizationPage,
+  loadPlanningStudioPage,
+  loadProjectDetailPage,
+  loadProjectsPage,
+  loadRegisterPage,
+  loadVisualizationPage,
+} from "./routeLoaders";
 
-// Lazy-load all page routes for optimized code-splitting and faster initial page loads
-const LandingPage = lazy(() => import("../pages/LandingPage").then((m) => ({ default: m.LandingPage })));
-const LoginPage = lazy(() => import("../pages/LoginPage").then((m) => ({ default: m.LoginPage })));
-const RegisterPage = lazy(() => import("../pages/RegisterPage").then((m) => ({ default: m.RegisterPage })));
-const ForgotPasswordPage = lazy(() => import("../pages/ForgotPasswordPage").then((m) => ({ default: m.ForgotPasswordPage })));
-const LogoutPage = lazy(() => import("../pages/LogoutPage").then((m) => ({ default: m.LogoutPage })));
-const DashboardPage = lazy(() => import("../pages/app/DashboardPage").then((m) => ({ default: m.DashboardPage })));
-const ProjectsPage = lazy(() => import("../pages/app/ProjectsPage").then((m) => ({ default: m.ProjectsPage })));
-const CreateProjectPage = lazy(() => import("../pages/app/CreateProjectPage").then((m) => ({ default: m.CreateProjectPage })));
-const ProjectDetailPage = lazy(() => import("../pages/app/ProjectDetailPage").then((m) => ({ default: m.ProjectDetailPage })));
-const PlanningStudioPage = lazy(() => import("../pages/app/PlanningStudioPage").then((m) => ({ default: m.PlanningStudioPage })));
-const VisualizationPage = lazy(() => import("../pages/app/VisualizationPage").then((m) => ({ default: m.VisualizationPage })));
-const AnalysisPage = lazy(() => import("../pages/app/AnalysisPage").then((m) => ({ default: m.AnalysisPage })));
-const OptimizationPage = lazy(() => import("../pages/app/OptimizationPage").then((m) => ({ default: m.OptimizationPage })));
-const ComingSoonPage = lazy(() => import("../pages/app/ComingSoonPage").then((m) => ({ default: m.ComingSoonPage })));
+// Route-level code splitting. Every loader is imported from ./routeLoaders so
+// the hover prefetcher warms the exact same chunk these `lazy()` calls resolve
+// to — one chunk per route, no duplicated network request.
+//
+// AppShell is lazy too: it pulls in the sidebar, header, mobile drawer and
+// their icons, none of which the public landing/login pages need. Importing it
+// eagerly used to put the whole workspace chrome on every visitor's critical
+// path.
+const AppShell = lazy(() => loadAppShell().then((m) => ({ default: m.AppShell })));
+const LandingPage = lazy(() => loadLandingPage().then((m) => ({ default: m.LandingPage })));
+const LoginPage = lazy(() => loadLoginPage().then((m) => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() => loadRegisterPage().then((m) => ({ default: m.RegisterPage })));
+const ForgotPasswordPage = lazy(() =>
+  loadForgotPasswordPage().then((m) => ({ default: m.ForgotPasswordPage }))
+);
+const LogoutPage = lazy(() => loadLogoutPage().then((m) => ({ default: m.LogoutPage })));
+const DashboardPage = lazy(() => loadDashboardPage().then((m) => ({ default: m.DashboardPage })));
+const ProjectsPage = lazy(() => loadProjectsPage().then((m) => ({ default: m.ProjectsPage })));
+const CreateProjectPage = lazy(() =>
+  loadCreateProjectPage().then((m) => ({ default: m.CreateProjectPage }))
+);
+const ProjectDetailPage = lazy(() =>
+  loadProjectDetailPage().then((m) => ({ default: m.ProjectDetailPage }))
+);
+const PlanningStudioPage = lazy(() =>
+  loadPlanningStudioPage().then((m) => ({ default: m.PlanningStudioPage }))
+);
+const VisualizationPage = lazy(() =>
+  loadVisualizationPage().then((m) => ({ default: m.VisualizationPage }))
+);
+const AnalysisPage = lazy(() => loadAnalysisPage().then((m) => ({ default: m.AnalysisPage })));
+const OptimizationPage = lazy(() =>
+  loadOptimizationPage().then((m) => ({ default: m.OptimizationPage }))
+);
+const ComingSoonPage = lazy(() =>
+  loadComingSoonPage().then((m) => ({ default: m.ComingSoonPage }))
+);
 
 function LazyRoute({ children, label = "Loading UrbanForma…" }: { children: ReactNode; label?: string }) {
   return <Suspense fallback={<Loader label={label} />}>{children}</Suspense>;
@@ -67,7 +105,9 @@ export const router = createBrowserRouter([
     path: "/app",
     element: (
       <ProtectedRoute>
-        <AppShell />
+        <LazyRoute label="Loading workspace…">
+          <AppShell />
+        </LazyRoute>
       </ProtectedRoute>
     ),
     children: [

@@ -23,7 +23,7 @@ export function Checkbox({ checked, onChange, label, id }: CheckboxProps) {
         />
         <span
           className={[
-            "grid h-5 w-5 place-items-center rounded-[7px] border transition-all duration-150",
+            "grid h-5 w-5 place-items-center rounded-[7px] border transition duration-150",
             checked
               ? "border-primary bg-primary text-white"
               : "border-line-strong bg-white text-transparent hover:border-primary",

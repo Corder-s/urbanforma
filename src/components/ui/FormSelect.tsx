@@ -39,7 +39,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
             value={value}
             onChange={(e) => onChange(e.target.value)}
             className={[
-              "h-12 w-full cursor-pointer appearance-none rounded-xl border bg-white pl-3.5 pr-10 text-[15px] transition-all duration-200 focus:outline-none",
+              "h-12 w-full cursor-pointer appearance-none rounded-xl border bg-white pl-3.5 pr-10 text-[15px] transition duration-200 focus:outline-none",
               empty ? "text-faint" : "text-ink",
               error
                 ? "border-danger ring-4 ring-danger/10"

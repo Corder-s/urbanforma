@@ -27,7 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div
           className={[
-            "group flex items-center gap-2.5 rounded-xl border bg-white px-3.5 transition-all duration-200 h-12",
+            "group flex items-center gap-2.5 rounded-xl border bg-white px-3.5 transition duration-200 h-12",
             error
               ? "border-danger ring-4 ring-danger/10"
               : "border-line hover:border-line-strong focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15",

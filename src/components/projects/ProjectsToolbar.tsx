@@ -40,7 +40,7 @@ export function ProjectsToolbar({ filters, on, resultCount, hasActiveFilters, on
             value={filters.q}
             onChange={(e) => on.setQ(e.target.value)}
             placeholder="Search projects..."
-            className="h-11 w-full rounded-xl border border-line bg-canvas pl-10 pr-9 text-sm text-ink placeholder:text-faint transition-all focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15"
+            className="h-11 w-full rounded-xl border border-line bg-canvas pl-10 pr-9 text-sm text-ink placeholder:text-faint transition focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15"
           />
           {filters.q && (
             <button
@@ -167,7 +167,7 @@ function ViewBtn({
       title={label}
       onClick={onClick}
       className={[
-        "grid h-9 w-10 place-items-center rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+        "grid h-9 w-10 place-items-center rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
         active ? "bg-primary text-white shadow-glow" : "text-muted hover:bg-surface-2 hover:text-primary",
       ].join(" ")}
     >

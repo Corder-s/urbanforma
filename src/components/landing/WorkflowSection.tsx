@@ -31,7 +31,7 @@ export function WorkflowSection() {
             {STEPS.map((s, i) => (
               <Reveal key={s.n} delay={i * 90}>
                 <div className="group relative text-center lg:text-left">
-                  <div className="relative z-10 mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-line bg-white text-primary shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:border-primary/30 group-hover:shadow-card lg:mx-0">
+                  <div className="relative z-10 mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-line bg-white text-primary shadow-soft transition duration-300 group-hover:-translate-y-1 group-hover:border-primary/30 group-hover:shadow-card lg:mx-0">
                     <s.icon size={24} />
                   </div>
                   <p className="mt-4 text-xs font-bold tracking-widest text-accent">STEP {s.n}</p>

@@ -63,7 +63,7 @@ export function UserMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
-        className="flex items-center gap-2.5 rounded-2xl border border-line bg-white py-1.5 pl-1.5 pr-2.5 shadow-soft transition-all hover:border-line-strong hover:shadow-float focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+        className="flex items-center gap-2.5 rounded-2xl border border-line bg-white py-1.5 pl-1.5 pr-2.5 shadow-soft transition hover:border-line-strong hover:shadow-float focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
       >
         <Avatar user={user} size={36} />
         <span className="hidden text-left leading-tight md:block">

@@ -28,7 +28,7 @@ export function IntroSection() {
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {CONCEPTS.map((c, i) => (
             <Reveal key={c.n} delay={i * 120}>
-              <div className="group h-full rounded-3xl border border-line bg-canvas p-8 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
+              <div className="group h-full rounded-3xl border border-line bg-canvas p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
                 <span className="bg-gradient-to-br from-primary to-accent bg-clip-text text-5xl font-extrabold tracking-tight text-transparent">
                   {c.n}
                 </span>

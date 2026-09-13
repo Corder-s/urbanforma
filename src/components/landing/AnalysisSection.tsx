@@ -38,7 +38,7 @@ export function AnalysisSection() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {METRICS.map((m, i) => (
             <Reveal key={m.label} delay={(i % 3) * 110}>
-              <div className="group h-full rounded-3xl border border-line bg-canvas p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
+              <div className="group h-full rounded-3xl border border-line bg-canvas p-6 transition duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
                 <div className="flex items-center justify-between">
                   <span
                     className="grid h-11 w-11 place-items-center rounded-xl"
@@ -58,7 +58,7 @@ export function AnalysisSection() {
                   {m.bars.map((h, j) => (
                     <span
                       key={j}
-                      className="flex-1 rounded-t-md transition-all duration-500 group-hover:opacity-100"
+                      className="flex-1 rounded-t-md transition-opacity duration-500 group-hover:opacity-100"
                       style={{
                         height: `${h}%`,
                         backgroundColor: m.accent,

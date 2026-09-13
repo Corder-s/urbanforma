@@ -7,6 +7,7 @@ import { PasswordInput } from "../ui/PasswordInput";
 import { Checkbox } from "../ui/Checkbox";
 import { Divider } from "../ui/Divider";
 import { useAuth } from "../../features/auth/AuthProvider";
+import { prefetchRoute } from "../../app/routeLoaders";
 import {
   getRememberedEmail,
   isValidEmail,
@@ -61,10 +62,13 @@ export function LoginForm() {
     if (Object.keys(found).length) return;
 
     setSubmitting(true);
+    const dest = location.state?.from ?? "/app";
+    // The destination is now certain, so overlap its chunk download + parse
+    // with the auth round trip instead of starting it after the redirect.
+    prefetchRoute(dest);
     try {
       // delegate entirely to the auth abstraction (dev implementation for now)
       await login({ email, password, remember });
-      const dest = location.state?.from ?? "/app";
       navigate(dest, { replace: true });
     } catch {
       setErrors({ general: GENERIC_ERROR });
@@ -203,7 +207,7 @@ function SocialButton({
       onClick={onClick}
       aria-label={`Continue with ${label} (coming soon)`}
       title={`${label} sign-in coming soon`}
-      className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-ink transition-all hover:border-primary hover:shadow-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+      className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-ink transition hover:border-primary hover:shadow-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
     >
       {children}
       <span className="hidden sm:inline">{label}</span>

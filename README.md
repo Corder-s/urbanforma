@@ -4,155 +4,171 @@ UrbanForma is the smart-city planning platform (Urban Planning · GIS · Site
 Planning · 3D City Modeling · Environmental Analysis · Smart Infrastructure ·
 Optimization · BIM).
 
-This repository currently contains **Step 1 (frontend foundation)**,
-**Step 2 (premium animated login page)** and **Step 3 (real frontend
-authentication layer)**. The full landing page and the application workspace
-(dashboard, projects, 3D studio, analysis, reports, BIM, settings) are
-intentionally **not** built yet.
+The frontend is built out across a public marketing site, a full authentication
+layer, and an authenticated workspace with six domain modules — roughly **35.4k
+lines of TypeScript/React across 280 files**. All data is served by mock
+service layers written to be swapped for a Java Spring Boot + JWT API without
+touching the UI.
 
 > The earlier static marketing prototype is kept for reference in
 > [`legacy/`](./legacy).
 
 ---
 
-## ✨ Step 2 — Login page
+## 🧩 What's built
 
-- **Premium split-screen** — desktop **42% auth panel / 58% city visual**
-- **Animated isometric smart-city** (pure SVG/CSS, no heavy 3D library):
-  buildings rise in sequence, park with swaying trees, roads/pedestrian paths,
-  a river + bridge, rooftop solar panels, drifting clouds, glowing data paths
-  with moving points and floating particles
-- **Floating storytelling labels**: 3D City Modeling · Environmental Analysis
-  · Smart Planning · Data Driven Decisions · Sustainable Future
-- **Functional form**: required/format email validation, required +
-  min-length password, **inline** errors (no alerts), loading state
-  (*Signing in…* with spinner, duplicate submissions blocked)
-- **Password visibility toggle** (Lucide `Eye` / `EyeOff`) with accessible
-  `aria-label`
-- **Remember me** (persists email + uses the appropriate storage),
-  **Forgot password?** → `/forgot-password`, **Create account** → `/register`,
-  **Back to Home** → `/`
-- **Social buttons** (Google / Microsoft / GitHub) clearly marked as
-  development placeholders — they show a *coming soon* note, no fake OAuth
-- **Auth abstraction** (`AuthProvider` / `useAuth`) with a mock service built
-  to be replaced by the future Java Spring Boot + JWT API without touching UI
-- Successful dev login → protected `/app`; failures show a clean inline message
-- Subtle **mouse parallax** on the city (desktop only — disabled on touch
-  devices and under `prefers-reduced-motion`)
-- Responsive (compact city banner on mobile, form as the focus), keyboard
-  navigable, visible focus states, labelled inputs/errors
+### Public
 
-### Demo sign-in
-Any syntactically valid email + a password of **6+ characters** (shown on the
-page). Signing in with `user@urbanforma.app` resolves to the documented
-development user **“UrbanForma User / Urban Planner.”** No production
-credentials are hardcoded.
+- **Landing page** — hero, intro, feature grid, workflow, analysis preview,
+  sustainability, philosophy, CTA, footer, with scroll-reveal and an animated
+  SVG city scene.
+- **Auth** — login (premium split-screen with an animated isometric smart-city
+  built in pure SVG/CSS), register, forgot-password, logout. Inline validation
+  (no alerts), password visibility toggle, remember-me, loading states with
+  duplicate-submission blocking, and clearly-labelled social buttons that are
+  honest *coming soon* placeholders rather than fake OAuth.
 
----
+### Authenticated workspace (`/app`)
 
-## 🔐 Step 3 — Authentication layer
+App shell with a collapsible sidebar, header (search, notifications, user
+menu), mobile drawer, and breadcrumbs.
 
-Clean, layered flow — **the UI contains no auth business logic**:
+| Module | Highlights |
+| --- | --- |
+| **Dashboard** | Portfolio overview, continue-working, recent projects, attention panel, environmental snapshot, workflow stages, activity feed, quick actions |
+| **Projects** | Grid/list views, filter + sort + search, create flow with draft persistence, project detail, row/card menus with confirm dialogs |
+| **Planning Studio** | Site canvas with building / road / landscape / water / site / annotation layers, inspector, object geometry + area math |
+| **Analysis** | Environmental engine (solar, wind, heat, green, carbon, density, land-use, open-space, mobility) with 9 map overlays and per-category inspectors |
+| **Optimization** | Scenario generation with goals/weights/constraints, scoring, trade-offs, comparison, performance charts, pluggable provider |
+| **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
+| Reports · BIM · Settings | Route-level "coming soon" placeholders |
 
-```
-UI (pages/components)
-   └─ useAuth()
-        └─ AuthProvider (auth store / React context)
-             └─ auth.service.ts   ← replace here for the real backend
-                    └─ (future) POST /api/auth/login → Java Spring Boot → JWT/session
-```
+### Cross-cutting
 
-- **`useAuth()`** exposes exactly: `user`, `isAuthenticated`, `isLoading`,
-  `login()`, `logout()`.
-- **`isLoading`** is `true` during initial session restore and while a
-  `login()` call runs; `ProtectedRoute` shows a spinner instead of bouncing.
-- **User model** — easy to extend later:
-  ```ts
-  { id: string; name: string; email: string; avatar: string|null; role: string }
-  ```
-- **`auth.service.ts`** (the swappable seam) exposes the documented methods:
-  `login()`, `logout()`, `getCurrentUser()`, `isAuthenticated()`
-  (plus `register()` / `requestPasswordReset()` and session helpers). Each
-  function is commented with the REST call it will become (`POST /api/auth/login`,
-  `GET /api/auth/me`, `POST /api/auth/logout`) — only the bodies change when
-  Spring Boot/JWT arrives; no component code changes.
-- Frontend-only for now (mock with simulated latency). Persists a session
-  token + user in `localStorage` (or `sessionStorage` when *Remember me* is
-  off), restores it on reload.
-- Signed-in user (name, role, avatar/initials) is shown on the protected
-  `/app` placeholder via a reusable `Avatar`.
+- **Session handling** — restore-on-startup (no login flash), shape-guarded
+  storage reads that can't crash on corruption, cross-tab sign-out sync via the
+  `storage` event, and expiration/refresh hooks ready for JWT `exp`.
+- **Accessibility** — focus trapping in dialogs, `aria-*` throughout, visible
+  focus rings, and `prefers-reduced-motion` respected everywhere animations
+  exist.
 
 ---
 
-## 👤 Step 4 — Logout & session management
+## ⚡ Performance
 
-- **Reusable `logout()`** clears the user, the development session, and auth
-  state, then the UI redirects to `/login`. `/logout` performs it instantly
-  (no logout screen). **Passwords are never stored** — only a session token +
-  minimal user info.
-- **`UserMenu`** (`components/auth/UserMenu.tsx`) — clean white rounded
-  dropdown with subtle shadow: avatar, name, email and role in the header;
-  **Profile** / **Account settings** are placeholders (marked “later”), and
-  **Sign out** is a real `<button>`. Fully accessible: Enter/Space opens,
-  **Escape** closes, outside-click closes, visible focus rings, keyboard
-  navigable. Shown in the `/app` top bar; usable on mobile (name/role collapse
-  to just the avatar on small screens).
-- **Route guards** —
-  - `/app` is behind `ProtectedRoute`: shows a lightweight loader while the
-    session is restored, redirects to `/login` when signed out, accessible
-    when signed in.
-  - `/login` is wrapped in `GuestRoute`: already-authenticated users are
-    redirected to `/app` (and don't flash the login page).
-- **Session restoration** — on startup `AuthProvider` re-reads the stored
-  session (loader shown until done; no login flash). Invalid/expired/corrupted
-  sessions are cleared safely via a shape guard + `try/catch`, so corrupt
-  storage never crashes the app.
-- **Expiration foundation** — `isSessionValid()` (dev TTL placeholder; later
-  driven by the JWT `exp` / `GET /api/auth/me`) and `refreshSession()`
-  (placeholder — no fake token refresh; later `POST /api/auth/refresh`).
-- **Cross-tab sync** — `AuthProvider` listens to the browser `storage` event:
-  signing out (or in) in one tab updates every other tab automatically. No
-  extra library.
+The app is code-split per route and tuned so the public pages never pay for the
+authenticated workspace.
+
+**Initial paint** (before any route chunk):
+
+| | before | after | change |
+| --- | --- | --- | --- |
+| JS + CSS (raw) | 361 KB | **280 KB** | −22.4% |
+| JS + CSS (gzip) | 99 KB | **83 KB** | −16.0% |
+| Web fonts | ~125 KB, 5 static weights, third-party, **render-blocking** | **47 KB**, 1 self-hosted variable font, preloaded | −62% |
+
+What drives it:
+
+- **Route-level lazy loading** — every page is a `React.lazy` chunk.
+- **`AppShell` is lazy too.** It was statically imported by the router, so the
+  sidebar, header, mobile drawer and their icons were on the critical path of
+  *every* visitor — including the landing page, which uses none of it.
+- **Vendor chunks that actually split.** The old `manualChunks` checked
+  `id.includes("react")` *before* `id.includes("lucide-react")`; since
+  "lucide-react" contains "react", the icon branch never fired and ~159 icons
+  were folded into `react-vendor` — a 273 KB blob on every page's critical
+  path. Now `react-vendor` (139 KB), `router-vendor` (63 KB), `icons-vendor`
+  (64 KB) and `three-vendor` (520 KB, loaded only by the 3D routes) are
+  separate and cache independently.
+- **Self-hosted Inter variable font.** Replaces the render-blocking
+  `fonts.googleapis.com` stylesheet and its two third-party preconnects with
+  one preloaded same-origin woff2 covering weights 100–900. `unicode-range`
+  keeps the latin-ext file from downloading unless a glyph needs it.
+- **Intent-based route prefetching** (`src/app/useLinkPrefetch.ts`) — one
+  delegated `document` listener warms a route chunk after 80 ms of hover or on
+  keyboard focus, and immediately on click (which is what makes it work on
+  touch). Covers every `<Link>` in the app with zero per-component wiring.
+  Idempotent, and skipped on `saveData` / 2G connections.
+- **Login prefetches its destination** while the auth call is in flight,
+  overlapping the chunk download with the network round trip.
+- **No `transition-property: all`.** All 26 `transition-all` utilities were
+  narrowed to the properties that actually animate (three of them needed an
+  explicit arbitrary-value list, e.g. `transition-[width,…]` for the header
+  search field). `all` makes the browser diff every animatable property on
+  every style recalc — expensive when it's on cards rendered in long lists.
+- **`text-rendering: optimizeSpeed`** instead of `optimizeLegibility`, which
+  forces per-glyph kerning/ligature passes and is a documented bottleneck on
+  long strings (tables, inspectors, project lists).
+- **3D renders on demand.** `CityScene` only calls `renderer.render()` when the
+  camera moved or something was invalidated, and hover raycasting resolves at
+  most once per frame from a pending pointer position.
 
 ---
 
 ## 🧱 Tech stack
 
 React 18 · TypeScript · Vite 5 · Tailwind CSS 3 · React Router v6 ·
-lucide-react · Inter.
+three.js · lucide-react · Inter (self-hosted variable).
 
 ## 🚀 Run
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/login
-npm run build      # production build
+npm run dev        # http://localhost:5173/
+npm run build      # production build → dist/
+npm run preview    # serve the production build
 npm run typecheck  # tsc --noEmit
 ```
 
+Dev sign-in uses the mock auth service: **any valid email + a password of 6 or
+more characters** works. There is no hardcoded credential.
+
 ## 🔐 Routes
 
-| Route              | Purpose                                              |
-| ------------------ | ---------------------------------------------------- |
-| `/`                | Minimal home placeholder                             |
-| `/login`          | **Step 2: animated login page**                     |
-| `/register`        | Create-account UI (functional validation)           |
-| `/forgot-password` | Mocked reset-link flow                               |
-| `/app`             | Protected placeholder (→ `/login` when signed out) |
-| `/logout`          | Clears session, redirects to `/login`                |
+| Route | Purpose |
+| --- | --- |
+| `/` | Marketing landing page |
+| `/login` | Animated split-screen sign-in |
+| `/register` | Create account |
+| `/forgot-password` | Mocked reset-link flow |
+| `/logout` | Clears session, redirects to `/login` |
+| `/app` | Dashboard (protected) |
+| `/app/projects` · `/new` · `/:projectId` | Projects list · create · detail |
+| `/app/planning` | Planning Studio |
+| `/app/analysis` | Environmental analysis |
+| `/app/optimization` | Scenario optimization |
+| `/app/visualization` | 2D map + 3D city studio |
+| `/app/reports` · `/app/bim` · `/app/settings` | Coming-soon placeholders |
+
+Signed-out visitors hitting `/app/*` are redirected to `/login`; signed-in
+visitors hitting `/login` are sent to `/app`.
 
 ## 📁 Structure
 
 ```
 src/
-  app/            App.tsx · router.tsx
+  app/            App · router · routeLoaders · useLinkPrefetch
   components/
-    ui/           Button · Input · PasswordInput · Checkbox · Card · Logo · Divider · Avatar · Loader
-    auth/         AuthLayout · LoginForm · CityVisual · FloatingInsight · UserMenu
-                  ProtectedRoute · GuestRoute
-  features/auth/  AuthProvider · auth.service (mock → Spring Boot/JWT later) · auth.types
-  pages/          Home · Login · Register · ForgotPassword · AppPlaceholder · Logout
-  styles/         tokens.css · globals.css
+    ui/           Button · Input · PasswordInput · Checkbox · Select · FormSelect
+                  Textarea · IconButton · Badge · Divider · Avatar · Logo · Loader
+    auth/         AuthLayout · LoginForm · CityVisual · ProtectedRoute · GuestRoute
+    landing/      Hero · Features · Workflow · Analysis · Sustainability · CTA …
+    dashboard/    PortfolioOverview · RecentProjects · QuickActions · ActivityFeed …
+    layout/       AppHeader · Sidebar · SidebarNav · MobileSidebar · PageHeader
+    navigation/   NavItem · navConfig
+    projects/     ProjectCard · ProjectRow · Toolbar · States
+  features/
+    auth/         AuthProvider · auth.service · auth.types
+    projects/     project.service · data · types · components
+    planning/     canvas layers · geometry lib · planning.service · state hook
+    analysis/     analysis.engine · overlays · charts · map · inspector
+    optimization/ providers · scoring · scenarios · workspace · comparison
+    visualization/ 3d/ (three.js CityScene, meshes, CameraRig) · map/ (2D layers)
+                  hooks (camera, layers, saved views, presentation, slideshow)
+  layouts/        AppShell (lazy) · shellContext
+  pages/          public pages + app/ workspace pages
+  styles/         fonts.css · tokens.css · globals.css
+public/fonts/     self-hosted Inter woff2 + SIL OFL license
 legacy/           previous static prototype (reference only)
 ```
 
@@ -162,3 +178,15 @@ Background `#F5F9FF` · Surface `#FFFFFF` · Primary `#2563EB`
 (primary-dark `#1D4ED8`) · Accent cyan `#06B6D4` · Text `#0F172A` ·
 secondary text `#64748B` · Success `#16A34A` · Border `#DCE6F2`. Blue/cyan
 gradients are used sparingly.
+
+## 🗺️ Known follow-ups
+
+- **Cross-feature imports.** `analysis` and `optimization` each import ~30
+  symbols from `visualization` (shared GIS types + spatial data), and
+  `visualization` imports back from `optimization` (e.g. `ConfirmDialog`). It
+  works, but the shared kernel should be promoted to a neutral module so
+  features stop depending on each other bidirectionally.
+- **Backend.** Every `*.service.ts` is a mock with the real REST contract
+  documented inline — swap them for Spring Boot + JWT calls.
+- **No test suite yet.** `npm run typecheck` and `npm run build` are the only
+  automated gates.

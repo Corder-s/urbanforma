@@ -39,7 +39,7 @@ export function CityVisualization() {
                     aria-pressed={active}
                     onClick={() => setMode(m.id)}
                     className={[
-                      "flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
+                      "flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-bold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20",
                       active
                         ? "bg-primary text-white shadow-glow"
                         : "text-muted hover:bg-surface-2 hover:text-primary",

@@ -1,3 +1,4 @@
+@import "./fonts.css";
 @import "./tokens.css";
 
 @tailwind base;
@@ -18,10 +19,15 @@ body {
   margin: 0;
   background-color: var(--color-canvas);
   color: var(--color-ink);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  /* `optimizeLegibility` forces per-glyph kerning/ligature passes and is a
+     documented text-rendering bottleneck on long strings (tables, inspectors,
+     long project lists). Kerning is on by default in every browser we target,
+     so `optimizeSpeed` keeps the same look without the cost. */
+  text-rendering: optimizeSpeed;
+  font-kerning: normal;
 }
 
 #root {

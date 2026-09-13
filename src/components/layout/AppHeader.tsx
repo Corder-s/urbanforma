@@ -79,7 +79,7 @@ export function AppHeader() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search projects, sites and tools..."
           aria-label="Search projects, sites and tools"
-          className="h-10 w-56 rounded-xl border border-line bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-faint transition-all focus:w-72 focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15 lg:w-64"
+          className="h-10 w-56 rounded-xl border border-line bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-faint transition-[width,border-color,background-color,box-shadow] focus:w-72 focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15 lg:w-64"
         />
       </div>
       <button
@@ -108,7 +108,7 @@ export function AppHeader() {
             aria-pressed={unit === u}
             onClick={() => setUnit(u)}
             className={[
-              "rounded-lg px-3 py-1.5 text-xs font-bold capitalize transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+              "rounded-lg px-3 py-1.5 text-xs font-bold capitalize transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
               unit === u ? "bg-white text-primary shadow-soft" : "text-muted hover:text-ink",
             ].join(" ")}
           >

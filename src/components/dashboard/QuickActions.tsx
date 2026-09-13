@@ -28,7 +28,7 @@ export function QuickActions() {
           <Reveal key={a.label} delay={i * 70} className="h-full">
             <Link
               to={a.to}
-              className="group flex h-full flex-col gap-3 rounded-2xl border border-line bg-white p-4 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
+              className="group flex h-full flex-col gap-3 rounded-2xl border border-line bg-white p-4 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
             >
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-105">
                 <a.icon size={20} />

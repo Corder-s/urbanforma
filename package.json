@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "UrbanForma — Smart City Planning Platform (Step 2: animated login page)",
+  "description": "UrbanForma — smart city planning platform: landing, auth, and a workspace for projects, site planning, environmental analysis, scenario optimization and 2D/3D city visualization.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -27,5 +27,17 @@
     "tailwindcss": "^3.4.13",
     "typescript": "^5.6.2",
     "vite": "^5.4.8"
-  }
+  },
+  "keywords": [
+    "urban-planning",
+    "gis",
+    "smart-city",
+    "3d-city-modeling",
+    "environmental-analysis",
+    "react",
+    "typescript",
+    "vite",
+    "threejs"
+  ],
+  "license": "UNLICENSED"
 }
