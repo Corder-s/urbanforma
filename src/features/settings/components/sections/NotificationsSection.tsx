@@ -19,8 +19,16 @@ export function NotificationsSection() {
   const enabled = NOTIFICATION_CATEGORIES.filter((category) => notifications[category]).length;
 
   const setAll = (value: boolean) => {
-    const next = {} as NotificationSettings;
-    for (const category of NOTIFICATION_CATEGORIES) next[category] = value;
+    // Written out rather than built by casting an empty object: the compiler
+    // checks every category is present, so a new one cannot be silently missed.
+    const next: NotificationSettings = {
+      projectUpdates: value,
+      analysisCompleted: value,
+      optimizationCompleted: value,
+      reportGenerated: value,
+      bimProcessing: value,
+      system: value,
+    };
     patch({ notifications: next });
   };
 

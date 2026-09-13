@@ -1,7 +1,7 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useSettings } from "../../hooks/useSettings";
 import { usePrefersDark } from "../../lib/useMediaQuery";
-import { ChoiceGroup, InlineNote, SettingRow, SettingsPanel } from "../controls";
+import { ChoiceGroup, InlineNote, SettingRow, SettingsPanel, type ChoiceOption } from "../controls";
 import type { AccentPreference, ThemePreference } from "../../types/settings.types";
 
 /**
@@ -15,10 +15,10 @@ const ACCENTS: { value: AccentPreference; label: string; swatch: string }[] = [
   { value: "slate", label: "Slate", swatch: "#334155" },
 ];
 
-const THEME_OPTIONS = [
-  { value: "light" as ThemePreference, label: "Light", icon: <Sun size={14} aria-hidden="true" /> },
-  { value: "dark" as ThemePreference, label: "Dark", icon: <Moon size={14} aria-hidden="true" /> },
-  { value: "system" as ThemePreference, label: "System", icon: <Monitor size={14} aria-hidden="true" /> },
+const THEME_OPTIONS: ChoiceOption<ThemePreference>[] = [
+  { value: "light", label: "Light", icon: <Sun size={14} aria-hidden="true" /> },
+  { value: "dark", label: "Dark", icon: <Moon size={14} aria-hidden="true" /> },
+  { value: "system", label: "System", icon: <Monitor size={14} aria-hidden="true" /> },
 ];
 
 /**

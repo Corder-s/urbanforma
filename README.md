@@ -45,7 +45,7 @@ menu), mobile drawer, and breadcrumbs.
 | **Visualization** | 2D map view + **three.js** 3D city scene, camera presets, layer visibility, saved views, presentation mode with slideshow + storyboard |
 | **Reports** | Five report types, 18 configurable sections (enable + reorder) incl. a plan-view figure (Step 12 map layers), an axonometric massing model drawn from the live dataset and a BIM model & quantities section, live document preview, revision/status tracking, print → PDF with app chrome stripped |
 | **BIM** | Toolbar project + model-record selectors, derived element index (site → building → level → component) with IFC-style GlobalIds and property sets, model tree with debounced search (name · id · GlobalId · category · level), properties inspector, typed filters, 8 BIM layers, metric cards, 2D/3D viewport reuse (scene-synced, no second engine), versions & revisions, coordination checks against planning/analysis/optimization/reports plus a BIM → Analysis quantity feed, issue tracking, recent-models dashboard, honest import pipeline states |
-| **Settings** | Thirteen panels: profile, account, accessibility, appearance (light / dark / system + three accents), units (metric / imperial with a live preview table), map & GIS defaults, visualization defaults, BIM defaults, notification categories, privacy, data & storage (inventory, per-category clear, JSON export), about, and a danger zone — all driven by one typed `AppSettings` tree with debounced persistence, a Saved/Saving indicator, corruption fallback, cross-tab sync and `?section=` deep links |
+| **Settings** | Thirteen panels: profile, account, accessibility, appearance (light / dark / system + three accents), units (metric / imperial with a live preview table), map & GIS defaults (view, basemap, camera, zoom, overlays), visualization defaults, BIM defaults, notification categories, privacy, data & storage (inventory, per-category clear, JSON export), about, and a danger zone — all driven by one typed `AppSettings` tree with debounced persistence, a Saved/Saving indicator that only claims "Saved" once the bytes reached storage (blocked or full localStorage is reported, not hidden), corruption fallback, cross-tab sync and `?section=` deep links |
 
 ### Cross-cutting
 
@@ -115,9 +115,10 @@ What drives it:
 - **`text-rendering: optimizeSpeed`** instead of `optimizeLegibility`, which
   forces per-glyph kerning/ligature passes and is a documented bottleneck on
   long strings (tables, inspectors, project lists).
-- **Settings stays light.** `/app/settings` is its own ~49 KB chunk that pulls
-  in no 3D engine, GIS renderer, PDF writer or BIM model — only the settings
-  feature, the auth session and shared UI primitives. The dependency arrow
+- **Settings stays light.** `/app/settings` is its own chunk (53 KB raw,
+  15.5 KB gzip) that pulls in no 3D engine, GIS renderer, PDF writer or BIM
+  model — only the settings feature, the auth session and shared UI primitives,
+  which the built chunk's import list confirms. The dependency arrow
   points *at* settings: modules read their defaults through tiny synchronous
   accessors in `settings.service` (`getMapDefaults`, `getVisualizationDefaults`,
   `getBimDefaults`, `getRenderQualityCap`), never through the settings UI.

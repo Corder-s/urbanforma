@@ -3,6 +3,7 @@ import { AlertTriangle } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { PageContainer } from "../../../components/layout/PageContainer";
 import { PageHeader } from "../../../components/layout/PageHeader";
+import { SettingsFooter } from "./SettingsFooter";
 import { SettingsNav } from "./SettingsNav";
 import { SaveIndicator } from "./controls";
 import { getSectionMeta, toSectionId } from "../lib/sections";
@@ -52,7 +53,7 @@ const SECTION_COMPONENTS: Record<SettingsSectionId, ComponentType> = {
  * or BIM model: only the settings feature, the auth session and shared UI.
  */
 export function SettingsPage() {
-  const { saveState, recovered, status } = useSettings();
+  const { saveState, recovered, storageBlocked, status } = useSettings();
   const [searchParams] = useSearchParams();
   const section = toSectionId(searchParams.get("section"));
   const meta = getSectionMeta(section);
@@ -64,9 +65,20 @@ export function SettingsPage() {
       <PageHeader
         icon={meta.icon}
         title="Settings"
-        description="Appearance, units, workspace defaults, notifications, accessibility, privacy and your data."
+        description="Manage your UrbanForma workspace, preferences, and account."
         actions={<SaveIndicator state={saveState} />}
       />
+
+      {storageBlocked && (
+        <div className="mb-4 flex items-start gap-2.5 rounded-2xl border border-danger/30 bg-danger/5 px-4 py-3">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0 text-danger" aria-hidden="true" />
+          <p className="text-[13px] leading-relaxed text-ink">
+            <strong className="font-bold">This browser is not storing preferences</strong> — local storage is
+            blocked or full (a private window, or a site-data restriction). Changes still apply now, but they
+            are lost when the tab closes.
+          </p>
+        </div>
+      )}
 
       {recovered && (
         <div className="mb-4 flex items-start gap-2.5 rounded-2xl border border-warning/30 bg-warning/10 px-4 py-3">
@@ -101,6 +113,8 @@ export function SettingsPage() {
           </header>
 
           <Section />
+
+          <SettingsFooter />
         </div>
       </div>
     </PageContainer>

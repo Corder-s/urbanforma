@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { getMapDefaults } from "../../settings/services/settings.service";
 import type { Bounds, Point } from "../types/visualization.types";
 
 /**
@@ -15,7 +16,20 @@ const MIN_SCALE = 0.06;
 const MAX_SCALE = 8;
 const STEP = 1.3;
 
-export function useMapView(world: Bounds | null, site: Bounds | null, resetKey: string | null = null) {
+/**
+ * @param initialZoom factor applied to the fitted scale when a project is first
+ * framed. Defaults to the Settings → Map "default zoom" preference (percent), so
+ * every 2-D map in the app — visualization, analysis, optimization and the BIM
+ * viewport — opens at the same framing. Callers may override it.
+ */
+export function useMapView(
+  world: Bounds | null,
+  site: Bounds | null,
+  resetKey: string | null = null,
+  initialZoom?: number
+) {
+  const defaultZoom = getMapDefaults().defaultZoom / 100;
+  const openingZoom = initialZoom ?? defaultZoom;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const setContainerRef = useCallback((el: HTMLDivElement | null) => {
@@ -46,9 +60,10 @@ export function useMapView(world: Bounds | null, site: Bounds | null, resetKey: 
   }, [container]);
 
   const fitTo = useCallback(
-    (b: Bounds | null, padding = 40) => {
+    (b: Bounds | null, padding = 40, zoom = 1) => {
       if (!b || size.width === 0 || size.height === 0) return;
-      const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, Math.min((size.width - padding * 2) / b.width, (size.height - padding * 2) / b.height)));
+      const fit = Math.min((size.width - padding * 2) / b.width, (size.height - padding * 2) / b.height);
+      const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, fit * zoom));
       setView({ scale, tx: size.width / 2 - (b.x + b.width / 2) * scale, ty: size.height / 2 - (b.y + b.height / 2) * scale });
     },
     [size.width, size.height]
@@ -61,8 +76,10 @@ export function useMapView(world: Bounds | null, site: Bounds | null, resetKey: 
   useEffect(() => {
     if (!siteKey || size.width === 0 || fittedFor.current === siteKey) return;
     fittedFor.current = siteKey;
-    fitTo(site, 48);
-  }, [siteKey, site, size.width, fitTo]);
+    // Only the *opening* framing takes the preference: an explicit "Fit site"
+    // always frames the site exactly, and user zooming is untouched.
+    fitTo(site, 48, openingZoom);
+  }, [siteKey, site, size.width, fitTo, openingZoom]);
 
   const zoomAt = useCallback((factor: number, at?: Point) => {
     setView((v) => {

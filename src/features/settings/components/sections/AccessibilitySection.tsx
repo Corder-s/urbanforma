@@ -1,7 +1,7 @@
 import { useSettings } from "../../hooks/useSettings";
 import { usePrefersReducedMotion } from "../../lib/useMediaQuery";
 import { ChoiceGroup, InlineNote, SettingRow, SettingsPanel, Switch } from "../controls";
-import type { ContrastPreference, FocusPreference, InterfaceScale, MotionPreference } from "../../types/settings.types";
+import type { FocusPreference, InterfaceScale, MotionPreference } from "../../types/settings.types";
 
 const MOTION_OPTIONS: { value: MotionPreference; label: string }[] = [
   { value: "auto", label: "Auto (follow system)" },
@@ -59,7 +59,7 @@ export function AccessibilitySection() {
         >
           <Switch
             checked={accessibility.contrast === "high"}
-            onChange={(next) => update({ contrast: (next ? "high" : "normal") as ContrastPreference })}
+            onChange={(next) => update({ contrast: next ? "high" : "normal" })}
             label="High contrast"
           />
         </SettingRow>

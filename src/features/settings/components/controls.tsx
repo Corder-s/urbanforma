@@ -1,6 +1,7 @@
 import { useId } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
 import { AlertTriangle, Check, Info, Loader2 } from "lucide-react";
+import { FormSelect } from "../../../components/ui/FormSelect";
 import type { SettingsSaveState } from "../types/settings.types";
 
 /**
@@ -117,14 +118,14 @@ export function Switch({ checked, onChange, label, disabled = false }: SwitchPro
   );
 }
 
-export interface ChoiceOption<T extends string> {
+export interface ChoiceOption<T extends string | number> {
   value: T;
   label: string;
   /** Optional icon rendered before the label. */
   icon?: ReactNode;
 }
 
-interface ChoiceGroupProps<T extends string> {
+interface ChoiceGroupProps<T extends string | number> {
   ariaLabel: string;
   value: T;
   options: readonly ChoiceOption<T>[];
@@ -136,7 +137,7 @@ interface ChoiceGroupProps<T extends string> {
  * Segmented single-choice control with real radiogroup semantics: one tab stop,
  * arrow keys move the selection, `aria-checked` reports it.
  */
-export function ChoiceGroup<T extends string>({ ariaLabel, value, options, onChange, disabled = false }: ChoiceGroupProps<T>) {
+export function ChoiceGroup<T extends string | number>({ ariaLabel, value, options, onChange, disabled = false }: ChoiceGroupProps<T>) {
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const forward = event.key === "ArrowRight" || event.key === "ArrowDown";
     const backward = event.key === "ArrowLeft" || event.key === "ArrowUp";
@@ -246,6 +247,38 @@ export function SaveIndicator({ state }: { state: SettingsSaveState }) {
       )}
       {SAVE_COPY[state]}
     </span>
+  );
+}
+
+interface SettingSelectProps<T extends string> {
+  id: string;
+  /** Accessible name — the visible label is the `SettingRow`'s, via `htmlFor`. */
+  ariaLabel: string;
+  value: T;
+  options: readonly { value: T; label: string }[];
+  onChange: (next: T) => void;
+}
+
+/**
+ * Form select typed against its option list.
+ *
+ * A native `<select>` reports a `string`; casting that straight back into a
+ * union (`value as BasemapId`) is exactly the unsafe cast the brief rules out.
+ * Resolving by lookup means an unexpected value is ignored instead of forced
+ * into the state tree, and `onChange` hands the caller a real `T`.
+ */
+export function SettingSelect<T extends string>({ id, ariaLabel, value, options, onChange }: SettingSelectProps<T>) {
+  return (
+    <FormSelect
+      id={id}
+      aria-label={ariaLabel}
+      value={value}
+      options={[...options]}
+      onChange={(raw) => {
+        const match = options.find((option) => option.value === raw);
+        if (match) onChange(match.value);
+      }}
+    />
   );
 }
 

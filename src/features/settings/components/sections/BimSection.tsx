@@ -2,33 +2,23 @@ import { BIM_LAYER_KEYS, getBimLayerPreset } from "../../services/settings.servi
 import { useSettings } from "../../hooks/useSettings";
 import {
   BIM_LAYER_LABELS,
+  BIM_LAYER_PRESET_IDS,
   BIM_LAYER_PRESET_LABELS,
+  BIM_MODE_IDS,
   BIM_MODE_LABELS,
+  BIM_SCENE_MODE_IDS,
   BIM_SCENE_MODE_LABELS,
+  BIM_SIDE_PANEL_IDS,
   BIM_SIDE_PANEL_LABELS,
 } from "../../lib/labels";
 import { ChoiceGroup, InlineNote, SettingRow, SettingsPanel } from "../controls";
-import type { BimMode, BimSceneMode } from "../../../bim/types/bim.types";
-import type { BimLayerPreset, BimSettings } from "../../types/settings.types";
+import type { BimSettings } from "../../types/settings.types";
 
-const MODE_OPTIONS = (Object.keys(BIM_MODE_LABELS) as BimMode[]).map((value) => ({
-  value,
-  label: BIM_MODE_LABELS[value],
-}));
-
-const SCENE_MODE_OPTIONS = (Object.keys(BIM_SCENE_MODE_LABELS) as BimSceneMode[]).map((value) => ({
-  value,
-  label: BIM_SCENE_MODE_LABELS[value],
-}));
-
-const SIDE_PANEL_OPTIONS = (Object.keys(BIM_SIDE_PANEL_LABELS) as BimSettings["defaultSidePanel"][]).map(
-  (value) => ({ value, label: BIM_SIDE_PANEL_LABELS[value] })
-);
-
-const PRESET_OPTIONS = (Object.keys(BIM_LAYER_PRESET_LABELS) as BimLayerPreset[]).map((value) => ({
-  value,
-  label: BIM_LAYER_PRESET_LABELS[value],
-}));
+/** Typed option lists — ids from explicit arrays, labels from exhaustive Records. */
+const MODE_OPTIONS = BIM_MODE_IDS.map((value) => ({ value, label: BIM_MODE_LABELS[value] }));
+const SCENE_MODE_OPTIONS = BIM_SCENE_MODE_IDS.map((value) => ({ value, label: BIM_SCENE_MODE_LABELS[value] }));
+const SIDE_PANEL_OPTIONS = BIM_SIDE_PANEL_IDS.map((value) => ({ value, label: BIM_SIDE_PANEL_LABELS[value] }));
+const PRESET_OPTIONS = BIM_LAYER_PRESET_IDS.map((value) => ({ value, label: BIM_LAYER_PRESET_LABELS[value] }));
 
 /**
  * BIM defaults (§9).

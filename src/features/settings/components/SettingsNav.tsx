@@ -21,8 +21,9 @@ export function SettingsNav({ active }: SettingsNavProps) {
 
   return (
     <nav aria-label="Settings sections" className="lg:sticky lg:top-4">
-      {/* Mobile / tablet: chip rail */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 lg:hidden">
+      {/* Mobile / tablet: chip rail. Phones scroll it (13 chips would otherwise
+          push the panel off-screen); from md up it wraps so nothing is hidden. */}
+      <div className="-mx-4 flex flex-nowrap gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 md:flex-wrap md:overflow-visible lg:hidden">
         {SETTINGS_GROUPS.map((group) =>
           sectionsInGroup(group.id).map((section) => (
             <Link

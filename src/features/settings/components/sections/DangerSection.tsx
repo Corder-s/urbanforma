@@ -78,7 +78,7 @@ export function DangerSection() {
             <AlertTriangle size={17} aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <h3 className="text-[15px] font-extrabold tracking-tight text-ink">Danger Zone</h3>
+            <h3 className="text-[15px] font-extrabold tracking-tight text-ink">Irreversible actions</h3>
             <p className="mt-0.5 text-[13px] leading-snug text-muted">
               Irreversible actions. Each one asks for confirmation first.
             </p>

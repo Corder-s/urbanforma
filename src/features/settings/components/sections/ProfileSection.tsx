@@ -78,6 +78,17 @@ export function ProfileSection() {
     form.location.trim() !== (user.location ?? "") ||
     form.timezone !== (user.timezone ?? detectedZone);
 
+  /** Revert the form to what is stored — the Cancel half of §19. */
+  const onCancel = () => {
+    setForm({
+      name: user.name,
+      organization: user.organization ?? "",
+      location: user.location ?? "",
+      timezone: user.timezone ?? detectedZone,
+    });
+    setNotice(null);
+  };
+
   const onSave = () => {
     const session = updateProfile({
       name: form.name,
@@ -166,7 +177,10 @@ export function ProfileSection() {
 
         <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
           <Button size="sm" onClick={onSave} disabled={!dirty}>
-            Save profile
+            Save changes
+          </Button>
+          <Button size="sm" variant="ghost" onClick={onCancel} disabled={!dirty}>
+            Cancel
           </Button>
           {notice && (
             <p role="status" className="text-[12px] font-semibold text-muted">

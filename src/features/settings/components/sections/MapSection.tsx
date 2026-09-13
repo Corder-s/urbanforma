@@ -1,29 +1,33 @@
 import { useSettings } from "../../hooks/useSettings";
-import { BASEMAP_HINTS, BASEMAP_LABELS, CAMERA_HINTS, CAMERA_LABELS, DEFAULT_CAMERA_OPTIONS } from "../../lib/labels";
-import { FormSelect } from "../../../../components/ui/FormSelect";
-import { ChoiceGroup, InlineNote, SettingRow, SettingsPanel, Switch } from "../controls";
-import type { BasemapId } from "../../../visualization/types/visualization.types";
+import { MAP_ZOOM_PRESETS } from "../../services/settings.service";
+import {
+  BASEMAP_HINTS,
+  BASEMAP_IDS,
+  BASEMAP_LABELS,
+  CAMERA_HINTS,
+  CAMERA_LABELS,
+  DEFAULT_CAMERA_OPTIONS,
+} from "../../lib/labels";
+import { ChoiceGroup, InlineNote, SettingRow, SettingsPanel, SettingSelect, Switch } from "../controls";
+import type { MapSettings } from "../../types/settings.types";
 
-const BASEMAP_OPTIONS = (Object.keys(BASEMAP_LABELS) as BasemapId[]).map((id) => ({
-  value: id,
-  label: BASEMAP_LABELS[id],
-}));
-
-const CAMERA_OPTIONS = DEFAULT_CAMERA_OPTIONS.map((id) => ({ value: id, label: CAMERA_LABELS[id] }));
+const BASEMAP_OPTIONS = BASEMAP_IDS.map((value) => ({ value, label: BASEMAP_LABELS[value] }));
+const CAMERA_OPTIONS = DEFAULT_CAMERA_OPTIONS.map((value) => ({ value, label: CAMERA_LABELS[value] }));
+const ZOOM_OPTIONS = MAP_ZOOM_PRESETS.map((value) => ({ value, label: `${value}%` }));
 
 /**
  * Map & GIS defaults (§7).
  *
  * These are *defaults*, not a second GIS state: `useVisualizationState` reads
  * them through `getMapDefaults()` when a project has no workspace state of its
- * own, and `MapView` renders its grid, scale bar, north arrow and terrain from
- * the same fields. A project's saved settings always win, so nothing here can
- * silently override work in progress.
+ * own, `useMapView` opens at `defaultZoom`, and `MapView` renders its grid,
+ * scale bar, north arrow and terrain from the same fields. A project's saved
+ * settings always win, so nothing here can silently override work in progress.
  */
 export function MapSection() {
   const { settings, patch } = useSettings();
   const map = settings.map;
-  const update = (next: Partial<typeof map>) => patch({ map: next });
+  const update = (next: Partial<MapSettings>) => patch({ map: next });
 
   return (
     <>
@@ -33,8 +37,8 @@ export function MapSection() {
             ariaLabel="Default map view"
             value={map.defaultMode}
             options={[
-              { value: "2d" as const, label: "2-D map" },
-              { value: "3d" as const, label: "3-D city" },
+              { value: "2d", label: "2-D map" },
+              { value: "3d", label: "3-D city" },
             ]}
             onChange={(next) => update({ defaultMode: next })}
           />
@@ -42,26 +46,38 @@ export function MapSection() {
 
         <SettingRow label="Basemap" hint={BASEMAP_HINTS[map.defaultBasemap]} htmlFor="settings-map-basemap">
           <div className="w-full sm:w-64">
-            <FormSelect
+            <SettingSelect
               id="settings-map-basemap"
-              aria-label="Basemap"
+              ariaLabel="Basemap"
               value={map.defaultBasemap}
               options={BASEMAP_OPTIONS}
-              onChange={(next) => update({ defaultBasemap: next as BasemapId })}
+              onChange={(next) => update({ defaultBasemap: next })}
             />
           </div>
         </SettingRow>
 
         <SettingRow label="Camera preset" hint={CAMERA_HINTS[map.defaultCamera]} htmlFor="settings-map-camera">
           <div className="w-full sm:w-64">
-            <FormSelect
+            <SettingSelect
               id="settings-map-camera"
-              aria-label="Camera preset"
+              ariaLabel="Camera preset"
               value={map.defaultCamera}
               options={CAMERA_OPTIONS}
-              onChange={(next) => update({ defaultCamera: next as typeof map.defaultCamera })}
+              onChange={(next) => update({ defaultCamera: next })}
             />
           </div>
+        </SettingRow>
+
+        <SettingRow
+          label="Default zoom"
+          hint="How tightly a project is framed when the map first opens. 100% fits the site exactly, and the Fit button always frames the site regardless of this preference."
+        >
+          <ChoiceGroup
+            ariaLabel="Default zoom"
+            value={map.defaultZoom}
+            options={ZOOM_OPTIONS}
+            onChange={(next) => update({ defaultZoom: next })}
+          />
         </SettingRow>
       </SettingsPanel>
 
@@ -82,7 +98,8 @@ export function MapSection() {
 
           <InlineNote>
             Changing a default does not reopen workspaces you already have state for — it decides how the
-            next project (or a project with no saved view) starts.
+            next project (or a project with no saved view) starts. The same defaults feed the analysis,
+            optimization and BIM 2-D views, so every map in UrbanForma opens the same way.
           </InlineNote>
         </SettingsPanel>
       </div>

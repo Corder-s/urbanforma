@@ -6,7 +6,7 @@ import type {
   TimeOfDay,
 } from "../../visualization/types/visualization.types";
 import type { BimLayerKey, BimMode, BimSceneMode } from "../../bim/types/bim.types";
-import type { BimSettings } from "../types/settings.types";
+import type { BimSettings, RenderQuality } from "../types/settings.types";
 
 /**
  * Presentation labels for ids that belong to other modules.
@@ -26,6 +26,14 @@ export const BASEMAP_LABELS: Record<BasemapId, string> = {
   terrain: "Terrain",
 };
 
+/**
+ * Display order for each picker. Written out rather than derived with
+ * `Object.keys(...) as T[]`: an explicit array is checked against the union, so
+ * a typo fails the build and no cast is needed anywhere in the panels. The
+ * exhaustive `Record`s above are what guarantee nothing is missing.
+ */
+export const BASEMAP_IDS: BasemapId[] = ["urban", "light", "satellite", "terrain"];
+
 export const BASEMAP_HINTS: Record<BasemapId, string> = {
   urban: "Neutral cartographic base with legible blocks and streets.",
   light: "Minimal pale base — lets site data carry the colour.",
@@ -33,8 +41,12 @@ export const BASEMAP_HINTS: Record<BasemapId, string> = {
   terrain: "Contours and elevation shading for slope context.",
 };
 
-/** Camera presets offered as a *default*. The workspace itself offers more. */
-export const DEFAULT_CAMERA_OPTIONS: CameraPreset[] = ["overview", "top", "perspective"];
+/**
+ * Camera presets offered as a *default*. The workspace itself offers more.
+ * "fit" must stay in the list: it is the shipped default, and a `<select>`
+ * whose value matches no option renders empty.
+ */
+export const DEFAULT_CAMERA_OPTIONS: CameraPreset[] = ["fit", "overview", "top", "perspective"];
 
 export const CAMERA_LABELS: Record<CameraPreset, string> = {
   reset: "Reset",
@@ -60,6 +72,8 @@ export const CAMERA_HINTS: Record<CameraPreset, string> = {
   "central-district": "Framed on the centre of the site.",
 };
 
+export const BUILDING_STYLE_IDS: BuildingStyle[] = ["simple", "architectural", "height", "land-use"];
+
 export const BUILDING_STYLE_LABELS: Record<BuildingStyle, string> = {
   simple: "Simple massing",
   architectural: "Architectural",
@@ -67,11 +81,15 @@ export const BUILDING_STYLE_LABELS: Record<BuildingStyle, string> = {
   "land-use": "Land use",
 };
 
+export const ATMOSPHERE_IDS: Atmosphere[] = ["clear", "soft-cloud", "hazy"];
+
 export const ATMOSPHERE_LABELS: Record<Atmosphere, string> = {
   clear: "Clear",
   "soft-cloud": "Soft cloud",
   hazy: "Hazy",
 };
+
+export const TIME_OF_DAY_IDS: TimeOfDay[] = ["morning", "10:00", "14:00", "17:00", "evening"];
 
 export const TIME_OF_DAY_LABELS: Record<TimeOfDay, string> = {
   morning: "Morning",
@@ -81,17 +99,21 @@ export const TIME_OF_DAY_LABELS: Record<TimeOfDay, string> = {
   evening: "Evening",
 };
 
-export const RENDER_QUALITY_LABELS: Record<"performance" | "balanced" | "high", string> = {
+export const RENDER_QUALITY_IDS: RenderQuality[] = ["performance", "balanced", "high"];
+
+export const RENDER_QUALITY_LABELS: Record<RenderQuality, string> = {
   performance: "Performance",
   balanced: "Balanced",
   high: "High",
 };
 
-export const RENDER_QUALITY_HINTS: Record<"performance" | "balanced" | "high", string> = {
+export const RENDER_QUALITY_HINTS: Record<RenderQuality, string> = {
   performance: "Renders at 1× device pixels — smoothest on integrated GPUs.",
   balanced: "Renders at 1.5× device pixels.",
   high: "Renders at up to 2× device pixels — sharpest, most GPU load.",
 };
+
+export const BIM_MODE_IDS: BimMode[] = ["overview", "model", "coordination", "issues"];
 
 export const BIM_MODE_LABELS: Record<BimMode, string> = {
   overview: "Overview",
@@ -100,17 +122,31 @@ export const BIM_MODE_LABELS: Record<BimMode, string> = {
   issues: "Issues",
 };
 
+export const BIM_SCENE_MODE_IDS: BimSceneMode[] = ["bim", "city", "combined"];
+
 export const BIM_SCENE_MODE_LABELS: Record<BimSceneMode, string> = {
   bim: "Model only",
   city: "City context",
   combined: "Model + city",
 };
 
-export const BIM_SIDE_PANEL_LABELS: Record<BimSettings["defaultSidePanel"], string> = {
+export type BimSidePanel = BimSettings["defaultSidePanel"];
+
+export const BIM_SIDE_PANEL_IDS: BimSidePanel[] = ["properties", "filters", "layers"];
+
+export const BIM_SIDE_PANEL_LABELS: Record<BimSidePanel, string> = {
   properties: "Properties",
   filters: "Filters",
   layers: "Layers",
 };
+
+export const BIM_LAYER_PRESET_IDS: BimSettings["layerPreset"][] = [
+  "everything",
+  "model",
+  "architecture",
+  "structure",
+  "context-off",
+];
 
 export const BIM_LAYER_PRESET_LABELS: Record<BimSettings["layerPreset"], string> = {
   everything: "Everything on",

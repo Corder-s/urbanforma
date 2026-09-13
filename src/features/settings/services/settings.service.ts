@@ -67,7 +67,13 @@ export const DEFAULT_MAP: MapSettings = {
   showScale: true,
   showNorth: true,
   terrain: true,
+  defaultZoom: 100,
 };
+
+/** Zoom presets offered in Settings, as a percentage of the fitted scale. */
+export const MAP_ZOOM_PRESETS = [75, 100, 125, 150] as const;
+export const MAP_ZOOM_MIN = 50;
+export const MAP_ZOOM_MAX = 200;
 
 export const DEFAULT_VISUALIZATION: VisualizationPreferences = {
   buildingStyle: "land-use",
@@ -150,6 +156,19 @@ function sanitizeUnits(raw: unknown): UnitSettings {
   return { system: oneOf(raw.system, ["metric", "imperial"] as const, DEFAULT_UNITS.system) };
 }
 
+/**
+ * Zoom percentage: numeric, clamped, then snapped to the nearest offered preset
+ * so the segmented control always shows the value that is actually stored.
+ */
+function sanitizeZoom(value: unknown, fallback: number): number {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n) || n <= 0) return fallback;
+  const clamped = Math.min(MAP_ZOOM_MAX, Math.max(MAP_ZOOM_MIN, Math.round(n)));
+  return MAP_ZOOM_PRESETS.reduce((best, preset) =>
+    Math.abs(preset - clamped) < Math.abs(best - clamped) ? preset : best
+  , MAP_ZOOM_PRESETS[0]);
+}
+
 function sanitizeMap(raw: unknown): MapSettings {
   const d = DEFAULT_MAP;
   if (!isRecord(raw)) return { ...d };
@@ -165,6 +184,7 @@ function sanitizeMap(raw: unknown): MapSettings {
     showScale: isBool(raw.showScale) ? raw.showScale : d.showScale,
     showNorth: isBool(raw.showNorth) ? raw.showNorth : d.showNorth,
     terrain: isBool(raw.terrain) ? raw.terrain : d.terrain,
+    defaultZoom: sanitizeZoom(raw.defaultZoom, d.defaultZoom),
   };
 }
 
@@ -267,9 +287,37 @@ function readStorage(): string | null {
   }
 }
 
+/** Result of the most recent persist, so the UI never claims a save that failed. */
+let lastWriteOk = true;
+
 function writeStorage(settings: AppSettings): boolean {
   try {
     window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    lastWriteOk = true;
+    return true;
+  } catch {
+    // Private window, blocked storage or a full quota: preferences still apply
+    // in memory, but they cannot survive a reload — and the UI must say so.
+    lastWriteOk = false;
+    return false;
+  }
+}
+
+/** Did the last write to storage succeed? */
+export function didLastWriteSucceed(): boolean {
+  return lastWriteOk;
+}
+
+/**
+ * One-byte capability probe, run once when Settings opens. Distinguishes
+ * "storage is blocked / full" from "nothing has been written yet", which the
+ * app cannot tell apart from a successful read of defaults alone.
+ */
+export function probeSettingsStorage(): boolean {
+  const probeKey = `${SETTINGS_STORAGE_KEY}.probe`;
+  try {
+    window.localStorage.setItem(probeKey, "1");
+    window.localStorage.removeItem(probeKey);
     return true;
   } catch {
     return false;

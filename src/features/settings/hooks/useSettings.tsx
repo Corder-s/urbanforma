@@ -4,11 +4,13 @@ import { applyPreferences } from "../lib/applyPreferences";
 import { configureUnits } from "../lib/units";
 import {
   SETTINGS_STORAGE_KEY,
+  didLastWriteSucceed,
   invalidateSettingsCache,
   isStoredSettingsCorrupt,
   loadSettings,
   mergePatches,
   mergeSettings,
+  probeSettingsStorage,
   resetSettings,
   updateSettings,
   type SettingsPatch,
@@ -21,6 +23,8 @@ interface SettingsContextValue {
   status: "loading" | "ready";
   /** True when a stored blob existed but could not be parsed — defaults are in use. */
   recovered: boolean;
+  /** True when the browser refuses to persist (private window, blocked or full storage). */
+  storageBlocked: boolean;
   saveState: SettingsSaveState;
   /** Merge a partial tree. Optimistic in memory, persisted with a short debounce. */
   patch: (patch: SettingsPatch) => void;
@@ -51,6 +55,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
   const [status, setStatus] = useState<"loading" | "ready">("loading");
   const [recovered, setRecovered] = useState<boolean>(() => isStoredSettingsCorrupt());
+  const [storageBlocked, setStorageBlocked] = useState(false);
   const [saveState, setSaveState] = useState<SettingsSaveState>("idle");
 
   const pending = useRef<SettingsPatch | null>(null);
@@ -61,6 +66,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const id = window.setTimeout(() => setStatus("ready"), 0);
     return () => window.clearTimeout(id);
+  }, []);
+
+  // Storage capability is probed once: a private window or a full quota must be
+  // reported rather than silently discarding every preference.
+  useEffect(() => {
+    setStorageBlocked(!probeSettingsStorage());
   }, []);
 
   useEffect(
@@ -79,7 +90,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const next = updateSettings(patchToWrite);
       setSettings(next);
       applyPreferences(next);
-      setSaveState("saved");
+      // Only claim "Saved" when the bytes actually reached storage.
+      setSaveState(didLastWriteSucceed() ? "saved" : "error");
     } catch {
       setSaveState("error");
     }
@@ -135,8 +147,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, [reload]);
 
   const value = useMemo<SettingsContextValue>(
-    () => ({ settings, status, recovered, saveState, patch, reset, reload }),
-    [settings, status, recovered, saveState, patch, reset, reload]
+    () => ({ settings, status, recovered, storageBlocked, saveState, patch, reset, reload }),
+    [settings, status, recovered, storageBlocked, saveState, patch, reset, reload]
   );
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

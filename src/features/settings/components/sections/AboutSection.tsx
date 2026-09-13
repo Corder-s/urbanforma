@@ -1,5 +1,6 @@
 import { version as reactVersion } from "react";
 import { Badge } from "../../../../components/ui/Badge";
+import { Logo } from "../../../../components/ui/Logo";
 import { SETTINGS_SCHEMA_VERSION, SETTINGS_STORAGE_KEY } from "../../services/settings.service";
 import { InlineNote, SettingsPanel } from "../controls";
 
@@ -18,7 +19,7 @@ export function AboutSection() {
   const version = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "dev build";
   const mode = import.meta.env?.MODE ?? "development";
   const rows: { label: string; value: string; tone?: "neutral" | "amber" | "green" }[] = [
-    { label: "Application", value: "UrbanForma" },
+    { label: "Application", value: "UrbanForma — Smart City Planning Platform" },
     { label: "Version", value: version },
     { label: "Environment", value: mode, tone: mode === "production" ? "green" : "amber" },
     { label: "Frontend", value: `React ${reactVersion} · Vite · TypeScript (strict)` },
@@ -31,6 +32,9 @@ export function AboutSection() {
   return (
     <>
       <SettingsPanel title="About this build" description="What you are running, exactly.">
+        <div className="mb-3 border-b border-line pb-4">
+          <Logo size={26} tagline />
+        </div>
         <dl className="divide-y divide-line">
           {rows.map((row) => (
             <div key={row.label} className="flex flex-col gap-1 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">

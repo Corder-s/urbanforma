@@ -56,6 +56,13 @@ export interface MapSettings {
   showScale: boolean;
   showNorth: boolean;
   terrain: boolean;
+  /**
+   * Initial zoom in percent, applied when a project is first framed
+   * (100 = fit the site exactly). The map camera is a metres-to-pixels scale,
+   * not a tile level, so this is a factor on the fitted scale rather than a
+   * zoom level from a slippy-map engine.
+   */
+  defaultZoom: number;
 }
 
 // ---------------------------------------------------------------------------
