@@ -19,6 +19,7 @@ import { MobilityOverlay } from "./overlays/MobilityOverlay";
 import type { OverlayProps } from "./overlays/overlay.props";
 import { SolarOverlay } from "./overlays/SolarOverlay";
 import { WindOverlay } from "./overlays/WindOverlay";
+import { quantizeLayerScale } from "../../visualization/lib/layerScale";
 
 interface AnalysisMapProps {
   state: AnalysisState;
@@ -121,6 +122,10 @@ export function AnalysisMap({ state, map }: AnalysisMapProps) {
 
   const overlayProps: OverlayProps | null = activeOverlay ? { overlay: activeOverlay, data, selectedId: selectedArea, focusId: hasZones ? focusZone : null, scale: view.scale, onSelect: selectArea } : null;
 
+  // Layers are memoised; a raw per-frame scale defeats the memo (see
+  // quantizeLayerScale). The <g transform> above keeps the exact value.
+  const layerScale = quantizeLayerScale(view.scale);
+
   return (
     <div
       ref={setContainerRef}
@@ -156,18 +161,18 @@ export function AnalysisMap({ state, map }: AnalysisMapProps) {
 
           {/* --- base map (shared Step 12 layers; decoration except buildings) ---------------- */}
           <g data-layer="analysis-base">
-            <SiteLayer boundary={groups.boundary} contextBuildings={groups.ctxBuildings} contextRoads={groups.ctxRoads} contours={[]} basemap={basemap} scale={view.scale} selected={false} showBoundary onSelectBoundary={NOOP} interactive={false} />
+            <SiteLayer boundary={groups.boundary} contextBuildings={groups.ctxBuildings} contextRoads={groups.ctxRoads} contours={[]} basemap={basemap} scale={layerScale} selected={false} showBoundary onSelectBoundary={NOOP} interactive={false} />
             <g opacity={hasZones ? 0.8 : 1}>
-              <BlockLayer blocks={groups.blocks} selectedId={null} scale={view.scale} onSelect={NOOP} interactive={false} />
-              <WaterLayer water={groups.water} basemap={basemap} selectedId={null} scale={view.scale} onSelect={NOOP} interactive={false} />
-              <LandscapeLayer parking={[]} green={groups.green} trees={groups.trees} selectedId={null} scale={view.scale} onSelect={NOOP} interactive={false} />
+              <BlockLayer blocks={groups.blocks} selectedId={null} scale={layerScale} onSelect={NOOP} interactive={false} />
+              <WaterLayer water={groups.water} basemap={basemap} selectedId={null} scale={layerScale} onSelect={NOOP} interactive={false} />
+              <LandscapeLayer parking={[]} green={groups.green} trees={groups.trees} selectedId={null} scale={layerScale} onSelect={NOOP} interactive={false} />
             </g>
             <g opacity={tintsRoads ? 0.35 : 1}>
-              <RoadLayer roads={groups.roads} transit={[]} utilities={[]} selectedId={null} scale={view.scale} showLabels={false} onSelect={NOOP} interactive={false} />
+              <RoadLayer roads={groups.roads} transit={[]} utilities={[]} selectedId={null} scale={layerScale} showLabels={false} onSelect={NOOP} interactive={false} />
             </g>
             {!tintsBuildings && (
               <g opacity={hasZones ? 0.85 : 1}>
-                <BuildingLayer buildings={groups.buildings} selectedId={baseSelectedId} scale={view.scale} showLabels={false} showHeights={false} showShadows={!activeOverlay} sunIntensity={65} onSelect={selectArea} />
+                <BuildingLayer buildings={groups.buildings} selectedId={baseSelectedId} scale={layerScale} showLabels={false} showHeights={false} showShadows={!activeOverlay} sunIntensity={65} onSelect={selectArea} />
               </g>
             )}
           </g>

@@ -11,7 +11,7 @@ import {
   resetLocalData,
   storageInventory,
   type DataCategory,
-} from "../../services/settings.service";
+} from "../../services/settingsData.service";
 import { ConfirmAction } from "../ConfirmAction";
 import { InlineNote, SettingsPanel } from "../controls";
 

@@ -3,7 +3,7 @@ import { getDemoScenario } from "../../projects/project.service";
 import { getSpatialData, getVisualizationProjects, ProjectNotFoundError, type VisualizationProjectSummary } from "../../visualization/services/visualization.service";
 import type { SpatialDataset } from "../../visualization/types/visualization.types";
 import { ANALYSIS_LAST_PROJECT_KEY, ANALYSIS_PREFS_KEY, ANALYSIS_RUN_KEY, isCategoryId } from "../data/analysis.data";
-import { ENGINE_VERSION, runDemoAnalysis } from "../lib/analysis.engine";
+import { ENGINE_VERSION } from "../lib/engineInfo";
 import type { AnalysisCategoryId, AnalysisMetric, AnalysisResult, AnalysisViewMode, ExportFormat } from "../types/analysis.types";
 
 /**
@@ -32,6 +32,21 @@ export async function getAnalysisSpatialData(projectId: string): Promise<Spatial
 }
 
 /**
+ * The demo engine, loaded on demand.
+ *
+ * Every caller here is already awaiting (the dataset load, plus the run
+ * choreography the UI shows), so this adds no perceptible latency — but it keeps
+ * ~49 KB of heuristics out of the static import graph of the features that only
+ * *read* a stored result: BIM coordination, Reports and Optimization. The
+ * Analysis workspace imports the engine statically for its zone helpers, so
+ * there the dynamic import resolves from a chunk that is already loaded.
+ */
+async function loadEngine() {
+  const { runDemoAnalysis } = await import("../lib/analysis.engine");
+  return runDemoAnalysis;
+}
+
+/**
  * Compute a fresh analysis for a project. Pure and fast (a few ms); the
  * caller decides how to present progress. Throws for unknown projects and for
  * the dev-only `?demo=error` scenario so the error state can be exercised.
@@ -39,6 +54,7 @@ export async function getAnalysisSpatialData(projectId: string): Promise<Spatial
 export async function runAnalysis(projectId: string, data?: SpatialDataset): Promise<AnalysisResult> {
   if (getDemoScenario() === "error") throw new Error("The analysis engine did not respond. This is a simulated failure for the demo.");
   const spatial = data ?? (await getSpatialData(projectId));
+  const runDemoAnalysis = await loadEngine();
   const result = runDemoAnalysis(spatial, new Date().toISOString());
   saveLastRun(result);
   return result;
@@ -52,6 +68,7 @@ export async function runAnalysis(projectId: string, data?: SpatialDataset): Pro
 export async function getAnalysis(projectId: string, data?: SpatialDataset): Promise<{ result: AnalysisResult; fromRun: boolean }> {
   const stored = loadLastRun(projectId);
   const spatial = data ?? (await getSpatialData(projectId));
+  const runDemoAnalysis = await loadEngine();
   if (stored && stored.engine.version === ENGINE_VERSION) {
     // Re-derive against the current plan so a changed plan never shows stale
     // geometry, but keep the original run timestamp.

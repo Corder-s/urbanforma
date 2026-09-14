@@ -44,6 +44,15 @@ export default defineConfig({
           // fired — every icon was folded into react-vendor, which is on the
           // critical path of *every* page. The landing page was downloading
           // ~159 icons used only by the authenticated workspace.
+          //
+          // One chunk for all 186 icons is deliberate, and was re-measured
+          // against letting Rollup place each icon with its routes: the
+          // fine-grained split made the *landing* page 2.0 kB gzip lighter but
+          // the BIM route 9.7 kB heavier (53 icon chunks totalling 17.6 kB gzip
+          // versus 14.3 kB for all of them together — gzip cannot exploit the
+          // near-identical icon bodies across separate files), added 75 requests
+          // and grew the whole dist by 34 kB gzip. A single icons chunk is also
+          // fetched once per session and then cached across every route.
           if (id.includes("lucide-react")) return "icons-vendor";
 
           // Split the router from React itself so a router bump does not

@@ -1,7 +1,7 @@
 import { memo } from "react";
 import type { BuildingObject } from "../../../visualization/types/visualization.types";
 import { RAMPS } from "../../data/analysis.data";
-import { rampColor } from "../../lib/analysis.engine";
+import { rampColor } from "../../lib/engineColor";
 import { BuildingTint } from "./BuildingTint";
 import type { OverlayProps } from "./overlay.props";
 import { ZoneGrid } from "./ZoneGrid";

@@ -26,6 +26,7 @@ import { PoiLayer } from "./PoiLayer";
 import { RoadLayer } from "./RoadLayer";
 import { SiteLayer } from "./SiteLayer";
 import { WaterLayer } from "./WaterLayer";
+import { quantizeLayerScale } from "../../lib/layerScale";
 
 export interface AnnotationEditorHandlers {
   activeId: string | null;
@@ -239,6 +240,10 @@ export function MapView({ state, map, annotations = NO_ANNOTATIONS, presentation
   const gridMajor = 100;
   const selectedId = selection;
 
+  // Layers are memoised; a raw per-frame scale defeats the memo (see
+  // quantizeLayerScale). The <g transform> above keeps the exact value.
+  const layerScale = quantizeLayerScale(view.scale);
+
   return (
     <div
       ref={setContainerRef}
@@ -281,18 +286,18 @@ export function MapView({ state, map, annotations = NO_ANNOTATIONS, presentation
             contextRoads={groups.ctxRoads}
             contours={groups.contours}
             basemap={basemap}
-            scale={view.scale}
+            scale={layerScale}
             selected={selectedId === boundaryObj?.id}
             showBoundary={!!groups.boundary}
             onSelectBoundary={() => boundaryObj && onSelect(boundaryObj.id)}
             interactive={interactive}
           />
-          <BlockLayer blocks={groups.blocks} selectedId={selectedId} scale={view.scale} onSelect={onSelect} interactive={interactive} />
-          <WaterLayer water={groups.water} basemap={basemap} selectedId={selectedId} scale={view.scale} onSelect={onSelect} interactive={interactive} />
-          <LandscapeLayer parking={groups.parking} green={groups.green} trees={groups.trees} selectedId={selectedId} scale={view.scale} onSelect={onSelect} interactive={interactive} />
-          <RoadLayer roads={groups.roads} transit={groups.transit} utilities={groups.utilities} selectedId={selectedId} scale={view.scale} showLabels={settings.labels} onSelect={onSelect} interactive={interactive} />
-          <BuildingLayer buildings={groups.buildings} selectedId={selectedId} scale={view.scale} showLabels={settings.labels} showHeights={settings.buildingHeights} showShadows={settings.buildingShadows} sunIntensity={settings.sunIntensity} shadow={shadow} style={settings.buildingStyle} heightEmphasis={settings.heightEmphasis} onSelect={onSelect} interactive={interactive} />
-          <PoiLayer pois={groups.pois} selectedId={selectedId} scale={view.scale} showLabels={settings.labels} onSelect={onSelect} interactive={interactive} />
+          <BlockLayer blocks={groups.blocks} selectedId={selectedId} scale={layerScale} onSelect={onSelect} interactive={interactive} />
+          <WaterLayer water={groups.water} basemap={basemap} selectedId={selectedId} scale={layerScale} onSelect={onSelect} interactive={interactive} />
+          <LandscapeLayer parking={groups.parking} green={groups.green} trees={groups.trees} selectedId={selectedId} scale={layerScale} onSelect={onSelect} interactive={interactive} />
+          <RoadLayer roads={groups.roads} transit={groups.transit} utilities={groups.utilities} selectedId={selectedId} scale={layerScale} showLabels={settings.labels} onSelect={onSelect} interactive={interactive} />
+          <BuildingLayer buildings={groups.buildings} selectedId={selectedId} scale={layerScale} showLabels={settings.labels} showHeights={settings.buildingHeights} showShadows={settings.buildingShadows} sunIntensity={settings.sunIntensity} shadow={shadow} style={settings.buildingStyle} heightEmphasis={settings.heightEmphasis} onSelect={onSelect} interactive={interactive} />
+          <PoiLayer pois={groups.pois} selectedId={selectedId} scale={layerScale} showLabels={settings.labels} onSelect={onSelect} interactive={interactive} />
           {settings.labels && (
             <g aria-hidden="true" pointerEvents="none">
               <rect x={data.siteBounds.x + data.siteBounds.width / 2 - (data.projectName.length * 3.4 + 12) / view.scale} y={data.siteBounds.y - 36 / view.scale} width={(data.projectName.length * 6.8 + 24) / view.scale} height={20 / view.scale} rx={10 / view.scale} fill="#FFFFFF" fillOpacity={0.92} stroke="#DCE6F2" strokeWidth={1 / view.scale} />
@@ -301,7 +306,7 @@ export function MapView({ state, map, annotations = NO_ANNOTATIONS, presentation
               </text>
             </g>
           )}
-          {annotations.length > 0 && <AnnotationLayer annotations={annotations} scale={view.scale} activeId={annotationEditor?.activeId ?? null} onPick={annotationEditor ? annotationEditor.onPick : undefined} />}
+          {annotations.length > 0 && <AnnotationLayer annotations={annotations} scale={layerScale} activeId={annotationEditor?.activeId ?? null} onPick={annotationEditor ? annotationEditor.onPick : undefined} />}
         </g>
 
         {/* time-of-day tone + atmosphere haze (visual presets only — not a lighting or weather simulation) */}

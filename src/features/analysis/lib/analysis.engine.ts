@@ -2,6 +2,8 @@ import { centroid, pointInPolygon, polygonArea, polylineLength } from "../../pla
 import { LAND_USE_STYLE } from "../../visualization/data/visualization.data";
 import type { AreaObject, Bounds, BuildingObject, PoiObject, Point, RoadObject, SpatialDataset, TransitObject, TreeObject } from "../../visualization/types/visualization.types";
 import { ANALYSIS_PROFILES, RAMPS, ROAD_CLASS_COLOR, statusForScore, WALK_M_PER_MIN, type AnalysisProfile } from "../data/analysis.data";
+import { ENGINE_VERSION } from "./engineInfo";
+import { clamp01 } from "./engineColor";
 import type {
   AnalysisFinding,
   AnalysisMetric,
@@ -33,7 +35,6 @@ import type {
  * shape from real engines and the UI stays unchanged.
  */
 
-export const ENGINE_VERSION = "demo-1.0";
 
 // ---------------------------------------------------------------------------
 // Deterministic helpers
@@ -52,7 +53,6 @@ function noise(seed: string): number {
   return (hash(seed) % 10000) / 10000; // 0–1
 }
 
-const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const round1 = (v: number) => Math.round(v * 10) / 10;
 
 function distToSegment(p: Point, a: Point, b: Point): number {
@@ -1017,20 +1017,4 @@ export function focusZoneId(result: AnalysisResult, data: SpatialDataset, overla
   const candidates = overlay.zones.filter((z) => built.has(z.id) && z.coverage > 0.5);
   const pool = candidates.length > 0 ? candidates : overlay.zones;
   return pool.reduce<ZoneCell | null>((m, z) => (!m || z.value > m.value ? z : m), null)?.id ?? null;
-}
-
-/** Colour for a normalised value on a ramp (piecewise-linear interpolation). */
-export function rampColor(ramp: string[], t: number): string {
-  const x = clamp01(t) * (ramp.length - 1);
-  const i = Math.min(ramp.length - 2, Math.floor(x));
-  const f = x - i;
-  const a = hexToRgb(ramp[i]);
-  const b = hexToRgb(ramp[i + 1]);
-  const mix = a.map((c, k) => Math.round(c + (b[k] - c) * f));
-  return `#${mix.map((c) => c.toString(16).padStart(2, "0")).join("")}`;
-}
-
-function hexToRgb(hex: string): [number, number, number] {
-  const h = hex.replace("#", "");
-  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }

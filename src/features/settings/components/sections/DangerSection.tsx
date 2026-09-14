@@ -3,7 +3,7 @@ import { AlertTriangle } from "lucide-react";
 import { Button } from "../../../../components/ui/Button";
 import { useAuth } from "../../../auth/AuthProvider";
 import { useSettings } from "../../hooks/useSettings";
-import { resetLocalData } from "../../services/settings.service";
+import { resetLocalData } from "../../services/settingsData.service";
 import { ConfirmAction } from "../ConfirmAction";
 
 type PendingAction = "settings" | "data" | "signout" | null;

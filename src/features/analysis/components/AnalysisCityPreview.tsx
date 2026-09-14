@@ -6,7 +6,7 @@ import { DEFAULT_SETTINGS, LAND_USE_STYLE } from "../../visualization/data/visua
 import type { BuildingObject, SpatialObject } from "../../visualization/types/visualization.types";
 import { RAMPS } from "../data/analysis.data";
 import type { AnalysisState } from "../hooks/useAnalysisState";
-import { rampColor } from "../lib/analysis.engine";
+import { rampColor } from "../lib/engineColor";
 import type { AnalysisOverlay } from "../types/analysis.types";
 
 interface AnalysisCityPreviewProps {

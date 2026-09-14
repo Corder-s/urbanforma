@@ -140,7 +140,89 @@ What drives it:
   most once per frame from a pending pointer position. The one deliberate
   exception is a playing 360° inspection, where the camera moves every frame by
   definition — and it starts paused when motion is reduced, so on-demand
-  rendering is the default state.
+  rendering is the default state. Its azimuth readout is written straight to a
+  DOM node (~8× a second), and the pose callback still only fires once the camera
+  *settles*, so an orbiting camera never re-renders React.
+- **Heavy modules load on demand, not on the static graph.** Three services were
+  reachable from routes that never call them, so they were bundled into those
+  routes' blocking first paint. Each is now imported inside the async function
+  that actually uses it (all of them already had loading states, so nothing the
+  user sees changed): the demo **analysis engine** (48.8 KB of source, an 11.4 KB
+  gzip chunk) behind `runAnalysis` / `getAnalysis`, which BIM coordination,
+  Reports and Optimization only *read*; the **optimization service** (12.4 KB
+  gzip) and the **planning service + dataset** (6.8 KB gzip) behind BIM's
+  coordination loader; and the scenario machinery behind `useScenarioOptions`,
+  which `useVisualizationState` reaches on every map route — including BIM, which
+  never shows a scenario picker. `rampColor` and `ENGINE_VERSION` moved into
+  two tiny modules of their own so a colour ramp or a version string no longer
+  implies the engine.
+- **The settings service is split by criticality.** The provider wraps the whole
+  app, so everything in `settings.service.ts` was in the entry chunk of every
+  page. The data-management surface (the 10-category storage table, inventory,
+  per-category clear, JSON export) is used by exactly two Settings panels and now
+  lives in `settingsData.service.ts`, inside the lazy Settings chunk. One storage
+  key, one cache and one copy of the sanitising logic; the dependency is one-way.
+- **Memoised map layers are not defeated by the zoom scale.** Every SVG layer is
+  `memo`'d and takes the view scale to keep hairlines screen-space sized (`1 /
+  scale`) and to decide when labels are worth drawing — both *threshold*
+  decisions, but the raw scale changes every frame of a gesture, so all six to
+  eight layers re-rendered 60× a second. They now receive
+  `quantizeLayerScale(view.scale)`, a 4% multiplicative bucket: measured across
+  realistic gesture profiles that is **53% fewer layer re-renders** for a wheel
+  burst and a trackpad pinch, neutral for wide-range animations, and still zero
+  for a pan. The `<g transform>` keeps the exact scale, so no geometry moves and
+  hit-testing is unaffected; the only visible effect is a hairline within 1.98%
+  of 1 px and a label threshold that trips up to 4% early.
+
+**Route payload** (measured on the built chunk graph — every number is the
+initial payload plus that route's chunk plus its exclusive dependencies, gzip):
+
+| first paint | before | after | change |
+| --- | --- | --- | --- |
+| initial JS, before any route (3 requests) | 76.22 KB | **75.21 KB** | −1.3% |
+| initial CSS | 14.47 KB | 14.47 KB | — |
+| `/` landing | 102.59 KB | **101.57 KB** | −1.0% |
+| `/login` | 100.44 KB | **99.42 KB** | −1.0% |
+| `/app` shell | 97.06 KB | **96.04 KB** | −1.1% |
+| `/app` dashboard | 110.41 KB | **109.39 KB** | −0.9% |
+| `/app/visualization` | 200.15 KB | **173.29 KB** | **−13.4%** |
+| `/app/bim` | 222.69 KB | **201.59 KB** | **−9.5%** |
+| `/app/optimization` | 184.10 KB | **175.06 KB** | −4.9% |
+| `/app/reports` | 201.96 KB | **192.84 KB** | −4.5% |
+| `/app/planning` | 133.22 KB | **132.49 KB** | −0.5% |
+| `/app/settings` | 110.77 KB | **110.74 KB** | −0.0% |
+| `/app/analysis` | 163.83 KB | 164.76 KB | +0.6% |
+| 3-D city (`CityView`, lazy) | 200.54 KB | **185.38 KB** | −7.6% |
+| scenario 3-D preview (lazy) | 216.74 KB | **190.67 KB** | −12.0% |
+
+Analysis is the one route that grew (+0.9 KB): it genuinely runs the engine, so
+it now carries it explicitly instead of inheriting it from a shared chunk. The
+whole dist grew 0.7% (3 extra chunk boundaries) to move 20–27 KB off four
+routes' blocking paths.
+
+Rejected after measuring: letting Rollup place each **icon** with its routes
+instead of one `icons-vendor` chunk. It made the landing page 2.0 KB lighter but
+the BIM route 9.7 KB *heavier* — 53 separate icon chunks totalling 17.6 KB gzip
+versus 14.3 KB for all 186 icons together, because gzip cannot exploit the
+near-identical icon bodies across files — plus 75 more requests and 34 KB more
+dist. One cached icons chunk wins.
+
+**Remaining bottlenecks** (measured, deliberately not touched):
+
+- `three-vendor` is 519.6 KB raw / **131.2 KB gzip** and is the largest single
+  download on any 3-D route. It is tree-shaken (922 KB of the 1.2 MB module
+  survive), route-deferred behind `CityView` / the two city previews, and cached
+  across every route — but three.js ships as one module, so shrinking it further
+  means unsupported deep imports or dropping 3-D features.
+- The `BimPage` chunk is 136.0 KB raw / **31.4 KB gzip**, the largest route
+  chunk. ~50 KB of it renders only in a non-default mode or behind a dialog
+  (Issues panel + inspector + dialog, Import dialog, Versions panel). Deferring
+  those would cut roughly 8–10 KB gzip from BIM's first paint, at the cost of a
+  Suspense fallback the first time a panel or dialog opens — a behaviour change,
+  so it is left as a decision rather than taken silently.
+- `WaterLayer`-style chunk *names* are Rollup's, not meaningful: that chunk is
+  the shared visualization core (map layers + spatial data), and the chunk named
+  `IconButton` is the planning dataset. Read the module list, not the name.
 
 ---
 

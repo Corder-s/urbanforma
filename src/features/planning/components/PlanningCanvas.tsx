@@ -11,6 +11,7 @@ import { BuildingLayer } from "./canvas/BuildingLayer";
 import { AnnotationLayer } from "./canvas/AnnotationLayer";
 import { CanvasControls } from "./CanvasControls";
 import { CanvasEmptyState } from "./StudioStates";
+import { quantizeLayerScale } from "../../visualization/lib/layerScale";
 
 interface PlanningCanvasProps {
   state: PlanningState;
@@ -79,6 +80,9 @@ export function PlanningCanvas({ state, camera }: PlanningCanvasProps) {
   const interactive = toolDef.kind === "select";
   const cursor: CursorMode = toolDef.kind;
   const scale = camera.view.scale;
+  // Memoised layers: hand them a quantised scale so a zoom gesture does not
+  // re-render every layer on every frame (see quantizeLayerScale).
+  const layerScale = quantizeLayerScale(scale);
 
   /**
    * Objects call this on click. With the Select tool it selects; with a
@@ -130,12 +134,12 @@ export function PlanningCanvas({ state, camera }: PlanningCanvasProps) {
         dragEnabled={interactive}
         ariaLabel={`Planning canvas. ${objects.length} objects. Demo canvas, not a real GIS engine.`}
       >
-        <SiteLayer site={doc.site} layers={layers} selected={selection === "site"} onSelect={onSiteClick} scale={scale} />
-        {layers.water && <WaterLayer water={grouped.water} selectedId={selectedId} scale={scale} onSelect={onObjectClick} interactive={interactive} />}
-        <LandscapeLayer areas={grouped.areas} selectedId={selectedId} scale={scale} showGreen={layers.green} onSelect={onObjectClick} interactive={interactive} />
-        {layers.roads && <RoadLayer roads={grouped.roads} paths={grouped.paths} water={layers.water ? grouped.water : undefined} selectedId={selectedId} scale={scale} onSelect={onObjectClick} interactive={interactive} />}
+        <SiteLayer site={doc.site} layers={layers} selected={selection === "site"} onSelect={onSiteClick} scale={layerScale} />
+        {layers.water && <WaterLayer water={grouped.water} selectedId={selectedId} scale={layerScale} onSelect={onObjectClick} interactive={interactive} />}
+        <LandscapeLayer areas={grouped.areas} selectedId={selectedId} scale={layerScale} showGreen={layers.green} onSelect={onObjectClick} interactive={interactive} />
+        {layers.roads && <RoadLayer roads={grouped.roads} paths={grouped.paths} water={layers.water ? grouped.water : undefined} selectedId={selectedId} scale={layerScale} onSelect={onObjectClick} interactive={interactive} />}
         {layers.buildings && (
-          <BuildingLayer buildings={grouped.buildings} selectedId={selectedId} scale={scale} showLabels={settings.showLabels} onSelect={onObjectClick} interactive={interactive} />
+          <BuildingLayer buildings={grouped.buildings} selectedId={selectedId} scale={layerScale} showLabels={settings.showLabels} onSelect={onObjectClick} interactive={interactive} />
         )}
         <AnnotationLayer
           labels={grouped.labels}
@@ -144,7 +148,7 @@ export function PlanningCanvas({ state, camera }: PlanningCanvasProps) {
           draftKind={draftKind}
           hover={draftKind ? hover : null}
           selectedId={selectedId}
-          scale={scale}
+          scale={layerScale}
           showLabels={settings.showLabels}
           onSelect={onObjectClick}
           interactive={interactive}

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { applyScenarioOps } from "../../optimization/lib/scenario.spatial";
-import { deriveScenarios, generateScenarios, getOptimizationContext, getOptimizationState, scoreScenarios } from "../../optimization/services/optimization.service";
 import type { OptimizationScenario } from "../../optimization/types/optimization.types";
 import { currentPlanOption, scenarioOption, type ScenarioOption } from "../lib/scenarios";
 import type { SpatialDataset } from "../types/visualization.types";
@@ -18,6 +16,14 @@ export type ScenarioLoad =
  * the scenarios are derived once from the default optimization inputs so the
  * comparison is always available. Scenario datasets are ops applied on top of
  * the current plan — no second dataset exists.
+ *
+ * The optimization service and the scenario spatial ops are imported *inside*
+ * the effect. This hook is reached from `useVisualizationState`, i.e. from the
+ * shared visualization core that every map route renders — including BIM, which
+ * never shows a scenario picker. Importing them statically put ~17 kB gzip of
+ * optimization machinery on those routes' blocking first paint. The effect was
+ * already async with its own loading/error states, so loading the modules here
+ * changes nothing the user sees; both imports run in parallel.
  */
 export function useScenarioOptions(projectId: string | null, base: SpatialDataset | null): ScenarioLoad {
   const [load, setLoad] = useState<ScenarioLoad>({ status: "idle" });
@@ -30,6 +36,11 @@ export function useScenarioOptions(projectId: string | null, base: SpatialDatase
     let active = true;
     setLoad({ status: "loading" });
     (async () => {
+      const [{ applyScenarioOps }, optimization] = await Promise.all([
+        import("../../optimization/lib/scenario.spatial"),
+        import("../../optimization/services/optimization.service"),
+      ]);
+      const { deriveScenarios, generateScenarios, getOptimizationContext, getOptimizationState, scoreScenarios } = optimization;
       const context = await getOptimizationContext(projectId, base);
       const current = currentPlanOption(base, context.analysis, context.current);
       try {

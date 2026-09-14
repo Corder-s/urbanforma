@@ -13,6 +13,7 @@ import { pathFrom, rectCorners } from "../../visualization/lib/spatial";
 import type { AreaObject, BoundaryObject, BuildingObject, CameraPreset, ContextBuildingObject, RoadObject, SpatialDataset, SpatialObject, TerrainObject, TreeObject } from "../../visualization/types/visualization.types";
 import { CHANGE_LEGEND } from "../data/optimization.data";
 import type { DerivedSpatialState, SpatialChangeKind } from "../types/optimization.types";
+import { quantizeLayerScale } from "../../visualization/lib/layerScale";
 
 interface ScenarioMapProps {
   /** Current plan (drawn when no scenario is active). */
@@ -111,6 +112,10 @@ export function ScenarioMap({ current, derived, scenarioName, map, camera, selec
   const counts = derived ? { added: derived.addedIds.length, modified: [...derived.changeOf.values()].filter((k) => k === "modified").length, removed: derived.removed.length } : null;
   const label = derived && scenarioName ? `Scenario map of ${data.projectName}, ${scenarioName}: ${counts?.added} added, ${counts?.modified} modified, ${counts?.removed} removed objects.` : `Current plan map of ${data.projectName}.`;
 
+  // Layers are memoised; a raw per-frame scale defeats the memo (see
+  // quantizeLayerScale). The <g transform> above keeps the exact value.
+  const layerScale = quantizeLayerScale(view.scale);
+
   return (
     <div
       ref={setContainerRef}
@@ -149,16 +154,16 @@ export function ScenarioMap({ current, derived, scenarioName, map, camera, selec
 
           {/* --- base map: the scenario dataset drawn with the shared Step 12 layers -------------- */}
           <g data-layer="scenario-base" opacity={derived ? 0.92 : 1}>
-            <SiteLayer boundary={groups.boundary} contextBuildings={groups.ctxBuildings} contextRoads={groups.ctxRoads} contours={[]} basemap={basemap} scale={view.scale} selected={false} showBoundary onSelectBoundary={NOOP} interactive={false} />
-            <BlockLayer blocks={groups.blocks} selectedId={selectedId} scale={view.scale} onSelect={onSelect} interactive={!!derived} />
-            <WaterLayer water={groups.water} basemap={basemap} selectedId={null} scale={view.scale} onSelect={NOOP} interactive={false} />
-            <LandscapeLayer parking={[]} green={groups.green} trees={groups.trees} selectedId={selectedId} scale={view.scale} onSelect={onSelect} interactive={!!derived} />
-            <RoadLayer roads={groups.roads} transit={[]} utilities={[]} selectedId={selectedId} scale={view.scale} showLabels={false} onSelect={onSelect} interactive={!!derived} />
-            <BuildingLayer buildings={groups.buildings} selectedId={selectedId} scale={view.scale} showLabels={false} showHeights={false} showShadows sunIntensity={65} onSelect={onSelect} />
+            <SiteLayer boundary={groups.boundary} contextBuildings={groups.ctxBuildings} contextRoads={groups.ctxRoads} contours={[]} basemap={basemap} scale={layerScale} selected={false} showBoundary onSelectBoundary={NOOP} interactive={false} />
+            <BlockLayer blocks={groups.blocks} selectedId={selectedId} scale={layerScale} onSelect={onSelect} interactive={!!derived} />
+            <WaterLayer water={groups.water} basemap={basemap} selectedId={null} scale={layerScale} onSelect={NOOP} interactive={false} />
+            <LandscapeLayer parking={[]} green={groups.green} trees={groups.trees} selectedId={selectedId} scale={layerScale} onSelect={onSelect} interactive={!!derived} />
+            <RoadLayer roads={groups.roads} transit={[]} utilities={[]} selectedId={selectedId} scale={layerScale} showLabels={false} onSelect={onSelect} interactive={!!derived} />
+            <BuildingLayer buildings={groups.buildings} selectedId={selectedId} scale={layerScale} showLabels={false} showHeights={false} showShadows sunIntensity={65} onSelect={onSelect} />
           </g>
 
           {/* --- change overlay (independent renderer) ------------------------------------------- */}
-          {derived && <ChangeOverlay derived={derived} scale={view.scale} patternId={patternId} selectedId={selectedId} onSelect={onSelect} />}
+          {derived && <ChangeOverlay derived={derived} scale={layerScale} patternId={patternId} selectedId={selectedId} onSelect={onSelect} />}
 
           {/* site name */}
           <g aria-hidden="true" pointerEvents="none">

@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getPlanningState } from "../../planning/services/planning.service";
 import type { PlanningDocument } from "../../planning/types/planning.types";
 import { getAnalysis } from "../../analysis/services/analysis.service";
 import type { AnalysisResult } from "../../analysis/types/analysis.types";
-import { getOptimizationState } from "../../optimization/services/optimization.service";
 import type { OptimizationState } from "../../optimization/types/optimization.types";
 import { loadReports } from "../../reports/services/report.service";
 import type { ReportConfig } from "../../reports/types/report.types";
@@ -37,6 +35,13 @@ export interface BimCoordinationApi {
  * nothing for this project simply reports `missing`, never an invented result.
  *
  * `enabled` keeps the reads off while the user is in the model or issues mode.
+ *
+ * The planning and optimization services are imported *inside* the loader. This
+ * hook is their only consumer in the BIM module, and it only ever calls them
+ * from an async effect that already reports `loading`, so a dynamic import keeps
+ * ~24 kB gzip (the optimization service plus the planning dataset behind it) out
+ * of the BIM route's blocking first paint without changing what the panel shows
+ * or when. A failed import is reported exactly like a failed read.
  */
 export function useBimCoordination(
   projectId: string | null,
@@ -62,7 +67,8 @@ export function useBimCoordination(
     setLoad({ status: "loading" });
     const failed: string[] = [];
 
-    const readPlanning = getPlanningState(projectId)
+    const readPlanning = import("../../planning/services/planning.service")
+      .then((m) => m.getPlanningState(projectId))
       .then((doc) => {
         if (active) setPlanningDoc(doc);
       })
@@ -82,7 +88,8 @@ export function useBimCoordination(
           })
       : Promise.resolve();
 
-    const readOptimization = getOptimizationState(projectId, null)
+    const readOptimization = import("../../optimization/services/optimization.service")
+      .then((m) => m.getOptimizationState(projectId, null))
       .then((state) => {
         if (active) setOptimization(state);
       })

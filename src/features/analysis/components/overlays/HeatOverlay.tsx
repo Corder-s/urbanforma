@@ -1,6 +1,6 @@
 import { memo, useId } from "react";
 import { RAMPS } from "../../data/analysis.data";
-import { rampColor } from "../../lib/analysis.engine";
+import { rampColor } from "../../lib/engineColor";
 import type { OverlayProps } from "./overlay.props";
 import { ZoneGrid } from "./ZoneGrid";
 

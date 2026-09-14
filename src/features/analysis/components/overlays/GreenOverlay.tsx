@@ -2,7 +2,7 @@ import { memo } from "react";
 import { pathFrom } from "../../../visualization/lib/spatial";
 import type { AreaObject, TreeObject } from "../../../visualization/types/visualization.types";
 import { RAMPS } from "../../data/analysis.data";
-import { rampColor } from "../../lib/analysis.engine";
+import { rampColor } from "../../lib/engineColor";
 import type { OverlayProps } from "./overlay.props";
 import { ZoneGrid } from "./ZoneGrid";
 
