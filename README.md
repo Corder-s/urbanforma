@@ -167,55 +167,92 @@ What drives it:
   scale`) and to decide when labels are worth drawing — both *threshold*
   decisions, but the raw scale changes every frame of a gesture, so all six to
   eight layers re-rendered 60× a second. They now receive
-  `quantizeLayerScale(view.scale)`, a 4% multiplicative bucket: measured across
-  realistic gesture profiles that is **53% fewer layer re-renders** for a wheel
-  burst and a trackpad pinch, neutral for wide-range animations, and still zero
-  for a pan. The `<g transform>` keeps the exact scale, so no geometry moves and
-  hit-testing is unaffected; the only visible effect is a hairline within 1.98%
-  of 1 px and a label threshold that trips up to 4% early.
+  `quantizeLayerScale(view.scale)`, a 4% multiplicative bucket across 4 canvases
+  and 27 layer props. `memo` compares against the previous render, so a layer
+  re-renders once per frame where the prop *changed* — measured against the
+  shipped helper:
 
-**Route payload** (measured on the built chunk graph — every number is the
-initial payload plus that route's chunk plus its exclusive dependencies, gzip):
+  | gesture (frames) | re-renders before | after | change |
+  | --- | --- | --- | --- |
+  | wheel zoom-in, 1.00 → 1.12× (45) | 44 | **3** | −93% |
+  | wheel zoom-out, 1.60 → 1.00× (45) | 44 | **12** | −73% |
+  | trackpad pinch, 0.85 → 1.25× (45) | 44 | **10** | −77% |
+  | wide animated fly-to, 0.40 → 2.40× (145) | 144 | **45** | −69% |
+  | zoom button, 10 discrete taps (10) | 9 | 9 | neutral |
+  | pan at constant zoom (60) | 0 | 0 | — |
+
+  Wheel and pinch together go 132 → 25 (**81% fewer**). Discrete button taps stay
+  neutral because each tap legitimately needs a new stroke width — the quantiser
+  is never worse than the raw value on any profile. The `<g transform>` keeps the
+  exact scale, so no geometry moves and hit-testing is unaffected; the only
+  visible effects are a hairline at most 1.98% off 1 px (worst case measured at
+  scale 0.907) and the `scale > 0.9` label threshold tripping at 0.9068.
+
+**Route payload** — every number is the initial payload plus that route's chunk
+plus its exclusive dependencies, gzip −9 of the emitted files, measured by
+rebuilding the pre-change commit (`408b481`) in a throwaway worktree with the
+same harness:
 
 | first paint | before | after | change |
 | --- | --- | --- | --- |
-| initial JS, before any route (3 requests) | 76.22 KB | **75.21 KB** | −1.3% |
-| initial CSS | 14.47 KB | 14.47 KB | — |
-| `/` landing | 102.59 KB | **101.57 KB** | −1.0% |
-| `/login` | 100.44 KB | **99.42 KB** | −1.0% |
-| `/app` shell | 97.06 KB | **96.04 KB** | −1.1% |
-| `/app` dashboard | 110.41 KB | **109.39 KB** | −0.9% |
-| `/app/visualization` | 200.15 KB | **173.29 KB** | **−13.4%** |
-| `/app/bim` | 222.69 KB | **201.59 KB** | **−9.5%** |
-| `/app/optimization` | 184.10 KB | **175.06 KB** | −4.9% |
-| `/app/reports` | 201.96 KB | **192.84 KB** | −4.5% |
-| `/app/planning` | 133.22 KB | **132.49 KB** | −0.5% |
-| `/app/settings` | 110.77 KB | **110.74 KB** | −0.0% |
-| `/app/analysis` | 163.83 KB | 164.76 KB | +0.6% |
-| 3-D city (`CityView`, lazy) | 200.54 KB | **185.38 KB** | −7.6% |
-| scenario 3-D preview (lazy) | 216.74 KB | **190.67 KB** | −12.0% |
+| initial JS, before any route (3 requests) | 76.13 KB | **75.12 KB** | −1.3% |
+| initial JS, brotli | 66.78 KB | **65.93 KB** | −1.3% |
+| initial CSS (1 request) | 14.38 KB | 14.38 KB | — |
+| `/` landing | 102.22 KB | **101.21 KB** | −1.0% |
+| `/login` | 100.09 KB | **99.08 KB** | −1.0% |
+| `/register` | 98.58 KB | **97.57 KB** | −1.0% |
+| `/forgot-password` | 97.80 KB | **96.78 KB** | −1.0% |
+| `/logout` | 76.34 KB | **75.33 KB** | −1.3% |
+| `/app` shell | 96.71 KB | **95.70 KB** | −1.0% |
+| `/app` dashboard | 110.04 KB | **109.03 KB** | −0.9% |
+| `/app/projects` | 110.70 KB | **109.69 KB** | −0.9% |
+| `/app/projects/:id` | 114.19 KB | **113.18 KB** | −0.9% |
+| `/app/projects/new` | 112.25 KB | **111.24 KB** | −0.9% |
+| `/app/planning` | 132.81 KB | **132.09 KB** | −0.5% |
+| `/app/visualization` | 199.66 KB | **172.82 KB** | **−13.4%** |
+| `/app/optimization` | 183.60 KB | **174.57 KB** | −4.9% |
+| `/app/reports` | 201.51 KB | **192.40 KB** | −4.5% |
+| `/app/bim` | 222.14 KB | **201.07 KB** | **−9.5%** |
+| `/app/settings` | 110.41 KB | **110.38 KB** | −0.0% |
+| `/app/analysis` | 163.38 KB | 164.33 KB | +0.6% |
+| 3-D city (`CityView`, lazy) | 275.98 KB | **259.82 KB** | −5.9% |
+| scenario 3-D preview (lazy) | 292.16 KB | **265.11 KB** | −9.3% |
+| analysis 3-D preview (lazy) | 275.94 KB | 276.80 KB | +0.3% |
 
-Analysis is the one route that grew (+0.9 KB): it genuinely runs the engine, so
-it now carries it explicitly instead of inheriting it from a shared chunk. The
-whole dist grew 0.7% (3 extra chunk boundaries) to move 20–27 KB off four
-routes' blocking paths.
+Analysis is the one route that grew (+0.95 KB): it genuinely runs the engine, so
+it now carries it explicitly instead of inheriting it from a shared chunk. Every
+other route is at least 1.01 KB lighter — that is the settings split landing on
+the entry chunk of every page. The whole dist grew 0.7% gzip (560.61 → 564.44 KB
+across 59 → 62 files, i.e. three extra chunk boundaries) to move 20–27 KB off
+four routes' blocking paths. CSS (81.12 KB raw) and the four static assets
+(136.26 KB) are byte-identical.
+
+The chunk that used to be the 4th largest file in the app — Rollup named it
+`WaterLayer`, but it was the shared visualization core — went from **27.46 KB to
+12.11 KB gzip** and out of the top ten, because the 68.7 KB of analysis code it
+carried (engine, dataset, service) no longer has to ride along on every map
+route. Four chunks now exist that have no route facade at all and are fetched
+only when the code path that needs them runs: `optimization.service` 12.37 KB,
+`analysis.engine` 11.43 KB, planning service + dataset 6.78 KB, scenario spatial
+ops 5.42 KB.
 
 Rejected after measuring: letting Rollup place each **icon** with its routes
-instead of one `icons-vendor` chunk. It made the landing page 2.0 KB lighter but
-the BIM route 9.7 KB *heavier* — 53 separate icon chunks totalling 17.6 KB gzip
-versus 14.3 KB for all 186 icons together, because gzip cannot exploit the
-near-identical icon bodies across files — plus 75 more requests and 34 KB more
-dist. One cached icons chunk wins.
+instead of one `icons-vendor` chunk (14.08 KB gzip for all 186 icons). It made
+the landing page 2.0 KB lighter but the BIM route 9.7 KB *heavier* — 53 separate
+icon chunks totalling 17.6 KB gzip versus 14.3 KB for all of them together,
+because gzip cannot exploit the near-identical icon bodies across files — plus 75
+more requests and 34 KB more dist. One cached icons chunk wins.
 
 **Remaining bottlenecks** (measured, deliberately not touched):
 
-- `three-vendor` is 519.6 KB raw / **131.2 KB gzip** and is the largest single
+- `three-vendor` is 519.63 KB raw / **130.77 KB gzip** and is the largest single
   download on any 3-D route. It is tree-shaken (922 KB of the 1.2 MB module
   survive), route-deferred behind `CityView` / the two city previews, and cached
   across every route — but three.js ships as one module, so shrinking it further
   means unsupported deep imports or dropping 3-D features.
-- The `BimPage` chunk is 136.0 KB raw / **31.4 KB gzip**, the largest route
-  chunk. ~50 KB of it renders only in a non-default mode or behind a dialog
+- The `BimPage` chunk is 135.96 KB raw / **31.27 KB gzip**, the largest route
+  chunk. ~54 KB of its rendered source appears only in a non-default mode or behind a
+dialog
   (Issues panel + inspector + dialog, Import dialog, Versions panel). Deferring
   those would cut roughly 8–10 KB gzip from BIM's first paint, at the cost of a
   Suspense fallback the first time a panel or dialog opens — a behaviour change,
